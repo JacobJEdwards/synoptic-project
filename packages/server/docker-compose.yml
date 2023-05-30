@@ -1,15 +1,16 @@
+version: '3.8'
 services:
-  db:
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=synoptic
+
+  postgres:
     image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+    volumes:
+      - postgres:/var/lib/postgresql/data
     ports:
       - '5432:5432'
-    restart: always
-    volumes: 
-      - db:/var/lib/postgresql/data
+
 volumes:
-  db:
-    driver: local
+  postgres:
