@@ -7,6 +7,13 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
-
+  ],
+  "scripts": {
+    "client:dev": "yarn workspace client dev",
+    "server:dev": "yarn workspace server start:dev",
+    "dev": "concurrently \"yarn server:dev\" \"yarn client:dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1"
+  }
 }
