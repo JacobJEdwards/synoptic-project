@@ -1,3 +1,3 @@
-import type { Recipe } from "../recipes.schema";
+import type { Recipe } from "@prisma/client";
 
 export type CreateRecipeDto = Omit<Recipe, "id">;
