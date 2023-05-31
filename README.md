@@ -28,4 +28,22 @@
 
 8. Run command in terminal in project root directory: `yarn run dev`
 
+# HOW TO USE WITH GIT
+
+- Clone the repo onto your computer by running the command in your terminal: `git clone https://github.com/JacobJEdwards/synoptic-project`
+
+- When you add a new file run the command in terminal: `git add -A`
+
+- when you make changes run the command: `git commit -am "your message"`
+
+- When you want to share the changes: `git push`
+
+- When you want to get other peoples changes: `git pull`
+
+- Sometimes there will be merge conflicts, im not sure how to deal with them maybe `git merge` or `git rebase`
+
+- run `git pull` or `git status` often
+
+- alterantively use VSCodes source control tab
+
 any issues text me
