@@ -16,7 +16,7 @@
 
 ## Only do these once:
 
-1. Install docker desktop and open it
+1. Install [docker desktop](https://www.docker.com/products/docker-desktop/) and open it
 2. Run command in terminal: `npm install -g yarn`
 3. Run command in terminal: `docker run -d -e POSTGRES_DB=synoptic -e POSTGRES_PASSWORD=password -e POSTGRES_USER=postgres -p 5432:5432 postgres`
 4. Run command in terminal in proejct root directory: `yarn install`
