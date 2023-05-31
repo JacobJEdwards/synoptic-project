@@ -12,8 +12,15 @@ model Recipe {
     title       String
     description String?
     ingredients String[]
+    origin      String   @default("Unknown")
     steps       String
-    user        User?    @relation(fields: [id], references: [id])
+    vegan       Boolean  @default(false)
+    vegetarian  Boolean  @default(false)
+    halal       Boolean  @default(false)
+    kosher      Boolean  @default(false)
+    tags        String[]
+    user        User?    @relation(fields: [userId], references: [id])
+    userId      Int?
 }
 
 model User {
@@ -22,11 +29,18 @@ model User {
     username String   @unique
     name     String
     password String
-    recipes  Recipe[]
     role     Role     @default(USER)
+    recipes  Recipe[]
 }
 
 enum Role {
     USER
     ADMIN
+}
+
+model Charity {
+    id          Int     @id @default(autoincrement())
+    name        String
+    description String?
+    website     String?
 }
