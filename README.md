@@ -24,6 +24,8 @@
 6. Run command in terminal in server directory: `npx prisma generate`
 7. Run command in terminal in server directory: `npx prisma db seed`
 
+When changes are made to the database [schema](packages/server/prisma/schema.prisma), delete the docker container from the docker desktop app and rerun commands 3-7.
+
 ## Do this every time:
 
 8. Run command in terminal in project root directory: `yarn run dev`
