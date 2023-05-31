@@ -27,3 +27,5 @@
 ## Do this every time:
 
 8. Run command in terminal in project root directory: `yarn run dev`
+
+any issues text me
