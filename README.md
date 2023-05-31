@@ -30,6 +30,10 @@ When changes are made to the database [schema](packages/server/prisma/schema.pri
 
 8. Run command in terminal in project root directory: `yarn run dev`
 
+Then go to [http://localhost:3001/](http://localhost:3001/)
+
+Or view api routes in [http://localhost:3000/](http://localhost:3000/)
+
 # HOW TO USE WITH GIT
 
 - Clone the repo onto your computer by running the command in your terminal: `git clone https://github.com/JacobJEdwards/synoptic-project`
