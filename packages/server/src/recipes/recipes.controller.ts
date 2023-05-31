@@ -1,11 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { RecipesService } from './recipes.service';
-import { CreateRecipeDto } from './dto/create-recipe.dto';
-import { UpdateRecipeDto } from './dto/update-recipe.dto';
-import { ApiTags} from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+} from "@nestjs/common";
+import { RecipesService } from "./recipes.service";
+import { CreateRecipeDto } from "./dto/create-recipe.dto";
+import { UpdateRecipeDto } from "./dto/update-recipe.dto";
+import { ApiTags } from "@nestjs/swagger";
 
-@Controller('recipes')
-@ApiTags('recipes')
+@Controller("recipes")
+@ApiTags("recipes")
 export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
@@ -19,18 +28,21 @@ export class RecipesController {
     return this.recipesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.recipesService.findOne(+id);
+  @Get(":id")
+  findOne(@Param("id", ParseIntPipe) id: number) {
+    return this.recipesService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRecipeDto: UpdateRecipeDto) {
-    return this.recipesService.update(+id, updateRecipeDto);
+  @Patch(":id")
+  update(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() updateRecipeDto: UpdateRecipeDto
+  ) {
+    return this.recipesService.update(id, updateRecipeDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.recipesService.remove(+id);
+  @Delete(":id")
+  remove(@Param("id", ParseIntPipe) id: number) {
+    return this.recipesService.remove(id);
   }
 }
