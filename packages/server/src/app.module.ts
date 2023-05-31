@@ -6,14 +6,22 @@ import { UsersModule } from "./users/users.module";
 import { ConfigModule } from "@nestjs/config";
 import config from "./config/configuration";
 
+/**
+ * @Module() decorator provides metadata that Nest makes use of to organize the application structure.
+ * Main application module that imports all other modules.
+ */
 @Module({
   imports: [
+    // access environment variables
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
+
+    // database module
     PrismaModule,
-    RecipesModule,
+
+    // feature modules
     AuthModule,
+    RecipesModule,
     UsersModule,
   ],
 })
-
 export class AppModule {}

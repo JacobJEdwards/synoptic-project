@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
-import { UsersModule } from "../users/users.module";
+import { UsersModule } from "src/users/users.module";
 import { PassportModule } from "@nestjs/passport";
-import { LocalStrategy } from "./local.strategy";
+import { LocalStrategy } from "./local/local.strategy";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
-import { JwtStrategy } from "./jwt.strategy";
+import { JwtStrategy } from "./jwt/jwt.strategy";
 
 @Module({
   imports: [
