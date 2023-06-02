@@ -20,9 +20,14 @@
 2. Run command in terminal: `npm install -g yarn`
 3. Run command in terminal: `docker run -d -e POSTGRES_DB=synoptic -e POSTGRES_PASSWORD=password -e POSTGRES_USER=postgres -p 5432:5432 postgres`
 4. Run command in terminal in proejct root directory: `yarn install`
-5. Run command in terminal in server direcotry: `npx prisma migrate dev`
-6. Run command in terminal in server directory: `npx prisma generate`
-7. Run command in terminal in server directory: `npx prisma db seed`
+5. Add file called `.env` to server directory, and within the file add the lines:
+```
+DATABASE_URL=postgres://postgres:password@localhost:5432/synoptic?schema=public
+JWT_SECRET=secret
+```
+7. Run command in terminal in server direcotry: `npx prisma migrate dev`
+8. Run command in terminal in server directory: `npx prisma generate`
+9. Run command in terminal in server directory: `npx prisma db seed`
 
 When changes are made to the database [schema](packages/server/prisma/schema.prisma), delete the docker container from the docker desktop app and rerun commands 3-7.
 
