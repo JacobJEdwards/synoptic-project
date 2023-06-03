@@ -5,105 +5,156 @@ import Recipes from "/views/pages/Recipes.js";
 import Error404 from "/views/pages/Error404.js";
 import Recipe from "/views/pages/Recipe.js";
 
+/**
+ * Regex to get the parameters from the url path and return them as an object
+ * Based on the route object
+ * @param {string} path
+ */
 const pathToRegex = (path) =>
-  new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
+    new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
+/**
+ * Get the parameters from the url path and return them as an object
+ * @param {object} match object with the corresponding route
+ */
 const getParams = (match) => {
-  const values = match.result.slice(1);
-  console.log(values);
-  const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
-    (result) => result[1]
-  );
+    const values = match.result.slice(1);
+    console.log(values);
+    const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
+        (result) => result[1]
+    );
 
-  return Object.fromEntries(
-    keys.map((key, i) => {
-      return [key, values[i]];
-    })
-  );
+    return Object.fromEntries(
+        keys.map((key, i) => {
+            return [key, values[i]];
+        })
+    );
 };
 
+/**
+ * Uses the history api to change the url without reloading the page
+ * @param {string} url
+ */
 const navigateTo = async (url) => {
-  history.pushState(null, null, url);
-  await Router();
+    history.pushState(null, null, url);
+    await Router();
 };
 
+/**
+ * Initialize the app
+ * Add the css files to the head of the document
+ */
 function init() {
-  const stylesheets = ["/views/css/index.css"];
+    const stylesheets = ["/views/css/index.css"];
 
-  stylesheets.forEach((stylesheet) => {
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = stylesheet;
-    document.head.appendChild(link);
-  });
+    stylesheets.forEach((stylesheet) => {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = stylesheet;
+        document.head.appendChild(link);
+    });
 }
 
+/**
+ * Routes of the app
+ * Each route has a path and a component
+ * The path is used to match the url path
+ * The component is the view that will be rendered
+ */
 const routes = [
-  {
-    path: "/",
-    component: Dashboard,
-  },
-  {
-    path: "/about",
-    component: About,
-  },
-  {
-    path: "/charities",
-    component: Charities,
-  },
-  {
-    path: "/recipes",
-    component: Recipes,
-  },
-  {
-    path: "/recipes/:id",
-    component: Recipe,
-  },
-  {
-    path: "/404",
-    component: Error404,
-  },
+    {
+        path: "/",
+        component: Dashboard,
+    },
+    {
+        path: "/about",
+        component: About,
+    },
+    {
+        path: "/charities",
+        component: Charities,
+    },
+    {
+        path: "/recipes",
+        component: Recipes,
+    },
+    {
+        path: "/recipes/:id",
+        component: Recipe,
+    },
+    {
+        path: "/404",
+        component: Error404,
+    },
 ];
 
+/**
+ * Router function
+ * It will match the url path with the routes
+ * If there is no match it will render the 404 page
+ * If there is a match it will render the corresponding view
+ */
 const Router = async () => {
-  const potentialMatches = routes.map((route) => {
-    return {
-      route: route,
-      result: location.pathname.match(pathToRegex(route.path)),
-    };
-  });
+    /* Get the current url path */
+    const potentialMatches = routes.map((route) => {
+        return {
+            route: route,
+            result: location.pathname.match(pathToRegex(route.path)),
+        };
+    });
 
-  let match = potentialMatches.find(
-    (potentialMatch) => potentialMatch.result !== null
-  );
+    /* Find the route that matches the url path */
+    let match = potentialMatches.find(
+        (potentialMatch) => potentialMatch.result !== null
+    );
 
-  if (!match) {
-    match = {
-      route: routes[4],
-      result: [location.pathname],
-    };
-  }
+    /* If there is no match render the 404 page */
+    if (!match) {
+        match = {
+            route: routes[4],
+            result: [location.pathname],
+        };
+    }
 
-  const view = new match.route.component(getParams(match));
-  await view.init();
+    /* Render the view */
+    const view = new match.route.component(getParams(match));
+    await view.init();
 
-  document.querySelector("#app").innerHTML = await view.render();
-  await view.afterRender();
+    /* Render the view in the app tags */
+    document.querySelector("#app").innerHTML = await view.render();
+    await view.afterRender();
 };
 
+/**
+ * Initialize the app
+ * Add the event listeners
+ * Call the init function on page load
+ */
 window.addEventListener("load", () => {
-  init();
+    init();
 });
 
+/**
+ * Add the event listener to the popstate event
+ * Call the Router function on popstate
+ * Call the Router function on page load
+ */
 window.addEventListener("popstate", Router);
 
+/**
+ * Add the event listener to the DOMContentLoaded event
+ * Add the event listener to the click event
+ * On clicking a data-link element prevent the default behaviour
+ * Call the navigateTo function with the href of the clicked element
+ * Call the Router function instead of navigating to the href
+ */
 document.addEventListener("DOMContentLoaded", () => {
-  document.body.addEventListener("click", (e) => {
-    if (e.target.matches("[data-link]")) {
-      e.preventDefault();
-      navigateTo(e.target.href);
-    }
-  });
+    document.body.addEventListener("click", (e) => {
+        if (e.target.matches("[data-link]")) {
+            e.preventDefault();
+            navigateTo(e.target.href);
+        }
+    });
 
-  Router();
+    Router();
 });

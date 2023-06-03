@@ -1,3 +1,9 @@
+// Purpose: Service for recipes
+
+/**
+ * @description Get all recipes 
+ * @returns {Array} Array of recipes 
+ */
 export async function getRecipes() {
   try {
     const recipes = await fetch("http://localhost:3000/recipes");
@@ -8,6 +14,11 @@ export async function getRecipes() {
   }
 }
 
+/** 
+ * @description Get a recipe by id 
+ * @param {Number} id Id of the recipe 
+ * @returns {Object} Recipe object 
+ */
 export async function getRecipe(id) {
   try {
     const recipe = await fetch(`http://localhost:3000/recipes/${id}`);
