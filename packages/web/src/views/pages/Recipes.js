@@ -62,7 +62,6 @@ export default class Recipes extends Page {
   }
 
   async afterRender() {
-    this.init();
     const recipes = this.loaderData;
     if (!recipes) return;
 

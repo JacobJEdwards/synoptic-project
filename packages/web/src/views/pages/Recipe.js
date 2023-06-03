@@ -2,6 +2,7 @@ import AbstractPage from "./AbstractPage.js";
 import { getRecipe } from "../services/recipes.service.js";
 
 const loader = async (params) => {
+  console.log(params);
   const { id } = params;
   const recipe = await getRecipe(id);
   return recipe;

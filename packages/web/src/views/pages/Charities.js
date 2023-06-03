@@ -1,8 +1,15 @@
 import Page from "./AbstractPage.js";
+import { getCharities } from "../services/charity.service.js";
+import CharityCard from "../components/CharityCard.js";
+
+const loader = async () => {
+  const charities = await getCharities();
+  return charities;
+};
 
 export default class Charities extends Page {
   constructor(params) {
-    super(params);
+    super(params, loader);
     this.setTitle("Charities");
   }
 
@@ -25,8 +32,27 @@ export default class Charities extends Page {
           >Govan Pantry</a
         >
       </p>
+      <section class="charity-container">
+      </section>
         `;
 
     return view;
+  }
+
+  async afterRender() {
+    const charities = this.loaderData;
+    if (!charities) return;
+
+    const charityContainer = document.querySelector(".charity-container");
+
+    charities.forEach((charity) => {
+      const charityElement = document.createElement("article");
+      charityElement.classList.add("service");
+
+      const charityComponent = new CharityCard(charityElement, charity);
+      charityComponent.init();
+
+      charityContainer.appendChild(charityElement);
+    });
   }
 }

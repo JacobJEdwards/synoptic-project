@@ -11,24 +11,23 @@ import Recipe from "/views/pages/Recipe.js";
  * @param {string} path
  */
 const pathToRegex = (path) =>
-    new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
+  new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
 /**
  * Get the parameters from the url path and return them as an object
  * @param {object} match object with the corresponding route
  */
 const getParams = (match) => {
-    const values = match.result.slice(1);
-    console.log(values);
-    const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
-        (result) => result[1]
-    );
+  const values = match.result.slice(1);
+  const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
+    (result) => result[1]
+  );
 
-    return Object.fromEntries(
-        keys.map((key, i) => {
-            return [key, values[i]];
-        })
-    );
+  return Object.fromEntries(
+    keys.map((key, i) => {
+      return [key, values[i]];
+    })
+  );
 };
 
 /**
@@ -36,8 +35,8 @@ const getParams = (match) => {
  * @param {string} url
  */
 const navigateTo = async (url) => {
-    history.pushState(null, null, url);
-    await Router();
+  history.pushState(null, null, url);
+  await Router();
 };
 
 /**
@@ -45,14 +44,14 @@ const navigateTo = async (url) => {
  * Add the css files to the head of the document
  */
 function init() {
-    const stylesheets = ["/views/css/index.css"];
+  const stylesheets = [];
 
-    stylesheets.forEach((stylesheet) => {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = stylesheet;
-        document.head.appendChild(link);
-    });
+  stylesheets.forEach((stylesheet) => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = stylesheet;
+    document.head.appendChild(link);
+  });
 }
 
 /**
@@ -62,30 +61,30 @@ function init() {
  * The component is the view that will be rendered
  */
 const routes = [
-    {
-        path: "/",
-        component: Dashboard,
-    },
-    {
-        path: "/about",
-        component: About,
-    },
-    {
-        path: "/charities",
-        component: Charities,
-    },
-    {
-        path: "/recipes",
-        component: Recipes,
-    },
-    {
-        path: "/recipes/:id",
-        component: Recipe,
-    },
-    {
-        path: "/404",
-        component: Error404,
-    },
+  {
+    path: "/",
+    component: Dashboard,
+  },
+  {
+    path: "/about",
+    component: About,
+  },
+  {
+    path: "/charities",
+    component: Charities,
+  },
+  {
+    path: "/recipes",
+    component: Recipes,
+  },
+  {
+    path: "/recipes/:id",
+    component: Recipe,
+  },
+  {
+    path: "/404",
+    component: Error404,
+  },
 ];
 
 /**
@@ -95,34 +94,34 @@ const routes = [
  * If there is a match it will render the corresponding view
  */
 const Router = async () => {
-    /* Get the current url path */
-    const potentialMatches = routes.map((route) => {
-        return {
-            route: route,
-            result: location.pathname.match(pathToRegex(route.path)),
-        };
-    });
+  /* Get the current url path */
+  const potentialMatches = routes.map((route) => {
+    return {
+      route: route,
+      result: location.pathname.match(pathToRegex(route.path)),
+    };
+  });
 
-    /* Find the route that matches the url path */
-    let match = potentialMatches.find(
-        (potentialMatch) => potentialMatch.result !== null
-    );
+  /* Find the route that matches the url path */
+  let match = potentialMatches.find(
+    (potentialMatch) => potentialMatch.result !== null
+  );
 
-    /* If there is no match render the 404 page */
-    if (!match) {
-        match = {
-            route: routes[4],
-            result: [location.pathname],
-        };
-    }
+  /* If there is no match render the 404 page */
+  if (!match) {
+    match = {
+      route: routes[4],
+      result: [location.pathname],
+    };
+  }
 
-    /* Render the view */
-    const view = new match.route.component(getParams(match));
-    await view.init();
+  /* Render the view */
+  const view = new match.route.component(getParams(match));
+  await view.init();
 
-    /* Render the view in the app tags */
-    document.querySelector("#app").innerHTML = await view.render();
-    await view.afterRender();
+  /* Render the view in the app tags */
+  document.querySelector("#app").innerHTML = await view.render();
+  await view.afterRender();
 };
 
 /**
@@ -130,9 +129,7 @@ const Router = async () => {
  * Add the event listeners
  * Call the init function on page load
  */
-window.addEventListener("load", () => {
-    init();
-});
+window.addEventListener("load", init());
 
 /**
  * Add the event listener to the popstate event
@@ -149,12 +146,12 @@ window.addEventListener("popstate", Router);
  * Call the Router function instead of navigating to the href
  */
 document.addEventListener("DOMContentLoaded", () => {
-    document.body.addEventListener("click", (e) => {
-        if (e.target.matches("[data-link]")) {
-            e.preventDefault();
-            navigateTo(e.target.href);
-        }
-    });
+  document.body.addEventListener("click", (e) => {
+    if (e.target.matches("[data-link]")) {
+      e.preventDefault();
+      navigateTo(e.target.href);
+    }
+  });
 
-    Router();
+  Router();
 });

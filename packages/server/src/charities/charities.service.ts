@@ -20,6 +20,8 @@ export class CharitiesService {
         message: "No charities found",
       });
     }
+
+    return charities;
   }
 
   async findOne(id: number) {

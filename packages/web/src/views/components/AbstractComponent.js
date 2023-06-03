@@ -53,6 +53,10 @@ export default class AbstractComponent {
    * @returns {Promise<void>}
    */
   async render() {
+    if (!this.parentElement) {
+      return await this.getHtml();
+    }
+
     const template = await this.getTemplate();
     this.parentElement.appendChild(template.content.cloneNode(true));
     await this.afterRender();
