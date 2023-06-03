@@ -7,3 +7,13 @@ export async function getRecipes() {
     return [];
   }
 }
+
+export async function getRecipe(id) {
+  try {
+    const recipe = await fetch(`http://localhost:3000/recipes/${id}`);
+    return await recipe.json();
+  } catch (error) {
+    console.log(error);
+    return {};
+  }
+}

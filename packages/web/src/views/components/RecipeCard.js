@@ -1,6 +1,6 @@
 import Component from "./AbstractComponent.js";
 
-export default class Recipe extends Component {
+export default class RecipeCard extends Component {
     constructor(parentElement, recipe) {
         super(parentElement, recipe);
         // this.props = recipe;
@@ -14,6 +14,7 @@ export default class Recipe extends Component {
                     <figcaption>
                         <h2>${recipe.title}</h2>
                         <p>${recipe.description}</p>
+                        <a href="/recipes/${recipe.id}">View Recipe</a>
                     </figcaption>
                 </figure>
             `;

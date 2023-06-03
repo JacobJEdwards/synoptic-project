@@ -3,6 +3,29 @@ import About from "/views/pages/About.js";
 import Charities from "/views/pages/Charities.js";
 import Recipes from "/views/pages/Recipes.js";
 import Error404 from "/views/pages/Error404.js";
+import Recipe from "/views/pages/Recipe.js";
+
+const pathToRegex = (path) =>
+    new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
+
+const getParams = (match) => {
+    const values = match.result.slice(1);
+    console.log(values);
+    const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
+        (result) => result[1]
+    );
+
+    return Object.fromEntries(
+        keys.map((key, i) => {
+            return [key, values[i]];
+        })
+    );
+};
+
+const navigateTo = (url) => {
+    history.pushState(null, null, url);
+    Router();
+};
 
 function init() {
     const stylesheets = ["/views/css/index.css"];
@@ -19,22 +42,22 @@ const routes = [
     {
         path: "/",
         component: Dashboard,
-        exact: true,
     },
     {
         path: "/about",
         component: About,
-        exact: true,
     },
     {
         path: "/charities",
         component: Charities,
-        exact: true,
     },
     {
         path: "/recipes",
         component: Recipes,
-        exact: true,
+    },
+    {
+        path: "/recipes/:id",
+        component: Recipe,
     },
     {
         path: "/404",
@@ -43,10 +66,25 @@ const routes = [
 ];
 
 const Router = async () => {
-    const path = window.location.pathname;
-    console.log(path);
-    const route = routes.find((r) => r.path === path) || routes[4];
-    const view = new route.component();
+    const potentialMatches = routes.map((route) => {
+        return {
+            route: route,
+            result: location.pathname.match(pathToRegex(route.path)),
+        };
+    });
+
+    let match = potentialMatches.find(
+        (potentialMatch) => potentialMatch.result !== null
+    );
+
+    if (!match) {
+        match = {
+            route: routes[4],
+            result: [location.pathname],
+        };
+    }
+
+    const view = new match.route.component(getParams(match));
 
     document.querySelector("#app").innerHTML = await view.render();
     await view.afterRender();
@@ -62,8 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("click", (e) => {
         if (e.target.matches("[data-link]")) {
             e.preventDefault();
-            history.pushState(null, null, e.target.href);
-            Router();
+            navigateTo(e.target.href);
         }
     });
 

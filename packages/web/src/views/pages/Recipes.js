@@ -1,6 +1,6 @@
 import Page from "./AbstractPage.js";
 import { getRecipes } from "../services/recipes.service.js";
-import Recipe from "../components/Recipe.js";
+import RecipeCard from "../components/RecipeCard.js";
 
 const loader = async () => {
     const recipes = await getRecipes();
@@ -72,7 +72,7 @@ export default class Recipes extends Page {
             const recipeElement = document.createElement("article");
             recipeElement.classList.add("service");
 
-            const recipeComponent = new Recipe(recipeElement, recipe);
+            const recipeComponent = new RecipeCard(recipeElement, recipe);
             recipeComponent.init();
 
             recipeContainer.appendChild(recipeElement);
