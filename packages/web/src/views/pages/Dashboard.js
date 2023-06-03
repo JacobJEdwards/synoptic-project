@@ -11,7 +11,7 @@ export default class Dashboard extends Page {
     <section class="top">
         <article>
             <figure>
-                <img class="topimg" src="images/placeholder.jpg" alt="placeholder" />
+                <img class="topimg" src="views/images/placeholder.jpg" alt="placeholder" />
             </figure>
         </article>
     </section>
