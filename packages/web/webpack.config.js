@@ -3,28 +3,47 @@ const webpack = require("webpack");
 const nodeExternals = require("webpack-node-externals");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
+const exclude = /node_modules/;
+const include = path.resolve(__dirname, "src");
+
+const babelPresets = [["@babel/preset-env", { targets: { node: "current" } }]];
+
+const babelPlugins = [
+  "@babel/plugin-proposal-class-properties",
+  ["@babel/plugin-transform-runtime", { regenerator: true }],
+];
+
 module.exports = {
+  mode: "development",
   entry: {
-    server: "./server.js",
+    app: "/src/root.js",
   },
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.join(__dirname, "dist"),
     publicPath: "/",
-    filename: "[name].js",
+    filename: "bundle.js",
   },
-  target: "node",
-  node: {
-    __dirname: false,
-    __filename: false,
+  resolve: {
+    extensions: [".js", ".jsx"],
+    preferRelative: true,
+    alias: {
+      "/views": path.resolve(__dirname, "src/views"),
+      "/root.js": path.resolve(__dirname, "src/root.js"),
+    },
   },
-  externals: [nodeExternals()],
+
   module: {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude,
+        include,
         use: {
           loader: "babel-loader",
+          options: {
+            presets: babelPresets,
+            plugins: babelPlugins,
+          },
         },
       },
       {
@@ -37,7 +56,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./src/index.html",
       filename: "index.html",
-      excludeChunks: ["server"],
     }),
   ],
 };
