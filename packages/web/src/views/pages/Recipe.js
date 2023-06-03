@@ -19,10 +19,12 @@ export default class Recipe extends AbstractPage {
 
     this.setTitle(recipe.title);
     return `
+    <article class="prose lg:prose-xl">
             <h1>${recipe.title}</h1>
             <p>${recipe.description}</p>
             <p>${recipe.ingredients}</p>
             <p>${recipe.steps}</p>
+            </article>
         `;
   }
 }

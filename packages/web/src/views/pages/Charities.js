@@ -15,6 +15,7 @@ export default class Charities extends Page {
 
   async getHtml() {
     let view = `
+    <section class="prose">
       <h1>Charities Page</h1>
       <p>
         <a href="https://getintogovan.com/thriving-places-food-for-good-group/"
@@ -33,6 +34,7 @@ export default class Charities extends Page {
         >
       </p>
       <section class="charity-container">
+      </section>
       </section>
         `;
 

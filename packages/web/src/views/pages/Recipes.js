@@ -16,6 +16,7 @@ export default class Recipes extends Page {
 
     async getHtml() {
         let view = `
+        <section class="prose">
       <h1>Recipes Page</h1>
 
       <h2>What do we provide?</h2>
@@ -61,6 +62,7 @@ export default class Recipes extends Page {
             href: "/recipes/new",
             text: "Add a Recipe",
         }).render()}
+    </section>
         `;
 
         return view;

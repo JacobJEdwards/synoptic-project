@@ -15,7 +15,7 @@ export default class Dashboard extends Page {
             </figure>
         </article>
     </section>
-    <main>
+    <section class="prose">
         <h1>Index Page</h1>
         <h2>A world of Recipes</h2>
         <p>
@@ -27,7 +27,7 @@ export default class Dashboard extends Page {
             occaecat cupidatat non proident, sunt in culpa qui officia deserunt
             mollit anim id est laborum.
         </p>
-    </main>
+    </section>
         `;
 
         return view;
