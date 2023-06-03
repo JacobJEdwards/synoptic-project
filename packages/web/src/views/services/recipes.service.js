@@ -28,3 +28,19 @@ export async function getRecipe(id) {
     return {};
   }
 }
+
+export async function createRecipe(recipe) {
+  try {
+    const response = await fetch("http://localhost:3000/recipes", {
+      method: "POST",
+      body: JSON.stringify(recipe),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+    return {};
+  }
+}

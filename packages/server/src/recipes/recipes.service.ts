@@ -8,14 +8,18 @@ export class RecipesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createRecipeDto: CreateRecipeDto) {
-    return "This action adds a new recipe";
+    const recipe = await this.prisma.recipe.create({
+      data: {
+        ...createRecipeDto,
+      },
+    });
   }
 
   async findAll() {
     const recipes = await this.prisma.recipe.findMany();
 
     if (!recipes || recipes.length === 0) {
-      throw new NotFoundException({status: 404, error: "No recipes found"});
+      throw new NotFoundException({ status: 404, error: "No recipes found" });
     }
 
     return recipes;
@@ -29,7 +33,7 @@ export class RecipesService {
     });
 
     if (!recipe) {
-      throw new NotFoundException({status: 404, error: "Recipe not found"});
+      throw new NotFoundException({ status: 404, error: "Recipe not found" });
     }
 
     return recipe;

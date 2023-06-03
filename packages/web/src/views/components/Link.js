@@ -8,6 +8,6 @@ export default class Link extends Component {
 
   render() {
     const { href, text } = this.props;
-    return `<a href="${href}">${text}</a>`;
+    return `<a href="${href}" data-link>${text}</a>`;
   }
 }
