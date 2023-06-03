@@ -8,14 +8,15 @@ const loader = async (params) => {
 };
 
 export default class Recipe extends AbstractPage {
-  constructor(params, title) {
-    super(params);
-    this.setTitle(title || "Recipe");
+  constructor(params) {
+    super(params, loader);
+    this.setTitle("Recipe");
   }
 
   async getHtml() {
-    const recipe = await loader(this.params);
-    console.log(recipe);
+    const recipe = this.loaderData;
+
+    this.setTitle(recipe.title);
     return `
             <h1>${recipe.title}</h1>
             <p>${recipe.description}</p>

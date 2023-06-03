@@ -1,7 +1,18 @@
 export default class {
-  constructor(params) {
+  constructor(params, loader) {
     this.params = params;
-    console.log(this.params);
+    this.loader = loader;
+    this.loaderData = null;
+  }
+
+  async init() {
+    if (this.loader) {
+        try {
+            this.loaderData = await this.loader(this.params);
+        } catch (e) {
+            console.log(e);
+        }
+    }
   }
 
   setTitle(title) {
