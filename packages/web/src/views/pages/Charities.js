@@ -1,6 +1,6 @@
 import Page from "./AbstractPage.js";
 import { getCharities } from "../services/charity.service.js";
-import CharityCard from "../components/CharityCard.js";
+import CharityCard from "../components/StatelessCharityCard.js";
 
 const loader = async () => {
   const charities = await getCharities();
@@ -8,11 +8,22 @@ const loader = async () => {
 };
 
 export default class Charities extends Page {
-  constructor(params, title="Charities") {
+  constructor(params, title = "Charities") {
     super(params, loader, title);
   }
 
   async getHtml() {
+    const charities = this.loaderData;
+    let charitiesHtml = "";
+
+    if (charities) {
+      charitiesHtml = charities
+        .map((charity) => {
+          return new CharityCard(charity).render();
+        })
+        .join("");
+    }
+
     let view = `
     <section class="prose">
       <h1>Charities Page</h1>
@@ -33,6 +44,7 @@ export default class Charities extends Page {
         >
       </p>
       <section class="charity-container">
+        ${charitiesHtml}
       </section>
       </section>
         `;
@@ -40,20 +52,21 @@ export default class Charities extends Page {
     return view;
   }
 
-  async clientScript() {
-    const charities = this.loaderData;
-    if (!charities) return;
-
-    const charityContainer = document.querySelector(".charity-container");
-
-    charities.forEach((charity) => {
-      const charityElement = document.createElement("article");
-      charityElement.classList.add("service");
-
-      const charityComponent = new CharityCard(charityElement, charity);
-      charityComponent.init();
-
-      charityContainer.appendChild(charityElement);
-    });
-  }
+  // probably could move to get html
+  // ssr
+  // async clientScript() {
+  //     const charities = this.loaderData;
+  //     if (!charities) return;
+  //
+  //     const charityContainer = document.querySelector(".charity-container");
+  //
+  //     charities.forEach((charity) => {
+  //         const charityElement = document.createElement("article");
+  //         charityElement.classList.add("service");
+  //
+  //         const charityComponent = new CharityCard(charityElement, charity);
+  //         charityComponent.init();
+  //
+  //         charityContainer.appendChild(charityElement);
+  //     });
 }
