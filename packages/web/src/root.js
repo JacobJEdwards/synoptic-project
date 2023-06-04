@@ -1,12 +1,12 @@
-import { getParams, pathToRegex } from "/utils/urls.js";
+import Router from "/Router.js";
 
 /**
  * Uses the history api to change the url without reloading the page
  * @param {string} url
  */
 export const navigateTo = async (url) => {
-    history.pushState(null, null, url);
-    await Router();
+  history.pushState(null, null, url);
+  await Render();
 };
 
 /**
@@ -14,89 +14,23 @@ export const navigateTo = async (url) => {
  * Add the css files to the head of the document
  */
 export function init() {
-    const stylesheets = [];
+  const stylesheets = [];
 
-    stylesheets.forEach((stylesheet) => {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = stylesheet;
-        document.head.appendChild(link);
-    });
+  stylesheets.forEach((stylesheet) => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = stylesheet;
+    document.head.appendChild(link);
+  });
 }
 
-/**
- * Routes of the app
- * Each route has a path and a component
- * The path is used to match the url path
- * The component is the view that will be rendered
- */
-const routes = [
-    {
-        path: "/",
-        component: () => import("/views/pages/Dashboard.js"),
-    },
-    {
-        path: "/about",
-        component: () => import("/views/pages/About.js"),
-    },
-    {
-        path: "/charities",
-        component: () => import("/views/pages/Charities.js"),
-    },
-    {
-        path: "/recipes",
-        component: () => import("/views/pages/Recipes.js"),
-    },
-    {
-        path: "/recipes/new",
-        component: () => import("/views/pages/CreateRecipe.js"),
-    },
-    {
-        path: "/recipes/:id",
-        component: () => import("/views/pages/Recipe.js"),
-    },
-    {
-        path: "/404",
-        component: () => import("/views/pages/Error404.js"),
-    },
-];
+const Render = async () => {
+  const view = await Router(location.pathname);
 
-/**
- * Router function
- * It will match the url path with the routes
- * If there is no match it will render the 404 page
- * If there is a match it will render the corresponding view
- */
-const Router = async () => {
-    /* Get the current url path */
-    const potentialMatches = routes.map((route) => {
-        return {
-            route: route,
-            result: location.pathname.match(pathToRegex(route.path)),
-        };
-    });
-
-    /* Find the route that matches the url path */
-    let match = potentialMatches.find(
-        (potentialMatch) => potentialMatch.result !== null
-    );
-
-    /* If there is no match render the 404 page */
-    if (!match) {
-        match = {
-            route: routes[4],
-            result: [location.pathname],
-        };
-    }
-
-    /* Render the view */
-    const { default: Component } = await match.route.component();
-    const view = new Component(getParams(match));
-    await view.init();
-
-    /* Render the view in the app tags */
-    document.querySelector("#app").innerHTML = await view.render();
-    await view.afterRender();
+  await view.init();
+  /* Render the view in the app tags */
+  document.querySelector("#app").innerHTML = await view.render();
+  await view.afterRender();
 };
 
 /**
@@ -111,7 +45,7 @@ window.addEventListener("load", init());
  * Call the Router function on popstate
  * Call the Router function on page load
  */
-window.addEventListener("popstate", Router);
+window.addEventListener("popstate", Render);
 
 /**
  * Add the event listener to the DOMContentLoaded event
@@ -121,12 +55,12 @@ window.addEventListener("popstate", Router);
  * Call the Router function instead of navigating to the href
  */
 document.addEventListener("DOMContentLoaded", () => {
-    document.body.addEventListener("click", (e) => {
-        if (e.target.matches("[data-link]")) {
-            e.preventDefault();
-            navigateTo(e.target.href);
-        }
-    });
+  document.body.addEventListener("click", (e) => {
+    if (e.target.matches("[data-link]")) {
+      e.preventDefault();
+      navigateTo(e.target.href);
+    }
+  });
 
-    Router();
+  Render();
 });
