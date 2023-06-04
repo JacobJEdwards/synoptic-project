@@ -8,9 +8,8 @@ const loader = async () => {
 };
 
 export default class Charities extends Page {
-  constructor(params) {
-    super(params, loader);
-    this.setTitle("Charities");
+  constructor(params, title="Charities") {
+    super(params, loader, title);
   }
 
   async getHtml() {
@@ -41,7 +40,7 @@ export default class Charities extends Page {
     return view;
   }
 
-  async afterRender() {
+  async clientScript() {
     const charities = this.loaderData;
     if (!charities) return;
 

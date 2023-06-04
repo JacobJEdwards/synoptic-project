@@ -22,9 +22,8 @@ import AbstractPage from "./AbstractPage.js";
 import { createRecipe } from "../services/recipes.service.js";
 
 export default class CreateRecipe extends AbstractPage {
-  constructor(params) {
-    super(params);
-    this.setTitle("Create Recipe");
+  constructor(params, title="Create Recipe") {
+    super(params, null, title);
   }
 
   async getHtml() {
@@ -78,7 +77,7 @@ export default class CreateRecipe extends AbstractPage {
         `;
   }
 
-  async afterRender() {
+  async clientScript() {
     const form = document.getElementById("create-recipe-form");
     form.addEventListener("submit", async (e) => {
       e.preventDefault();

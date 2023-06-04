@@ -1,4 +1,4 @@
-import Router from "/Router.js";
+import Router from "./Router.js";
 
 /**
  * Uses the history api to change the url without reloading the page
@@ -27,10 +27,9 @@ export function init() {
 const Render = async () => {
   const view = await Router(location.pathname);
 
-  await view.init();
   /* Render the view in the app tags */
-  document.querySelector("#app").innerHTML = await view.render();
-  await view.afterRender();
+  //document.querySelector("#app").innerHTML = await view.render();
+  await view.clientRender();
 };
 
 /**
@@ -55,12 +54,12 @@ window.addEventListener("popstate", Render);
  * Call the Router function instead of navigating to the href
  */
 document.addEventListener("DOMContentLoaded", () => {
-  document.body.addEventListener("click", (e) => {
-    if (e.target.matches("[data-link]")) {
-      e.preventDefault();
-      navigateTo(e.target.href);
-    }
-  });
+  // document.body.addEventListener("click", (e) => {
+  //   if (e.target.matches("[data-link]")) {
+  //     e.preventDefault();
+  //     navigateTo(e.target.href);
+  //   }
+  // });
 
   Render();
 });

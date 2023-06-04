@@ -4,18 +4,17 @@ import RecipeCard from "../components/RecipeCard.js";
 import Link from "../components/Link.js";
 
 const loader = async () => {
-    const recipes = await getRecipes();
-    return recipes;
+  const recipes = await getRecipes();
+  return recipes;
 };
 
 export default class Recipes extends Page {
-    constructor(params) {
-        super(params, loader);
-        this.setTitle("Recipes");
-    }
+  constructor(params, title = "Recipes") {
+    super(params, loader, title);
+  }
 
-    async getHtml() {
-        let view = `
+  async getHtml() {
+    let view = `
         <section class="prose">
       <h1>Recipes Page</h1>
 
@@ -59,29 +58,29 @@ export default class Recipes extends Page {
       <section class="recipe-container">
       </section>
       ${new Link({
-            href: "/recipes/new",
-            text: "Add a Recipe",
-        }).render()}
+        href: "/recipes/new",
+        text: "Add a Recipe",
+      }).render()}
     </section>
         `;
 
-        return view;
-    }
+    return view;
+  }
 
-    async afterRender() {
-        const recipes = this.loaderData;
-        if (!recipes) return;
+  async clientScript() {
+    const recipes = this.loaderData;
+    if (!recipes) return;
 
-        const recipeContainer = document.querySelector(".recipe-container");
+    const recipeContainer = document.querySelector(".recipe-container");
 
-        recipes.forEach((recipe) => {
-            const recipeElement = document.createElement("article");
-            recipeElement.classList.add("service");
+    recipes.forEach((recipe) => {
+      const recipeElement = document.createElement("article");
+      recipeElement.classList.add("service");
 
-            const recipeComponent = new RecipeCard(recipeElement, recipe);
-            recipeComponent.init();
+      const recipeComponent = new RecipeCard(recipeElement, recipe);
+      recipeComponent.init();
 
-            recipeContainer.appendChild(recipeElement);
-        });
-    }
+      recipeContainer.appendChild(recipeElement);
+    });
+  }
 }

@@ -7,7 +7,8 @@ export default class {
    * @param {Object} params url parameters
    * @param {Function} loader data loader function
    */
-  constructor(params, loader) {
+  constructor(params, loader, title) {
+    this.title = title;
     this.params = params;
     this.loader = loader;
     this.loaderData = null;
@@ -31,8 +32,8 @@ export default class {
    * Sets the title of the page
    * @param {String} title title of the page
    */
-  setTitle(title) {
-    document.title = title;
+  setTitle() {
+    document.title = this.title;
   }
 
   /**
@@ -43,11 +44,15 @@ export default class {
     return "";
   }
 
+  async clientScript() {
+    return;
+  }
+
   /**
    * Renders the page
    * @returns {String} html of the page
    */
-  async render() {
+  async serverRender() {
     let view = await this.getHtml();
     return view;
   }
@@ -55,7 +60,9 @@ export default class {
   /**
    * What to do after the page is rendered
    */
-  async afterRender() {
+  async clientRender() {
+    this.setTitle();
+    await this.clientScript();
     return;
   }
 }

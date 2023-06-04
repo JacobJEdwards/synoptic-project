@@ -1,9 +1,8 @@
 import Page from "./AbstractPage.js";
 
 export default class About extends Page {
-  constructor(params) {
-    super(params);
-    this.setTitle("About Us");
+  constructor(params, title="About Us") {
+    super(params, null, title);
   }
 
   async getHtml() {

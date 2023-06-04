@@ -24,7 +24,7 @@ app.set("port", port);
 app.use(compression());
 app.use(morgan("dev"));
 
-app.use(express.static(path.resolve(__dirname, "src")));
+app.use("/src", express.static(path.resolve(__dirname, "src")));
 app.use("/views", express.static(path.resolve(__dirname, "src", "views")));
 
 app.use(express.json());
@@ -32,41 +32,49 @@ app.use(express.urlencoded({ extended: true }));
 
 // error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Internal Server Error");
+    console.error(err.stack);
+    res.status(500).send("Internal Server Error");
 });
 
-app.get("/*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "src", "index.html"));
-});
+// app.get("/*", (req, res) => {
+//   res.sendFile(path.resolve(__dirname, "src", "index.html"));
+// });
 
 /* SSR */
-// app.get("*", async (req, res, next) => {
-//     try {
-//         console.log("req.url", req.url);
-//         console.log("req.path", req.path);
-//
-//         const html = await fs.readFile(
-//             path.resolve(__dirname, "src", "index.html"),
-//             "utf-8"
-//         );
-//         res.status(200).set({ "Content-Type": "text/html" }).end(html);
-//     } catch (err) {
-//         next(err);
-//     }
-// });
+app.get("*", async (req, res, next) => {
+    try {
+        const { default: Router } = await import("./src/Router.js");
+        const pathname = req.url.length > 0 ? req.url : "/";
+
+        const view = await Router(pathname);
+        const rendered = await view.serverRender();
+
+        const html = await fs.readFile(
+            path.resolve(__dirname, "src", "index.html"),
+            "utf-8"
+        );
+
+        const finalHtml = html.replace(
+            '<main id="app"></main>',
+            `<main id="app">${rendered}</main>`
+        );
+        res.status(200).set({ "Content-Type": "text/html" }).end(finalHtml);
+    } catch (err) {
+        next(err);
+    }
+});
 
 // create server
 const server = createServer(app);
 server.listen(port);
 
 server.on("error", (err) => {
-  console.log(err);
+    console.log(err);
 });
 
 server.on("listening", () => {
-  const host = server.address().address;
-  const port = server.address().port;
+    const host = server.address().address;
+    const port = server.address().port;
 
-  console.log(`Server is listening at http://${host}:${port}`);
+    console.log(`Server is listening at http://${host}:${port}`);
 });

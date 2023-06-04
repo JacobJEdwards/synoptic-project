@@ -1,9 +1,8 @@
 import Page from "./AbstractPage.js";
 
 export default class Dashboard extends Page {
-    constructor(params) {
-        super(params);
-        this.setTitle("Dashboard");
+    constructor(params, title="Home") {
+        super(params, null, title);
     }
 
     async getHtml() {

@@ -1,9 +1,8 @@
 import Page from "./AbstractPage.js";
 
 export default class Error404 extends Page {
-    constructor(params) {
-        super(params);
-        this.setTitle("404 - Page Not Found");
+    constructor(params, title="404 - Page Not Found") {
+        super(params, null, title);
     }
 
     async getHtml() {
