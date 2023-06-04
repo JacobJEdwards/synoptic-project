@@ -32,7 +32,7 @@ export default class {
    * @param {String} title title of the page
    */
   setTitle(title) {
-    document.title = title;
+    // document.title = title;
   }
 
   /**
