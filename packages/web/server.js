@@ -42,15 +42,18 @@ app.get("/*", (req, res) => {
 
 /* SSR */
 // app.get("*", async (req, res, next) => {
-//   try {
-//     const html = await fs.readFile(
-//       path.resolve(__dirname, "src", "index.html"),
-//       "utf-8"
-//     );
-//     res.status(200).set({ "Content-Type": "text/html" }).end(html);
-//   } catch (err) {
-//     next(err);
-//   }
+//     try {
+//         console.log("req.url", req.url);
+//         console.log("req.path", req.path);
+//
+//         const html = await fs.readFile(
+//             path.resolve(__dirname, "src", "index.html"),
+//             "utf-8"
+//         );
+//         res.status(200).set({ "Content-Type": "text/html" }).end(html);
+//     } catch (err) {
+//         next(err);
+//     }
 // });
 
 // create server
