@@ -43,6 +43,10 @@ const routes = [
         component: () => import("./views/pages/Login.js"),
     },
     {
+        path: "/register",
+        component: () => import("./views/pages/Register.js"),
+    },
+    {
         path: "/404",
         component: () => import("./views/pages/Error404.js"),
     },
