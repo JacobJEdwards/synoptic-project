@@ -1,16 +1,18 @@
-require("dotenv").config();
-const express = require("express");
-const { createServer } = require("http");
-const fs = require("fs/promises");
-// const ssr = require("./ssr.js");
+import * as dotenv from "dotenv";
+dotenv.config();
 
-const path = require("path");
+import express from "express";
+import { createServer } from "http";
+import fs from "fs/promises";
+import path from "path";
 
 // import middleware
-const morgan = require("morgan");
-const compression = require("compression");
-const helmet = require("helmet");
-const cors = require("cors");
+import morgan from "morgan";
+import compression from "compression";
+import helmet from "helmet";
+import cors from "cors";
+
+import Router from "./src/Router.js";
 
 // setup express app
 const port = process.env.PORT || 3001;
@@ -44,7 +46,6 @@ app.use((err, req, res, next) => {
 app.get("*", async (req, res, next) => {
     try {
 
-        const { default: Router } = await import("./src/Router.js");
         const pathname = req.url.length > 0 ? req.url : "/";
 
         const { view } = await Router.loadView(pathname);
@@ -68,7 +69,6 @@ app.get("*", async (req, res, next) => {
 app.post("*", async (req, res, next) => {
     try {
 
-        const { default: Router } = await import("./src/Router.js");
         const pathname = req.url.length > 0 ? req.url : "/";
         const { action } = await Router.loadView(pathname);
 

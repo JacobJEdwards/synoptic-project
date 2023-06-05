@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev:css": "postcss src/styles/styles.css -o src/views/css/index.css",
     "dev": "nodemon --watch app --exec \"npm run dev:css && node server.js\""
