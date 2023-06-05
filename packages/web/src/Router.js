@@ -65,11 +65,11 @@ const Router = async (pathname) => {
     }
 
     /* Render the view */
-    const { default: Component } = await match.route.component();
+    const { default: Component, action, loader } = await match.route.component();
     const view = new Component(getParams(match));
     await view.init();
 
-    return view;
+    return { view, action, loader};
 };
 
 export default Router;

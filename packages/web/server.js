@@ -32,8 +32,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // error handler
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send("Internal Server Error");
+  console.error(err.stack);
+  res.status(500).send("Internal Server Error");
 });
 
 // app.get("/*", (req, res) => {
@@ -42,26 +42,57 @@ app.use((err, req, res, next) => {
 
 /* SSR */
 app.get("*", async (req, res, next) => {
-    try {
-        const { default: Router } = await import("./src/Router.js");
-        const pathname = req.url.length > 0 ? req.url : "/";
+  try {
+    const { default: Router } = await import("./src/Router.js");
+    const pathname = req.url.length > 0 ? req.url : "/";
 
-        const view = await Router(pathname);
-        const rendered = await view.serverRender();
+    const { view } = await Router(pathname);
+    const rendered = await view.serverRender();
 
-        const html = await fs.readFile(
-            path.resolve(__dirname, "src", "index.html"),
-            "utf-8"
-        );
+    const html = await fs.readFile(
+      path.resolve(__dirname, "src", "index.html"),
+      "utf-8"
+    );
 
-        const finalHtml = html.replace(
-            '<main id="app"></main>',
-            `<main id="app">${rendered}</main>`
-        );
-        res.status(200).set({ "Content-Type": "text/html" }).end(finalHtml);
-    } catch (err) {
-        next(err);
+    const finalHtml = html.replace(
+      '<main id="app"></main>',
+      `<main id="app">${rendered}</main>`
+    );
+    res.status(200).set({ "Content-Type": "text/html" }).end(finalHtml);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post("*", async (req, res, next) => {
+  try {
+    const { default: Router } = await import("./src/Router.js");
+    const pathname = req.url.length > 0 ? req.url : "/";
+    const { view, action } = await Router(pathname);
+
+    if (action) {
+      await action(req.body);
     }
+    const rendered = await view.serverRender();
+
+    const html = await fs.readFile(
+      path.resolve(__dirname, "src", "index.html"),
+      "utf-8"
+    );
+
+    const finalHtml = html.replace(
+      '<main id="app"></main>',
+      `<main id="app">${rendered}</main>`
+    );
+
+    res
+      .status(200)
+      .set({ "Content-Type": "text/html" })
+      .redirect(303, req.url)
+      .end();
+  } catch (err) {
+    next(err);
+  }
 });
 
 // create server
@@ -69,12 +100,12 @@ const server = createServer(app);
 server.listen(port);
 
 server.on("error", (err) => {
-    console.log(err);
+  console.log(err);
 });
 
 server.on("listening", () => {
-    const host = server.address().address;
-    const port = server.address().port;
+  const host = server.address().address;
+  const port = server.address().port;
 
-    console.log(`Server is listening at http://${host}:${port}`);
+  console.log(`Server is listening at http://${host}:${port}`);
 });
