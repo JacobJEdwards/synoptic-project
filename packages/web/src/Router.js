@@ -8,22 +8,6 @@
  */
 
 /**
- * Get the parameters from the URL path and return them as an object
- * @param {object} match object with the corresponding route
- */
-export const getParams = (match) => {
-    const values = match.result.slice(1);
-    const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
-        (result) => result[1]
-    );
-
-    return Object.fromEntries(
-        keys.map((key, i) => {
-            return [key, values[i]];
-        })
-    );
-};
-/**
  * Routes of the app
  * Each route has a path and a component
  * The path is used to match the url path
@@ -85,6 +69,11 @@ class Router {
         this.match = match;
 
         const component = await this.loadComponent(match);
+
+        if (req?.session?.user) {
+            component.view.user = req.session.user;
+        }
+
         const loaderData = await this.loadLoaderData(component, req, res);
 
         this.component = component.view;
