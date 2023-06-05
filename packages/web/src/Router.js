@@ -41,10 +41,6 @@ class Router {
   constructor(routes) {
     this.routes = new Set(routes)
     this.matcher = new RouterMatcher(routes)
-    this.NOT_FOUND_ROUTE = {
-      path: '/404',
-      component: () => import('./views/pages/Error404.js'),
-    }
     this.match = null
     this.component = null
     this.action = null
@@ -96,12 +92,13 @@ class Router {
 
 // RouterMatcher class
 class RouterMatcher {
+  static NOT_FOUND_ROUTE = {
+    path: '/404',
+    component: () => import('./views/pages/Error404.js'),
+  }
+
   constructor(routes) {
     this.routes = routes
-    this.NOT_FOUND_ROUTE = {
-      path: '/404',
-      component: () => import('./views/pages/Error404.js'),
-    }
     this.regexCache = new Map()
   }
 
