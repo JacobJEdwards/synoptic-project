@@ -38,6 +38,7 @@ export async function createRecipe(recipe) {
         "Content-Type": "application/json",
       },
     });
+      console.log(response);
     return await response.json();
   } catch (error) {
     console.log(error);

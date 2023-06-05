@@ -4,6 +4,7 @@ import { AppModule } from "./app.module";
 import { middleware } from "./app.middleware";
 import type { NestExpressApplication } from "@nestjs/platform-express";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
+import { patchNestjsSwagger } from "@anatine/zod-nestjs";
 
 /**
  * Bootstrap the application
@@ -13,23 +14,25 @@ import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
  * @function bootstrap
  */
 async function bootstrap(): Promise<string> {
-  // create Nest application instance
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+    // create Nest application instance
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Express Middleware
-  middleware(app);
+    // Express Middleware
+    middleware(app);
 
-  const config = new DocumentBuilder()
-    .setTitle("Govan Recipe App API")
-    .setDescription("The Govan Recipe App API description")
-    .build();
+    const config = new DocumentBuilder()
+        .setTitle("Govan Recipe App API")
+        .setDescription("The Govan Recipe App API description")
+        .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api", app, document);
+    patchNestjsSwagger();
 
-  await app.listen(process.env.PORT || 3000);
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup("api", app, document);
 
-  return app.getUrl();
+    await app.listen(process.env.PORT || 3000);
+
+    return app.getUrl();
 }
 
 /**
@@ -37,10 +40,10 @@ async function bootstrap(): Promise<string> {
  * @async
  */
 (async (): Promise<void> => {
-  try {
-    const url = await bootstrap();
-    Logger.log(`Application is running on: ${url}`);
-  } catch (error) {
-    Logger.error(`Application failed to start due to an error: ${error}`);
-  }
+    try {
+        const url = await bootstrap();
+        Logger.log(`Application is running on: ${url}`);
+    } catch (error) {
+        Logger.error(`Application failed to start due to an error: ${error}`);
+    }
 })();

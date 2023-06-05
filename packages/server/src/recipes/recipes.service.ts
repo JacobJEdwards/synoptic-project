@@ -1,18 +1,19 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { CreateRecipeDto } from "./dto/create-recipe.dto";
-import { UpdateRecipeDto } from "./dto/update-recipe.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import { CreateRecipeDto, UpdateRecipeDto } from "./dto/recipes.dto";
 
 @Injectable()
 export class RecipesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createRecipeDto: CreateRecipeDto) {
+  async create(createRecipeDto: any) {
     const recipe = await this.prisma.recipe.create({
       data: {
         ...createRecipeDto,
       },
     });
+
+    return recipe;
   }
 
   async findAll() {

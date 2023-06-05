@@ -22,7 +22,7 @@ import AbstractPage from "./AbstractPage.js";
 import { createRecipe } from "../services/recipes.service.js";
 
 export default class CreateRecipe extends AbstractPage {
-  constructor(params, title="Create Recipe") {
+  constructor(params, title = "Create Recipe") {
     super(params, null, title);
   }
 
@@ -104,8 +104,10 @@ export default class CreateRecipe extends AbstractPage {
         kosher,
         tags,
       };
-      await createRecipe(recipe);
-      window.location.href = "/#/recipes";
+      const newRecipe = await createRecipe(recipe);
+      const { navigateTo } = await import("../../root.js");
+      await navigateTo(`/recipes/${newRecipe.id}`);
+      window.location.reload();
     });
   }
 }
