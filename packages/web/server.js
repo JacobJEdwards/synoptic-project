@@ -43,10 +43,11 @@ app.use((err, req, res, next) => {
 /* SSR */
 app.get("*", async (req, res, next) => {
     try {
+
         const { default: Router } = await import("./src/Router.js");
         const pathname = req.url.length > 0 ? req.url : "/";
 
-        const { view } = await Router(pathname);
+        const { view } = await Router.loadView(pathname);
         const rendered = await view.serverRender();
 
         const html = await fs.readFile(
@@ -66,9 +67,10 @@ app.get("*", async (req, res, next) => {
 
 app.post("*", async (req, res, next) => {
     try {
+
         const { default: Router } = await import("./src/Router.js");
         const pathname = req.url.length > 0 ? req.url : "/";
-        const { action } = await Router(pathname);
+        const { action } = await Router.loadView(pathname);
 
         if (action) {
             await action(req, res);

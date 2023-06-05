@@ -4,29 +4,29 @@ import RecipeCard from "../components/StatelessRecipeCard.js";
 import Link from "../components/Link.js";
 
 export const loader = async () => {
-  const recipes = await getRecipes();
-  return recipes;
+    const recipes = await getRecipes();
+    return recipes;
 };
 
 export default class Recipes extends Page {
-  constructor(params, title = "Recipes") {
-    super(params, title);
-  }
-
-  async getHtml() {
-    const recipes = this.loaderData;
-    let recipesHtml = "";
-
-    console.log(recipes);
-
-    if (recipes) {
-      recipesHtml = recipes
-        .map((recipe) => {
-          return new RecipeCard(recipe).render();
-        })
-        .join("");
+    constructor(params, title = "Recipes") {
+        super(params, title);
     }
-    let view = `
+
+    async getHtml() {
+        const recipes = this.loaderData;
+        let recipesHtml = "";
+
+        console.log(recipes);
+
+        if (recipes) {
+            recipesHtml = recipes
+                .map((recipe) => {
+                    return new RecipeCard(recipe).render();
+                })
+                .join("");
+        }
+        let view = `
         <section class="prose">
       <h1>Recipes Page</h1>
 
@@ -71,29 +71,29 @@ export default class Recipes extends Page {
         ${recipesHtml}
       </section>
       ${new Link({
-        href: "/recipes/new",
-        text: "Add a Recipe",
-      }).render()}
+            href: "/recipes/new",
+            text: "Add a Recipe",
+        }).render()}
     </section>
         `;
 
-    return view;
-  }
+        return view;
+    }
 
-  async clientScript() {
-    // const recipes = this.loaderData;
-    // if (!recipes) return;
-    //
-    // const recipeContainer = document.querySelector(".recipe-container");
-    //
-    // recipes.forEach((recipe) => {
-    //   const recipeElement = document.createElement("article");
-    //   recipeElement.classList.add("service");
-    //
-    //   const recipeComponent = new RecipeCard(recipeElement, recipe);
-    //   recipeComponent.init();
-    //
-    //   recipeContainer.appendChild(recipeElement);
-    // });
-  }
+    async clientScript() {
+        // const recipes = this.loaderData;
+        // if (!recipes) return;
+        //
+        // const recipeContainer = document.querySelector(".recipe-container");
+        //
+        // recipes.forEach((recipe) => {
+        //   const recipeElement = document.createElement("article");
+        //   recipeElement.classList.add("service");
+        //
+        //   const recipeComponent = new RecipeCard(recipeElement, recipe);
+        //   recipeComponent.init();
+        //
+        //   recipeContainer.appendChild(recipeElement);
+        // });
+    }
 }

@@ -25,7 +25,7 @@ export function init() {
 }
 
 const Render = async () => {
-  const { view } = await Router(location.pathname);
+  const { view } = await Router.loadView(location.pathname);
 
   /* Render the view in the app tags */
   //document.querySelector("#app").innerHTML = await view.render();
