@@ -4,38 +4,39 @@ import { createComment } from "../services/comments.service.js";
 import Comment from "../components/StatelessComment.js";
 
 export const loader = async (params) => {
-  const { id } = params;
-  const recipe = await getRecipe(id);
-  return recipe;
+    const { id } = params;
+    const recipe = await getRecipe(id);
+    return recipe;
 };
 
-export const action = async (body) => {
-  const { comment, recipeId } = body;
-  const response = await createComment(comment, recipeId);
-  return response;
+export const action = async (req, res) => {
+    const { body } = req;
+    const { comment, recipeId } = body;
+    const response = await createComment(comment, recipeId);
+    return response;
 };
 
 export default class Recipe extends AbstractPage {
-  constructor(params, title = "Recipe") {
-    super(params, loader, title);
-  }
-
-  async getHtml() {
-    const recipe = this.loaderData;
-
-    if (!recipe) {
-      return `<h1>Recipe not found</h1>`;
+    constructor(params, title = "Recipe") {
+        super(params, loader, title);
     }
 
-    const commentsHtml = recipe?.comments
-      .map((comment) => {
-        return new Comment(comment).render();
-      })
-      .join("");
+    async getHtml() {
+        const recipe = this.loaderData;
 
-    this.title = recipe.title;
+        if (!recipe) {
+            return `<h1>Recipe not found</h1>`;
+        }
 
-    return `
+        const commentsHtml = recipe?.comments
+            .map((comment) => {
+                return new Comment(comment).render();
+            })
+            .join("");
+
+        this.title = recipe.title;
+
+        return `
     <article class="prose lg:prose-xl">
             <h1>${recipe.title}</h1>
             <p>${recipe.description}</p>
@@ -52,17 +53,17 @@ export default class Recipe extends AbstractPage {
             </form>
             </article>
         `;
-  }
+    }
 
-  async clientScript() {
-    const form = document.querySelector(".comment-form");
-    form.addEventListener("submit", async (e) => {
-      // e.preventDefault();
-      // const formData = new FormData(form);
-      // const comment = formData.get("comment");
-      // const recipeId = this.params.id;
-      // const response = await createComment(comment, recipeId);
-      window.location.reload();
-    });
-  }
+    async clientScript() {
+        const form = document.querySelector(".comment-form");
+        form.addEventListener("submit", async (e) => {
+            // e.preventDefault();
+            // const formData = new FormData(form);
+            // const comment = formData.get("comment");
+            // const recipeId = this.params.id;
+            // const response = await createComment(comment, recipeId);
+            window.location.reload();
+        });
+    }
 }

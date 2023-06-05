@@ -21,7 +21,9 @@ model Recipe {
 import AbstractPage from "./AbstractPage.js";
 import { createRecipe } from "../services/recipes.service.js";
 
-export const action = async (body) => {
+export const action = async (req, res) => {
+  const body = req.body;
+
   const title = body.title;
   const description = body.description;
   const ingredients = body.ingredients.split("\n");
@@ -45,7 +47,12 @@ export const action = async (body) => {
     tags,
   };
   const newRecipe = await createRecipe(recipe);
-  return newRecipe;
+
+  if (!newRecipe) {
+    return;
+  }
+
+  res.redirect(`/recipes/${newRecipe.id}`);
 };
 
 export default class CreateRecipe extends AbstractPage {
