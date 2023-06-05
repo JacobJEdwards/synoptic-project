@@ -17,6 +17,8 @@ import Router from "./src/Router.js";
 // setup express app
 const port = process.env.PORT || 3001;
 
+const __dirname = process.cwd();
+
 const app = express();
 app.set("port", port);
 
