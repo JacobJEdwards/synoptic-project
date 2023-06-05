@@ -1,6 +1,6 @@
 import Page from "./AbstractPage.js";
 import { getRecipes } from "../services/recipes.service.js";
-import RecipeCard from "../components/RecipeCard.js";
+import RecipeCard from "../components/StatelessRecipeCard.js";
 import Link from "../components/Link.js";
 
 const loader = async () => {
@@ -14,6 +14,16 @@ export default class Recipes extends Page {
   }
 
   async getHtml() {
+    const recipes = this.loaderData;
+    let recipesHtml = "";
+
+    if (recipes) {
+      recipesHtml = recipes
+        .map((recipe) => {
+          return new RecipeCard(recipe).render();
+        })
+        .join("");
+    }
     let view = `
         <section class="prose">
       <h1>Recipes Page</h1>
@@ -56,6 +66,7 @@ export default class Recipes extends Page {
         </article>
       </section>
       <section class="recipe-container">
+        ${recipesHtml}
       </section>
       ${new Link({
         href: "/recipes/new",
@@ -68,19 +79,19 @@ export default class Recipes extends Page {
   }
 
   async clientScript() {
-    const recipes = this.loaderData;
-    if (!recipes) return;
-
-    const recipeContainer = document.querySelector(".recipe-container");
-
-    recipes.forEach((recipe) => {
-      const recipeElement = document.createElement("article");
-      recipeElement.classList.add("service");
-
-      const recipeComponent = new RecipeCard(recipeElement, recipe);
-      recipeComponent.init();
-
-      recipeContainer.appendChild(recipeElement);
-    });
+    // const recipes = this.loaderData;
+    // if (!recipes) return;
+    //
+    // const recipeContainer = document.querySelector(".recipe-container");
+    //
+    // recipes.forEach((recipe) => {
+    //   const recipeElement = document.createElement("article");
+    //   recipeElement.classList.add("service");
+    //
+    //   const recipeComponent = new RecipeCard(recipeElement, recipe);
+    //   recipeComponent.init();
+    //
+    //   recipeContainer.appendChild(recipeElement);
+    // });
   }
 }
