@@ -1,4 +1,5 @@
 import { ZodValidationPipe } from "@anatine/zod-nestjs";
+import { Logger } from "@nestjs/common";
 import {
   Controller,
   Get,
@@ -46,7 +47,10 @@ export class RecipesController {
 
   @Patch(":id")
   @ApiCreatedResponse({ type: RecipeDto })
-  update(@Param("id", ParseIntPipe) id: number, @Body() updateRecipeDto: UpdateRecipeDto) {
+  update(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() updateRecipeDto: UpdateRecipeDto
+  ) {
     return this.recipesService.update(id, updateRecipeDto);
   }
 
@@ -54,5 +58,14 @@ export class RecipesController {
   @ApiCreatedResponse({ type: RecipeDto })
   remove(@Param("id", ParseIntPipe) id: number) {
     return this.recipesService.remove(id);
+  }
+
+  @Post(":id/comments")
+  addComment(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() comment: { comment: string }
+  ) {
+    Logger.log(`Adding comment ${comment} to recipe ${id}`);
+    return this.recipesService.addComment(id, comment.comment);
   }
 }

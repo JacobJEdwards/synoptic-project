@@ -1,5 +1,7 @@
 import AbstractPage from "./AbstractPage.js";
 import { getRecipe } from "../services/recipes.service.js";
+import { createComment } from "../services/comments.service.js";
+import Comment from "../components/StatelessComment.js";
 
 const loader = async (params) => {
   const { id } = params;
@@ -19,6 +21,12 @@ export default class Recipe extends AbstractPage {
       return `<h1>Recipe not found</h1>`;
     }
 
+    const commentsHtml = recipe?.comments
+      .map((comment) => {
+        return new Comment(comment).render();
+      })
+      .join("");
+
     this.title = recipe.title;
 
     return `
@@ -27,7 +35,27 @@ export default class Recipe extends AbstractPage {
             <p>${recipe.description}</p>
             <p>${recipe.ingredients}</p>
             <p>${recipe.steps}</p>
+            <p>${recipe.comments.length} comments</p>
+            <div class="comments">
+                ${commentsHtml}
+            </div>
+            <form class="comment-form">
+                <input type="text" name="comment" placeholder="Your comment" />
+                <button type="submit">Add comment</button>
+            </form>
             </article>
         `;
+  }
+
+  async clientScript() {
+    const form = document.querySelector(".comment-form");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const comment = formData.get("comment");
+      const recipeId = this.params.id;
+      const response = await createComment(comment, recipeId);
+      window.location.reload();
+    });
   }
 }
