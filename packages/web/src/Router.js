@@ -1,4 +1,28 @@
-import { pathToRegex, getParams } from './utils/urls.js'
+/**
+ * type Match = {
+ *      path: string,
+ *      result: null | Array<string[]>
+ * }
+ *
+ * result will be null if route doesn't match current path, or an array with the full path and potential parameters
+ */
+
+/**
+ * Get the parameters from the URL path and return them as an object
+ * @param {object} match object with the corresponding route
+ */
+export const getParams = (match) => {
+    const values = match.result.slice(1);
+    const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
+        (result) => result[1]
+    );
+
+    return Object.fromEntries(
+        keys.map((key, i) => {
+            return [key, values[i]];
+        })
+    );
+};
 /**
  * Routes of the app
  * Each route has a path and a component
@@ -6,172 +30,222 @@ import { pathToRegex, getParams } from './utils/urls.js'
  * The component is the view that will be rendered
  */
 const routes = [
-  {
-    path: '/',
-    component: () => import('./views/pages/Dashboard.js'),
-  },
-  {
-    path: '/about',
-    component: () => import('./views/pages/About.js'),
-  },
-  {
-    path: '/charities',
-    component: () => import('./views/pages/Charities.js'),
-  },
-  {
-    path: '/recipes',
-    component: () => import('./views/pages/Recipes.js'),
-  },
-  {
-    path: '/recipes/new',
-    component: () => import('./views/pages/CreateRecipe.js'),
-  },
-  {
-    path: '/recipes/:id',
-    component: () => import('./views/pages/Recipe.js'),
-  },
-  {
-    path: '/404',
-    component: () => import('./views/pages/Error404.js'),
-  },
-]
+    {
+        path: "/",
+        component: () => import("./views/pages/Dashboard.js"),
+    },
+    {
+        path: "/about",
+        component: () => import("./views/pages/About.js"),
+    },
+    {
+        path: "/charities",
+        component: () => import("./views/pages/Charities.js"),
+    },
+    {
+        path: "/recipes",
+        component: () => import("./views/pages/Recipes.js"),
+    },
+    {
+        path: "/recipes/new",
+        component: () => import("./views/pages/CreateRecipe.js"),
+    },
+    {
+        path: "/recipes/:id",
+        component: () => import("./views/pages/Recipe.js"),
+    },
+    {
+        path: "/login",
+        component: () => import("./views/pages/Login.js"),
+    },
+    {
+        path: "/404",
+        component: () => import("./views/pages/Error404.js"),
+    },
+];
 
 // Improved Router class
 class Router {
-  constructor(routes) {
-    this.routes = new Set(routes)
-    this.matcher = new RouterMatcher(routes)
-    this.match = null
-    this.component = null
-    this.action = null
-    this.loader = null
-  }
-
-  async loadView(pathname) {
-    const match = this.matcher.match(pathname)
-
-    if (match === this.match) {
-      return { view: this.component, action: this.action, loader: this.loader }
+    constructor(routes) {
+        this.routes = new Set(routes);
+        this.matcher = new RouterMatcher(routes);
+        this.match = null;
+        this.component = null;
+        this.action = null;
+        this.loader = null;
     }
 
-    this.match = match
+    async loadView(pathname, req, res) {
+        const match = this.matcher.match(pathname);
 
-    const component = await this.loadComponent(match)
-    const loaderData = await this.loadLoaderData(component)
+        if (match === this.match) {
+            return { view: this.component, action: this.action, loader: this.loader };
+        }
 
-    this.component = component.view
-    this.action = component.action
-    this.loader = component.loader
+        this.match = match;
 
-    return {
-      view: component.view,
-      action: component.action,
-      loader: loaderData,
-    }
-  }
+        const component = await this.loadComponent(match);
+        const loaderData = await this.loadLoaderData(component, req, res);
 
-  async loadComponent(match) {
-    const { default: Component, action, loader } = await match.route.component()
-    const view = new Component(getParams(match))
-    return { view, action, loader }
-  }
+        this.component = component.view;
+        this.action = component.action;
+        this.loader = component.loader;
 
-  async loadLoaderData(component) {
-    if (component.loader) {
-      const loaderData = await component.loader(component.view.params)
-      component.view.loaderData = loaderData
-      return loaderData
-    }
-    return null
-  }
-
-  addRoute(route) {
-    this.routes.add(route)
-  }
-}
-
-// RouterMatcher class
-class RouterMatcher {
-  static NOT_FOUND_ROUTE = {
-    path: '/404',
-    component: () => import('./views/pages/Error404.js'),
-  }
-
-  constructor(routes) {
-    this.routes = routes
-    this.regexCache = new Map()
-  }
-
-  match(pathname) {
-    /* Get the current url path */
-    const potentialMatches = this.routes.map((route) => {
-      let regex = this.regexCache.get(route.path)
-
-      if (!regex) {
-        regex = pathToRegex(route.path)
-        this.regexCache.set(route.path, regex)
-      }
-
-      return {
-        route: route,
-        result: pathname.match(regex),
-      }
-    })
-
-    /* Find the route that matches the url path */
-    let match = potentialMatches.find(
-      (potentialMatch) => potentialMatch.result !== null
-    )
-
-    /* If there is no match render the 404 page */
-    if (!match) {
-      match = {
-        route: this.NOT_FOUND_ROUTE,
-        result: [pathname],
-      }
+        return {
+            view: component.view,
+            action: component.action,
+            loader: loaderData,
+        };
     }
 
-    return match
-  }
+    /**
+     * Load the component of the route
+     * @param {object} match
+     * @returns {object} the compoenet, action and loader of the route
+     */
+    async loadComponent(match) {
+        const {
+            default: Component,
+            action,
+            loader,
+        } = await match.route.component();
+        const view = new Component(this.getParams(match));
+        return { view, action, loader };
+    }
+
+    /**
+     * Load the loader data of the route
+     * @param {object} component
+     * @param {object} req
+     * @param {object} res
+     * @returns {object} the loader data of the route
+     */
+    async loadLoaderData(component, req, res) {
+        if (component.loader) {
+            const loaderData = await component.loader(
+                component.view.params,
+                req,
+                res
+            );
+            component.view.loaderData = loaderData;
+            return loaderData;
+        }
+        return null;
+    }
+
+    /**
+     * Add a route to the router
+     * @param {object} route
+     */
+    addRoute(route) {
+        this.routes.add(route);
+    }
+
+    /**
+     * get parameters from the url path
+     * @param {object} match
+     * @returns {object}
+     */
+    getParams(match) {
+        const values = match.result.slice(1);
+        const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
+            (result) => result[1]
+        );
+
+        return Object.fromEntries(
+            keys.map((key, i) => {
+                return [key, values[i]];
+            })
+        );
+    }
 }
 
 /**
- * Router function
- * It will match the url path with the routes
- * If there is no match it will render the 404 page
- * If there is a match it will render the corresponding view
+ * Class to match the url path with the routes
+ * @class RouterMatcher
+ * @memberof Router
+ * @type {class}
+ * @param {object[]} routes
  */
-// const Router = async (pathname) => {
-//   /* Get the current url path */
-//   const potentialMatches = routes.map((route) => {
-//     return {
-//       route: route,
-//       result: pathname.match(pathToRegex(route.path)),
-//     };
-//   });
-//
-//   /* Find the route that matches the url path */
-//   let match = potentialMatches.find(
-//     (potentialMatch) => potentialMatch.result !== null
-//   );
-//
-//   /* If there is no match render the 404 page */
-//   if (!match) {
-//     match = {
-//       route: routes[4],
-//       result: [pathname],
-//     };
-//   }
-//
-//   /* Render the view */
-//   const { default: Component, action, loader } = await match.route.component();
-//   const view = new Component(getParams(match));
-//   if (loader) {
-//     const loaderData = await loader(view.params);
-//     view.loaderData = loaderData;
-//   }
-//
-//   return { view, action, loader };
-// };
+class RouterMatcher {
+    /**
+     * Route object for the 404 page
+     * Made it a static member so it can be accessed with ease
+     * @static
+     * @constant
+     * @memberof RouterMatcher
+     * @type {object}
+     */
+    static NOT_FOUND_ROUTE = {
+        path: "/404",
+        component: () => import("./views/pages/Error404.js"),
+    };
 
-export default new Router(routes)
+    /**
+     * Regex to get the parameters from the url path and return them as an object
+     * Based on the route object
+     * @static
+     * @memberof RouterMatcher
+     * @type {function}
+     * @param {string} path
+     * @returns {RegExp}
+     */
+    pathToRegex(path) {
+        return new RegExp(
+            "^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$"
+        );
+    }
+
+    /**
+     * @constructor
+     * @memberof RouterMatcher
+     * @param {object[]} routes
+     * @returns {RouterMatcher}
+     */
+    constructor(routes) {
+        this.routes = routes;
+        /* Cache the regex for each route */
+        this.regexCache = new Map();
+    }
+
+    /**
+     * Match the url path with the routes
+     * @memberof RouterMatcher
+     * @param {string} pathname
+     * @returns {Match}
+     */
+    match(pathname) {
+        /* Get the current url path */
+        const potentialMatches = this.routes.map((route) => {
+            let regex = this.regexCache.get(route.path);
+
+            /* if the regex is not cached, cache it */
+            if (!regex) {
+                regex = this.pathToRegex(route.path);
+                this.regexCache.set(route.path, regex);
+            }
+
+            return {
+                route: route,
+                result: pathname.match(regex),
+            };
+        });
+
+        /* Find the route that matches the url path */
+        let match = potentialMatches.find(
+            (potentialMatch) => potentialMatch.result !== null
+        );
+
+        /* If there is no match render the 404 page */
+        if (!match) {
+            match = {
+                route: this.NOT_FOUND_ROUTE,
+                result: [pathname],
+            };
+        }
+
+        return match;
+    }
+}
+
+export default new Router(routes);

@@ -17,8 +17,6 @@ export default class Recipes extends Page {
         const recipes = this.loaderData;
         let recipesHtml = "";
 
-        console.log(recipes);
-
         if (recipes) {
             recipesHtml = recipes
                 .map((recipe) => {
