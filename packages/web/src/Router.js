@@ -67,9 +67,12 @@ const Router = async (pathname) => {
     /* Render the view */
     const { default: Component, action, loader } = await match.route.component();
     const view = new Component(getParams(match));
-    await view.init();
+    if (loader) {
+        const loaderData = await loader(view.params);
+        view.loaderData = loaderData;
+    }
 
-    return { view, action, loader};
+    return { view, action, loader };
 };
 
 export default Router;

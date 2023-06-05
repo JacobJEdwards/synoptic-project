@@ -9,7 +9,7 @@ const loader = async () => {
 
 export default class Charities extends Page {
   constructor(params, title = "Charities") {
-    super(params, loader, title);
+    super(params, title);
   }
 
   async getHtml() {

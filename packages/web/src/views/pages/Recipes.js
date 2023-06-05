@@ -3,14 +3,14 @@ import { getRecipes } from "../services/recipes.service.js";
 import RecipeCard from "../components/StatelessRecipeCard.js";
 import Link from "../components/Link.js";
 
-const loader = async () => {
+export const loader = async () => {
   const recipes = await getRecipes();
   return recipes;
 };
 
 export default class Recipes extends Page {
   constructor(params, title = "Recipes") {
-    super(params, loader, title);
+    super(params, title);
   }
 
   async getHtml() {

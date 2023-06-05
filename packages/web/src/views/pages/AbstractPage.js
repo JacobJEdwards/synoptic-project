@@ -7,25 +7,10 @@ export default class {
    * @param {Object} params url parameters
    * @param {Function} loader data loader function
    */
-  constructor(params, loader, title) {
+  constructor(params, title) {
     this.title = title;
     this.params = params;
-    this.loader = loader;
     this.loaderData = null;
-  }
-
-  /**
-   * Gets the data from the loader function
-   * @returns {Object} data from the loader function
-   */
-  async init() {
-    if (this.loader) {
-      try {
-        this.loaderData = await this.loader(this.params);
-      } catch (e) {
-        console.log(e);
-      }
-    }
   }
 
   /**

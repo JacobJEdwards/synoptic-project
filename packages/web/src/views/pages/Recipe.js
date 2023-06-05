@@ -18,7 +18,7 @@ export const action = async (req, res) => {
 
 export default class Recipe extends AbstractPage {
     constructor(params, title = "Recipe") {
-        super(params, loader, title);
+        super(params, title);
     }
 
     async getHtml() {
