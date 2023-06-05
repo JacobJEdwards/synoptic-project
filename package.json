@@ -9,7 +9,7 @@
     "packages/*"
   ],
   "scripts": {
-    "client:dev": "yarn workspace client dev",
+    "client:dev": "yarn workspace web dev",
     "server:dev": "yarn workspace server start:dev",
     "dev": "concurrently --kill-others-on-fail \"yarn server:dev\" \"yarn client:dev\""
   },
