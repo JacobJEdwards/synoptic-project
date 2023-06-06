@@ -1,6 +1,6 @@
 import express from "express";
 import { createServer } from "http";
-import Templater from "../templater.js"
+import Templater from "../Templater.js"
 
 /*
  * App class

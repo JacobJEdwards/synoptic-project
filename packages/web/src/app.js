@@ -9,7 +9,7 @@ import fs from "fs/promises";
 import path from "path";
 import Router from "./Router.js";
 
-import Templater from "./templater.js";
+import Templater from "./Templater.js";
 
 /* Set up */
 const port = process.env.PORT || 3001;

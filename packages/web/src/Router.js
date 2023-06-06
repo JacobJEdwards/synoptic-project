@@ -26,7 +26,7 @@ function deepEqual(x, y) {
  * The path is used to match the url path
  * The component is the view that will be rendered
  */
-const routes = [
+export const routes = [
     {
         path: "/",
         component: () => import("./views/pages/Dashboard.js"),
@@ -78,6 +78,18 @@ class Router {
         this.view = null;
         this.action = null;
         this.loader = null;
+    }
+
+    async getComponent(pathname, req, res, next) {
+        const match = this.matcher.match(pathname);
+
+        // if the component is already loaded, return it
+        if (deepEqual(match, this.match) || !match?.route) {
+            return this.match.route.component;
+        }
+
+        this.match = match;
+        return { default: this.match.route.component, params: this.getParams(match) };
     }
 
     async loadView(pathname, req, res, next) {
@@ -276,4 +288,5 @@ class RouterMatcher {
     }
 }
 
+export { Router, RouterMatcher };
 export default new Router(routes);

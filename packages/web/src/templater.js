@@ -140,4 +140,6 @@ class Templater {
     }
 }
 
+export { Templater }
+
 export default new Templater();
