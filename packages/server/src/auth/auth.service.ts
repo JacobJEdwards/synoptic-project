@@ -1,40 +1,46 @@
 import { Injectable } from "@nestjs/common";
 import { UsersService } from "src/users/users.service";
 import { JwtService } from "@nestjs/jwt";
-import { Logger } from "@nestjs/common";
-import type { User } from "@prisma/client";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private usersService: UsersService,
-        private jwtService: JwtService,
-    ) { }
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService
+  ) {}
 
-    async validateUser(email: string, pass: string): Promise<any> {
-        const user = await this.usersService.findOne(email);
+  async validateUser(email: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOne(email);
 
-        if (user && user.password === pass) {
-            const { password, ...result } = user;
-            return result;
-        }
-        return null;
+    if (!user) return null;
+
+    const passCompare = await bcrypt.compare(pass, user?.password);
+
+    if (user && passCompare) {
+      const { password, ...result } = user;
+      return result;
     }
 
-    async login(user: any) {
-        const payload = { email: user.email, sub: user.id };
-        return {
-            jwt: this.jwtService.sign(payload),
-            user: user,
-        };
-    }
+    return null;
+  }
 
-    async register(user: any) {
-        const newUser = await this.usersService.create(user);
-        const payload = { email: newUser.email, sub: newUser.id };
-        return {
-            jwt: this.jwtService.sign(payload),
-            user: newUser,
-        };
-    }
+  async login(user: any) {
+    const payload = { email: user.email, sub: user.id };
+    return {
+      jwt: this.jwtService.sign(payload),
+      user: user,
+    };
+  }
+
+  async register(user: any) {
+    const newUser = await this.usersService.create(user);
+    const payload = { email: newUser.email, sub: newUser.id };
+
+    const { password, ...result } = newUser;
+    return {
+      jwt: this.jwtService.sign(payload),
+      user: result,
+    };
+  }
 }
