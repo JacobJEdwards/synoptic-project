@@ -71,13 +71,11 @@ class Router {
         const match = this.matcher.match(pathname);
 
         // if the component is already loaded, return it
-        if (match === this.match) {
+        if (match === this.match || !match?.route) {
             return { view: this.view, action: this.action, loader: this.loader };
         }
 
         this.match = match;
-
-        console.log("match", match);
 
         // load the components module and create a new instance of the view
         const component = await this.loadComponent(match);
@@ -198,10 +196,19 @@ class RouterMatcher {
      * @param {string} path
      * @returns {RegExp}
      */
+    // pathToRegex(path) {
+    //     // return new RegExp(
+    //     //     "^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$"
+    //     // );
+    //     return new RegExp(
+    //         `^${path.replace(/\//g, "\\/").replace(/:\w+/g, "([^\\/]+)")}$`
+    //     );
+    // }
     pathToRegex(path) {
-        return new RegExp(
-            "^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$"
-        );
+        const sanitizedPath = path
+            .replace(/\//g, "\\/")
+            .replace(/:\w+/g, "([^\\/]+)");
+        return new RegExp(`^${sanitizedPath}$`);
     }
 
     /**

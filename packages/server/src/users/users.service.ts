@@ -36,10 +36,7 @@ export class UsersService {
 
         const saltRounds = this.configService.get<number>("bcrypt.salt") ?? 10;
 
-        const hashedPassword = await bcrypt.hash(
-            password,
-            saltRounds
-        );
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         const user = await this.prisma.user.create({
             data: {

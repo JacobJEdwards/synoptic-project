@@ -50,6 +50,17 @@ const handleGet = async (pathname, { req, res, next }) => {
   data.content = rendered;
   data.title = view.title || "Recipe App";
 
+
+  if (!req.session?.user) {
+    const { default: Link } = await import(
+      path.resolve(__dirname, "src", "views", "components", "Link.js")
+    );
+    data.login = new Link({
+      href: "/login",
+      text: "Login",
+    }).render();
+  }
+
   const htmlFilePath = path.resolve(__dirname, "src", "views", "index.html");
 
   // otherwise, read the index.html file and replace the main element with the rendered HTML

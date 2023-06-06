@@ -9,6 +9,7 @@ class Templater {
     constructor() {
         // Regex to match {{ key }} in a string
         this.regex = new RegExp(/{{(.*?)}}/g);
+        this.keyRegex = new RegExp(/{{|}}/g);
         this.templateCache = new Map();
     }
 
@@ -23,14 +24,14 @@ class Templater {
             return this.templateCache.get(template);
         }
 
-        const ast = await this.parseTemplate(template);
-        console.log(ast)
+        const ast = this.parseTemplate(template);
+        console.log(ast);
         this.templateCache.set(template, ast);
 
         return ast;
     }
 
-    async parseTemplate(template) {
+    async parseTemplateRegex(template) {
         let result = this.regex.exec(template);
         const arr = [];
         let firstPos;
@@ -52,18 +53,85 @@ class Templater {
         return arr;
     }
 
+    async parseTemplate(template) {
+        const arr = [];
+        let startPos = 0;
+
+        while (true) {
+            const startMarker = template.indexOf("{{", startPos);
+            if (startMarker === -1) {
+                if (startPos < template.length) {
+                    arr.push(template.substring(startPos));
+                }
+                break;
+            }
+
+            const endMarker = template.indexOf("}}", startMarker);
+            if (endMarker === -1) {
+                throw new Error("Invalid template: missing closing }}");
+            }
+
+            if (startMarker !== startPos) {
+                arr.push(template.substring(startPos, startMarker));
+            }
+
+            arr.push(template.substring(startMarker, endMarker + 2));
+            startPos = endMarker + 2;
+        }
+
+        return arr;
+    }
+
+    // async *parseTemplate(template) {
+    //     let result = this.regex.exec(template);
+    //     let lastIndex = 0;
+    //
+    //     while (result) {
+    //         const firstPos = result.index;
+    //         if (firstPos !== lastIndex) {
+    //             yield template.substring(lastIndex, firstPos);
+    //         }
+    //
+    //         yield result[0];
+    //         lastIndex = firstPos + result[0].length;
+    //         result = this.regex.exec(template);
+    //     }
+    //
+    //     if (lastIndex < template.length) {
+    //         yield template.substring(lastIndex);
+    //     }
+    // }
+
     async compileToString(template, data) {
         const ast = await this.parse(template);
         const resultArr = [];
-        ast.forEach((item) => {
+        ast.map((item) => {
             if (item.match(this.regex)) {
-                const key = item.replace(/{{|}}/g, "").trim();
+                const key = item.replace(this.keyRegex, "").trim();
                 data[key] = data[key] || "";
                 resultArr.push(data[key]);
             } else {
                 resultArr.push(item);
             }
         });
+        return resultArr.join("");
+    }
+
+    async compileToStringDSA(template, data) {
+        const ast = await this.parse(template);
+        const templateKeys = new Set(
+            ast
+                .filter((item) => item.match(this.regex))
+                .map((item) => item.replace(this.keyRegex, "").trim())
+        );
+        const resultArr = ast.map((item) => {
+            if (templateKeys.has(item)) {
+                const key = item.replace(this.keyRegex, "").trim();
+                return data.hasOwnProperty(key) ? data.get(key) : "";
+            }
+            return item;
+        });
+
         return resultArr.join("");
     }
 

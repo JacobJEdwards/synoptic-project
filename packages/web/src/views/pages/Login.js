@@ -1,6 +1,10 @@
 import Page from "./AbstractPage.js";
 import { login } from "../services/auth.service.js";
 
+export const loader = async ({ req, res }) => {
+    if (req.session?.user) return res.redirect("/");
+}
+
 export const action = async ({ req, res }) => {
   if (!req.body) return res.redirect("/login");
 

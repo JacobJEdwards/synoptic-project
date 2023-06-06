@@ -1,5 +1,6 @@
 import express from "express";
 import { createServer } from "http";
+import Templater from "../templater.js"
 
 /*
  * App class
@@ -9,6 +10,7 @@ import { createServer } from "http";
 export default class App {
     constructor({ port, middleware }) {
         this.app = express();
+        this.templater = Templater;
 
         this.port = this.normalizePort(port);
         this.app.set("port", this.port);
@@ -40,6 +42,16 @@ export default class App {
     all(path, callback) {
         this.app.all(path, callback);
     }
+
+    async templateFromString(template, data) {
+        return await this.templater.compileToString(template, data);
+    }
+
+    async templateFromFile(path, data) {
+        return await this.templater.compileFileToString(path, data)
+    }
+
+
 
     /**
      * add middleware to the application
