@@ -10,17 +10,23 @@ import { JwtStrategy } from "./jwt/jwt.strategy";
 import { jwtSecret } from './CONFIG'
 
 @Module({
-  imports: [
-    UsersModule,
-    PassportModule,
-    JwtModule.register({
-        secret: jwtSecret,
-        secretOrPrivateKey: jwtSecret,
-    }),
-
+    imports: [
+        UsersModule,
+        PassportModule,
+        // JwtModule.register({
+        //     secret: jwtSecret,
+        //     secretOrPrivateKey: jwtSecret,
+        // }),
+        JwtModule.registerAsync({
+            useFactory: async (configService: ConfigService) => ({
+                secret: configService.get<string>('JWT.SECRET'),
+                secretOrPrivateKey: configService.get<string>('JWT.SECRET'),
+            }),
+            inject: [ConfigService],
+        }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
-  controllers: [AuthController],
-  exports: [AuthService],
+    providers: [AuthService, LocalStrategy, JwtStrategy],
+    controllers: [AuthController],
+    exports: [AuthService],
 })
 export class AuthModule { }

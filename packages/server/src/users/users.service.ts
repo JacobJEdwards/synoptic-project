@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import type { User } from "@prisma/client";
 import type { CreateUserDto } from "./dto/create-user.dto";
+import { ZodValidationPipe } from '@anatine/zod-nestjs'
 
 @Injectable()
 export class UsersService {
