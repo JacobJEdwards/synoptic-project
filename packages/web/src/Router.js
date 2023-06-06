@@ -8,6 +8,19 @@
  */
 
 /**
+ * helper function to allow caching
+ */
+function deepEqual(x, y) {
+    const tx = typeof x;
+    const ty = typeof y;
+
+    return x && y && tx === "object" && tx === ty
+        ? Object.keys(x).length === Object.keys(y).length &&
+        Object.keys(x).every((key) => deepEqual(x[key], y[key]))
+        : x === y;
+}
+
+/**
  * Routes of the app
  * Each route has a path and a component
  * The path is used to match the url path
@@ -71,7 +84,7 @@ class Router {
         const match = this.matcher.match(pathname);
 
         // if the component is already loaded, return it
-        if (match === this.match || !match?.route) {
+        if (deepEqual(match, this.match) || !match?.route) {
             return { view: this.view, action: this.action, loader: this.loader };
         }
 

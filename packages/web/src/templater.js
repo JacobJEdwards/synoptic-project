@@ -25,7 +25,6 @@ class Templater {
         }
 
         const ast = this.parseTemplate(template);
-        console.log(ast);
         this.templateCache.set(template, ast);
 
         return ast;

@@ -23,6 +23,7 @@ export default class Recipe extends AbstractPage {
 
     async getHtml() {
         const recipe = this.loaderData;
+        console.log("ACTION", this.actionData)
 
         if (!recipe) {
             return `<h1>Recipe not found</h1>`;
