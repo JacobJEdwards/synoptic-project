@@ -7,7 +7,6 @@ import express from "express";
 import asyncHandler from "./app/asyncHandler.js";
 import fs from "fs/promises";
 import path from "path";
-import Router from "./Router.js";
 
 import Renderer from "./Renderer.js";
 
@@ -72,9 +71,12 @@ const handleGet = async (pathname, { req, res, next }) => {
 const handlePost = async (pathname, { req, res, next }) => {
   // if an action function has been exported from the view, execute it
   // the action function allows a component to handle a POST request
-  const { action, view } = await Router.loadView(pathname, { req, res, next });
+  const { action, view } = await Renderer.getComponent(pathname, {
+    req,
+    res,
+    next,
+  });
 
-  // maybe move into Router.loadView? or new function? almost certainly within router
   if (action) {
     const actionData = await action({ req, res, next });
     view.actionData = actionData;

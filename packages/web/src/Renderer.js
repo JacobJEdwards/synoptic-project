@@ -30,6 +30,27 @@ export class Renderer {
     return await this.generateHtml(this.view);
   }
 
+  async getComponent(pathname, { req, res, next }) {
+
+    if (this.pathname === pathname) {
+      return { view: this.view, action: this.action, loader: this.loader };
+    }
+
+      this.pathname = pathname;
+
+    const { view, action, loader } = await this.router.loadView(this.pathname, {
+      req,
+      res,
+      next,
+    });
+
+    this.view = view;
+    this.action = action;
+    this.loader = loader;
+
+    return { view, action, loader };
+  }
+
   /* T extends AbstractPage */
   async generateHtml(view) {
     const data = {};
