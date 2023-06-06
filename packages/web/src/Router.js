@@ -47,6 +47,10 @@ const routes = [
         component: () => import("./views/pages/Register.js"),
     },
     {
+        path: "logout",
+        component: () => import("./views/pages/Logout.js"),
+    },
+    {
         path: "/404",
         component: () => import("./views/pages/Error404.js"),
     },
@@ -58,36 +62,44 @@ class Router {
         this.routes = new Set(routes);
         this.matcher = new RouterMatcher(routes);
         this.match = null;
-        this.component = null;
+        this.view = null;
         this.action = null;
         this.loader = null;
     }
 
-    async loadView(pathname, req, res) {
+    async loadView(pathname, req, res, next) {
         const match = this.matcher.match(pathname);
 
+        // if the component is already loaded, return it
         if (match === this.match) {
-            return { view: this.component, action: this.action, loader: this.loader };
+            return { view: this.view, action: this.action, loader: this.loader };
         }
 
         this.match = match;
 
+        console.log("match", match);
+
+        // load the components module and create a new instance of the view
         const component = await this.loadComponent(match);
 
+        // if the user is logged in, pass the user to the view
         if (req?.session?.user) {
             component.view.user = req.session.user;
         }
 
-        const loaderData = await this.loadLoaderData(component, req, res);
+        // load the loader data of the route defined in the component
+        const loaderData = await this.loadLoaderData(component, req, res, next);
 
-        this.component = component.view;
+        // set the view, action and loader of the route
+        this.view = component.view;
         this.action = component.action;
         this.loader = component.loader;
 
         return {
-            view: component.view,
-            action: component.action,
-            loader: loaderData,
+            view: this.view,
+            action: this.action,
+            loader: this.loader,
+            loaderData,
         };
     }
 
@@ -97,13 +109,11 @@ class Router {
      * @returns {object} the compoenet, action and loader of the route
      */
     async loadComponent(match) {
-        const {
-            default: Component,
-            action,
-            loader,
-        } = await match.route.component();
-        const view = new Component(this.getParams(match));
-        return { view, action, loader };
+        const { default: View, action, loader } = await match.route.component();
+
+        const view = new View(this.getParams(match));
+
+        return { view, action, loader, params: view.params };
     }
 
     /**
@@ -113,13 +123,17 @@ class Router {
      * @param {object} res
      * @returns {object} the loader data of the route
      */
-    async loadLoaderData(component, req, res) {
+    async loadLoaderData(component, req, res, next) {
         if (component.loader) {
-            const loaderData = await component.loader(
-                component.view.params,
+            // load the loader data of the route
+            const loaderData = await component.loader({
+                params: component.view.params,
                 req,
-                res
-            );
+                res,
+                next,
+            });
+
+            // give the view access to the loader data
             component.view.loaderData = loaderData;
             return loaderData;
         }
@@ -128,6 +142,7 @@ class Router {
 
     /**
      * Add a route to the router
+     * Could be used to add routes dynamically
      * @param {object} route
      */
     addRoute(route) {

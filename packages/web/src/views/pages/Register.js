@@ -1,7 +1,11 @@
 import Page from "./AbstractPage.js";
 import { register } from "../services/auth.service.js";
 
-export const action = async (req, res) => {
+export const action = async ({ req, res }) => {
+  // edge cases
+  if (!req.body) return res.redirect("/register");
+  if (req.session.user) return res.redirect("/");
+
   const { username, email, name, password } = req.body;
 
   const data = await register(username, email, password, name);

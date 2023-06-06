@@ -3,13 +3,13 @@ import { getRecipe } from "../services/recipes.service.js";
 import { createComment } from "../services/comments.service.js";
 import Comment from "../components/StatelessComment.js";
 
-export const loader = async (params) => {
+export const loader = async ({ params }) => {
     const { id } = params;
     const recipe = await getRecipe(id);
     return recipe;
 };
 
-export const action = async (req, res) => {
+export const action = async ({ req, res }) => {
     const { body } = req;
     const { comment, recipeId } = body;
     const response = await createComment(comment, recipeId);

@@ -1,8 +1,11 @@
 import Page from "./AbstractPage.js";
 import { login } from "../services/auth.service.js";
 
-export const action = async (req, res) => {
+export const action = async ({ req, res }) => {
+  if (!req.body) return res.redirect("/login");
+
   const { email, password } = req.body;
+
   const data = await login(email, password);
 
   if (data?.user && data?.jwt) {

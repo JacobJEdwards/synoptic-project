@@ -21,47 +21,49 @@ model Recipe {
 import AbstractPage from "./AbstractPage.js";
 import { createRecipe } from "../services/recipes.service.js";
 
-export const action = async (req, res) => {
-  const body = req.body;
+export const action = async ({ req, res }) => {
+    if (!req.body) return res.redirect("/recipes/create");
 
-  const title = body.title;
-  const description = body.description;
-  const ingredients = body.ingredients.split("\n");
-  const origin = body.origin;
-  const steps = body.steps;
-  const vegan = body.vegan === "on";
-  const vegetarian = body.vegetarian === "on";
-  const halal = body.halal === "on";
-  const kosher = body.kosher === "on";
-  const tags = body.tags.split("\n");
-  const recipe = {
-    title,
-    description,
-    ingredients,
-    origin,
-    steps,
-    vegan,
-    vegetarian,
-    halal,
-    kosher,
-    tags,
-  };
-  const newRecipe = await createRecipe(recipe);
+    const body = req.body;
 
-  if (!newRecipe) {
-    return;
-  }
+    const title = body.title;
+    const description = body.description;
+    const ingredients = body.ingredients.split("\n");
+    const origin = body.origin;
+    const steps = body.steps;
+    const vegan = body.vegan === "on";
+    const vegetarian = body.vegetarian === "on";
+    const halal = body.halal === "on";
+    const kosher = body.kosher === "on";
+    const tags = body.tags.split("\n");
+    const recipe = {
+        title,
+        description,
+        ingredients,
+        origin,
+        steps,
+        vegan,
+        vegetarian,
+        halal,
+        kosher,
+        tags,
+    };
+    const newRecipe = await createRecipe(recipe);
 
-  res.redirect(`/recipes/${newRecipe.id}`);
+    if (!newRecipe) {
+        return;
+    }
+
+    res.redirect(`/recipes/${newRecipe.id}`);
 };
 
 export default class CreateRecipe extends AbstractPage {
-  constructor(params, title = "Create Recipe") {
-    super(params, null, title);
-  }
+    constructor(params, title = "Create Recipe") {
+        super(params, null, title);
+    }
 
-  async getHtml() {
-    return `
+    async getHtml() {
+        return `
         <section class="prose">
             <h1>Create Recipe</h1>
             <form id="create-recipe-form" method="POST">
@@ -109,39 +111,39 @@ export default class CreateRecipe extends AbstractPage {
             </form>
         </section>
         `;
-  }
+    }
 
-  async clientScript() {
-    const form = document.getElementById("create-recipe-form");
-    form.addEventListener("submit", async (e) => {
-      //   e.preventDefault();
-      //   const formData = new FormData(form);
-      //   const title = formData.get("title");
-      //   const description = formData.get("description");
-      //   const ingredients = formData.get("ingredients").split("\n");
-      //   const origin = formData.get("origin");
-      //   const steps = formData.get("steps");
-      //   const vegan = formData.get("vegan") === "on";
-      //   const vegetarian = formData.get("vegetarian") === "on";
-      //   const halal = formData.get("halal") === "on";
-      //   const kosher = formData.get("kosher") === "on";
-      //   const tags = formData.get("tags").split("\n");
-      //   const recipe = {
-      //     title,
-      //     description,
-      //     ingredients,
-      //     origin,
-      //     steps,
-      //     vegan,
-      //     vegetarian,
-      //     halal,
-      //     kosher,
-      //     tags,
-      //   };
-      //   const newRecipe = await createRecipe(recipe);
-      const { navigateTo } = await import("../../root.js");
-      await navigateTo(`/recipes/${newRecipe.id}`);
-      window.location.reload();
-    });
-  }
+    async clientScript() {
+        const form = document.getElementById("create-recipe-form");
+        form.addEventListener("submit", async (e) => {
+            //   e.preventDefault();
+            //   const formData = new FormData(form);
+            //   const title = formData.get("title");
+            //   const description = formData.get("description");
+            //   const ingredients = formData.get("ingredients").split("\n");
+            //   const origin = formData.get("origin");
+            //   const steps = formData.get("steps");
+            //   const vegan = formData.get("vegan") === "on";
+            //   const vegetarian = formData.get("vegetarian") === "on";
+            //   const halal = formData.get("halal") === "on";
+            //   const kosher = formData.get("kosher") === "on";
+            //   const tags = formData.get("tags").split("\n");
+            //   const recipe = {
+            //     title,
+            //     description,
+            //     ingredients,
+            //     origin,
+            //     steps,
+            //     vegan,
+            //     vegetarian,
+            //     halal,
+            //     kosher,
+            //     tags,
+            //   };
+            //   const newRecipe = await createRecipe(recipe);
+            const { navigateTo } = await import("../../root.js");
+            await navigateTo(`/recipes/${newRecipe.id}`);
+            window.location.reload();
+        });
+    }
 }

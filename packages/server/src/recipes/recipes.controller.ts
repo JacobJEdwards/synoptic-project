@@ -13,11 +13,10 @@ import {
 } from "@nestjs/common";
 import { RecipesService } from "./recipes.service";
 import {
-  RecipeDto,
-  GetRecipeDto,
-  GetRecipesDto,
-  UpdateRecipeDto,
-  CreateRecipeDto,
+    CreateRecipeResponseDto,
+    UpdateRecipeDto,
+    RecipeDto,
+    UpdateRecipeResponseDto,
 } from "./dto/recipes.dto";
 import { ApiTags, ApiCreatedResponse } from "@nestjs/swagger";
 
@@ -28,13 +27,13 @@ export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
   @Post()
-  @ApiCreatedResponse({ type: RecipeDto })
-  create(@Body() createRecipeDto: CreateRecipeDto) {
+  @ApiCreatedResponse({ type: CreateRecipeResponseDto })
+  create(@Body() createRecipeDto: RecipeDto) {
     return this.recipesService.create(createRecipeDto);
   }
 
   @Get()
-  @ApiCreatedResponse({ type: [RecipeDto] })
+  @ApiCreatedResponse({ type: Array<RecipeDto> })
   findAll() {
     return this.recipesService.findAll();
   }
@@ -46,7 +45,7 @@ export class RecipesController {
   }
 
   @Patch(":id")
-  @ApiCreatedResponse({ type: RecipeDto })
+  @ApiCreatedResponse({ type: UpdateRecipeResponseDto })
   update(
     @Param("id", ParseIntPipe) id: number,
     @Body() updateRecipeDto: UpdateRecipeDto

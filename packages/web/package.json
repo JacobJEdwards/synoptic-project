@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev:css": "postcss src/styles/styles.css -o src/views/css/index.css",
-    "dev": "nodemon --watch app --exec \"npm run dev:css && node server.js\""
+    "dev": "nodemon --watch app --exec \"npm run dev:css && node src/app.js\""
   },
   "dependencies": {
     "compression": "^1.7.4",

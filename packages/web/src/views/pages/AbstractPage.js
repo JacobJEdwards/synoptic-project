@@ -7,7 +7,7 @@ export default class {
    * @param {Object} params url parameters
    * @param {Function} loader data loader function
    */
-  constructor(params, title) {
+  constructor(params, title = "App") {
     this.title = title;
     this.params = params;
     this.loaderData = null;
@@ -23,12 +23,17 @@ export default class {
 
   /**
    * Gets the html of the page
+   * @abstract
    * @returns {String} html of the page
    */
   async getHtml() {
     return "";
   }
 
+  /**
+   * Run any client side scripts
+   * @abstract
+   */
   async clientScript() {
     return;
   }
@@ -46,7 +51,6 @@ export default class {
    * What to do after the page is rendered
    */
   async clientRender() {
-    this.setTitle();
     await this.clientScript();
     return;
   }
