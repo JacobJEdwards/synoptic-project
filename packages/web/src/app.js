@@ -11,6 +11,8 @@ import Router from "./Router.js";
 
 import Templater from "./Templater.js";
 
+import Renderer from './Renderer.js'
+
 /* Set up */
 const port = process.env.PORT || 3001;
 
@@ -37,35 +39,26 @@ app.use("/views", express.static(path.resolve(__dirname, "src", "views")));
  */
 const handleGet = async (pathname, { req, res, next }) => {
     // returns an instance of the view object corresponding to the URL path
-    const { view } = await Router.loadView(pathname, req, res, next);
-    if (!view) res.status(404).send("Not Found");
+    //
+    // if (!view) res.status(404).send("Not Found");
 
-    // gets the rendered HTML from the view object and passes the user object to the view (may be undefined)
-    const rendered = await view.serverRender();
+    const html = await Renderer.render(pathname, { req, res, next });
 
     // if the headers have already been sent (i.e. from the loader function), return
     if (res.headersSent) return;
 
 
     // dont really like where this is located, might be best to generate all this elsewhere. in router or separate? Renderer class?
-    const data = {};
-    data.content = rendered;
-    data.title = view.title || "Recipe App";
 
-    if (!req.session?.user) {
-        const { default: Link } = await import(
-            path.resolve(__dirname, "src", "views", "components", "Link.js")
-        );
-        data.login = new Link({
-            href: "/login",
-            text: "Login",
-        }).render();
-    }
-
-    const htmlFilePath = path.resolve(__dirname, "src", "views", "index.html");
-
-    // otherwise, read the index.html file and replace the main element with the rendered HTML
-    const html = await Templater.compileFileToString(htmlFilePath, data);
+    // if (!req.session?.user) {
+    //     const { default: Link } = await import(
+    //         path.resolve(__dirname, "src", "views", "components", "Link.js")
+    //     );
+    //     data.login = new Link({
+    //         href: "/login",
+    //         text: "Login",
+    //     }).render();
+    // }
 
     // send the final HTML to the client
     res.status(200).set({ "Content-Type": "text/html" }).end(html);
@@ -80,7 +73,7 @@ const handleGet = async (pathname, { req, res, next }) => {
 const handlePost = async (pathname, { req, res, next }) => {
     // if an action function has been exported from the view, execute it
     // the action function allows a component to handle a POST request
-    const { action, view } = await Router.loadView(pathname, req, res, next);
+    const { action, view } = await Renderer.executeAction(pathname, req, res, next);
 
     // maybe move into Router.loadView? or new function? almost certainly within router
     if (action) {

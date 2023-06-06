@@ -6,6 +6,7 @@ import Comment from "../components/StatelessComment.js";
 export const loader = async ({ params }) => {
     const { id } = params;
     const recipe = await getRecipe(id);
+    console.log("LOADER EXECUTED", recipe)
     return recipe;
 };
 
@@ -24,6 +25,7 @@ export default class Recipe extends AbstractPage {
     async getHtml() {
         const recipe = this.loaderData;
         console.log("ACTION", this.actionData)
+        console.log("PARAMS",this.params)
 
         if (!recipe) {
             return `<h1>Recipe not found</h1>`;
