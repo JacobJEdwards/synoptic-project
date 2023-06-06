@@ -5,7 +5,7 @@ import fs from "fs/promises";
  * @description A class that parses a template string and compiles it to a string
  * String given in the form {{ key }} will be replaced with the value of the key in the data object
  */
-class Templater {
+export class Templater {
     constructor() {
         // Regex to match {{ key }} in a string
         this.regex = new RegExp(/{{(.*?)}}/g);
