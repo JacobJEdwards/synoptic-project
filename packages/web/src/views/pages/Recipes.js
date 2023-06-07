@@ -1,4 +1,4 @@
-import Page from "./AbstractPage.js";
+import Page from "./AbstractPage";
 import { getRecipes } from "../services/recipes.service.js";
 import RecipeCard from "../components/StatelessRecipeCard.js";
 import Link from "../components/Link.js";

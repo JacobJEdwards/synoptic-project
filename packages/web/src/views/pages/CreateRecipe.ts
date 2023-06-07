@@ -18,10 +18,11 @@ model Recipe {
 }
 */
 
-import AbstractPage from "./AbstractPage.js";
+import type { Request, Response } from "express";
+import AbstractPage from "./AbstractPage";
 import { createRecipe } from "../services/recipes.service.js";
 
-export const action = async ({ req, res }) => {
+export const action = async ({ req, res }: { req: Request, res: Response }) => {
     if (!req.body) return res.redirect("/recipes/create");
 
     const body = req.body;
@@ -61,8 +62,8 @@ export const action = async ({ req, res }) => {
 };
 
 export default class CreateRecipe extends AbstractPage {
-    constructor(params, title = "Create Recipe") {
-        super(params, null, title);
+    constructor(params: any, title = "Create Recipe") {
+        super(params, title);
     }
 
     async getHtml() {
@@ -117,36 +118,37 @@ export default class CreateRecipe extends AbstractPage {
     }
 
     async clientScript() {
-        const form = document.getElementById("create-recipe-form");
-        form.addEventListener("submit", async (e) => {
-            //   e.preventDefault();
-            //   const formData = new FormData(form);
-            //   const title = formData.get("title");
-            //   const description = formData.get("description");
-            //   const ingredients = formData.get("ingredients").split("\n");
-            //   const origin = formData.get("origin");
-            //   const steps = formData.get("steps");
-            //   const vegan = formData.get("vegan") === "on";
-            //   const vegetarian = formData.get("vegetarian") === "on";
-            //   const halal = formData.get("halal") === "on";
-            //   const kosher = formData.get("kosher") === "on";
-            //   const tags = formData.get("tags").split("\n");
-            //   const recipe = {
-            //     title,
-            //     description,
-            //     ingredients,
-            //     origin,
-            //     steps,
-            //     vegan,
-            //     vegetarian,
-            //     halal,
-            //     kosher,
-            //     tags,
-            //   };
-            //   const newRecipe = await createRecipe(recipe);
-            const { navigateTo } = await import("../../root.js");
-            await navigateTo(`/recipes/${newRecipe.id}`);
-            window.location.reload();
-        });
-    }
+        // const form = document.getElementById("create-recipe-form");
+        // form.addEventListener("submit", async (e) => {
+        //   e.preventDefault();
+        //   const formData = new FormData(form);
+        //   const title = formData.get("title");
+        //   const description = formData.get("description");
+        //   const ingredients = formData.get("ingredients").split("\n");
+        //   const origin = formData.get("origin");
+        //   const steps = formData.get("steps");
+        //   const vegan = formData.get("vegan") === "on";
+        //   const vegetarian = formData.get("vegetarian") === "on";
+        //   const halal = formData.get("halal") === "on";
+        //   const kosher = formData.get("kosher") === "on";
+        //   const tags = formData.get("tags").split("\n");
+        //   const recipe = {
+        //     title,
+        //     description,
+        //     ingredients,
+        //     origin,
+        //     steps,
+        //     vegan,
+        //     vegetarian,
+        //     halal,
+        //     kosher,
+        //     tags,
+        //   };
+        //   const newRecipe = await createRecipe(recipe);
+        // const { navigateTo } = await import("../../root.js");
+        // await navigateTo(`/recipes/${newRecipe.id}`);
+        // window.location.reload();
+        return
+    };
+}
 }

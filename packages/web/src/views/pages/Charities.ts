@@ -1,4 +1,4 @@
-import Page from "./AbstractPage.js";
+import Page from "./AbstractPage";
 import { getCharities } from "../services/charity.service.js";
 import CharityCard from "../components/StatelessCharityCard.js";
 
@@ -8,7 +8,7 @@ export const loader = async () => {
 };
 
 export default class Charities extends Page {
-    constructor(params, title = "Charities") {
+    constructor(params: any, title = "Charities") {
         super(params, title);
     }
 
@@ -18,13 +18,13 @@ export default class Charities extends Page {
 
         if (charities) {
             charitiesHtml = charities
-                .map((charity) => {
+                .map((charity: any) => {
                     return new CharityCard(charity).render();
                 })
                 .join("");
         }
 
-        let view = `
+        const view = `
     <section class="prose">
       <h1>Charities Page</h1>
       <p>
@@ -69,4 +69,8 @@ export default class Charities extends Page {
     //
     //         charityContainer.appendChild(charityElement);
     //     });
+
+    async clientScript() {
+        return;
+    }
 }

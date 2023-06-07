@@ -1,33 +1,34 @@
-import Page from "./AbstractPage.js";
+import Page from "./AbstractPage";
 import { login } from "../services/auth.service.js";
+import type { Request, Response } from "express";
 
-export const loader = async ({ req, res }) => {
-  if (req.session?.user) return res.redirect("/");
+export const loader = async ({ req, res }: { req: Request; res: Response }) => {
+    if (req.session?.user) return res.redirect("/");
 };
 
-export const action = async ({ req, res }) => {
-  if (!req.body) return res.redirect("/login");
+export const action = async ({ req, res }: { req: Request; res: Response }) => {
+    if (!req.body) return res.redirect("/login");
 
-  const { email, password } = req.body;
+    const { email, password } = req.body;
 
-  const data = await login(email, password);
+    const data = await login(email, password);
 
-  if (data?.user && data?.jwt) {
-    req.session.user = data.user;
-    req.session.jwt = data.jwt;
-    res.redirect("/");
-  } else {
-    res.redirect("/login");
-  }
+    if (data?.user && data?.jwt) {
+        req.session.user = data.user;
+        req.session.jwt = data.jwt;
+        res.redirect("/");
+    } else {
+        res.redirect("/login");
+    }
 };
 
 export default class Login extends Page {
-  constructor(params, title = "Login") {
-    super(params, title);
-  }
+    constructor(params: any, title = "Login") {
+        super(params, title);
+    }
 
-  async getHtml() {
-    return `
+    async getHtml() {
+        return `
             <h1>Login</h1>
             <section>
                 <form class="login-form" action="/login" method="POST">
@@ -45,5 +46,9 @@ export default class Login extends Page {
                 </form>
             </section>
         `;
-  }
+    }
+
+    async clientScript(): Promise<void> {
+        return;
+    }
 }

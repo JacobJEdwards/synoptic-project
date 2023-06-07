@@ -1,11 +1,12 @@
-import Page from "./AbstractPage.js";
+import Page from "./AbstractPage";
 import { register } from "../services/auth.service.js";
+import type { Request, Response } from "express";
 
-export const loader = async ({ req, res }) => {
+export const loader = async ({ req, res }: {req: Request, res: Response}) => {
   if (req.session.user) return res.redirect("/");
 };
 
-export const action = async ({ req, res }) => {
+export const action = async ({ req, res }: {req: Request, res: Response}) => {
   // edge cases
   if (!req.body) return res.redirect("/register");
 
@@ -23,7 +24,7 @@ export const action = async ({ req, res }) => {
 };
 
 export default class Register extends Page {
-  constructor(params, title = "Register") {
+  constructor(params: any, title = "Register") {
     super(params, title);
   }
 
@@ -54,5 +55,9 @@ export default class Register extends Page {
             </form>
         </section>
         `;
+  }
+
+  async clientScript(): Promise<void> {
+    return;
   }
 }

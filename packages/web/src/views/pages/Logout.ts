@@ -1,6 +1,7 @@
-import Page from "./AbstractPage.js";
+import Page from "./AbstractPage";
+import type { ExpressObject } from "../../app";
 
-export const loader = async ({ req, res, next }) => {
+export const loader = async ({ req, res, next }: ExpressObject) => {
     if (req.session) {
         req.session.destroy((err) => {
             if (err) {

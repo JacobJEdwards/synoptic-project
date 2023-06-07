@@ -1,8 +1,8 @@
-import Page from "./AbstractPage.js";
+import Page from "./AbstractPage";
 
 export default class Error404 extends Page {
-    constructor(params, title="404 - Page Not Found") {
-        super(params, null, title);
+    constructor(params: any, title="404 - Page Not Found") {
+        super(params, title);
     }
 
     async getHtml() {
@@ -12,5 +12,9 @@ export default class Error404 extends Page {
         `;
 
         return view;
+    }
+
+    async clientScript(): Promise<void> {
+        return;
     }
 }

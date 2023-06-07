@@ -14,6 +14,7 @@
     "dev": "concurrently --kill-others-on-fail \"yarn server:dev\" \"yarn client:dev\""
   },
   "devDependencies": {
-    "concurrently": "^8.0.1"
+    "concurrently": "^8.0.1",
+    "ts-node": "^10.9.1"
   }
 }

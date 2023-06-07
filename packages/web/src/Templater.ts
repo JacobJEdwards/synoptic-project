@@ -1,11 +1,20 @@
 import fs from "fs/promises";
 
+type TemplateCache = Map<string, string[] | string>;
+type AST = string[];
+type Data = Record<string, string>;
+type Template = string;
+
 /**
  * @class Templater
  * @description A class that parses a template string and compiles it to a string
  * String given in the form {{ key }} will be replaced with the value of the key in the data object
  */
 export class Templater {
+  regex: RegExp;
+  keyRegex: RegExp;
+  templateCache: TemplateCache;
+
   constructor() {
     // Regex to match {{ key }} in a string
     this.regex = new RegExp(/{{(.*?)}}/g);
@@ -19,18 +28,24 @@ export class Templater {
    * @param {string} template - The template string to parse (e.g. "<h1>{{ title }}</h1>")
    * @returns {Promise<string[]>} - An array of strings and keys (e.g. ["<h1>", "{{ title }}", "</h1>"])
    */
-  async parse(template) {
-    if (this.templateCache.has(template)) {
-      return this.templateCache.get(template);
+  async parse(template: Template): Promise<AST> {
+    // if (this.templateCache.has(template)) {
+    //   return this.templateCache.get(template);
+    // }
+
+    const templateFromCache = this.templateCache.get(template);
+
+    if (templateFromCache && Array.isArray(templateFromCache)) {
+      return templateFromCache;
     }
 
-    const ast = this.parseTemplate(template);
+    const ast = await this.parseTemplate(template);
     this.templateCache.set(template, ast);
 
     return ast;
   }
 
-  async parseTemplateRegex(template) {
+  async parseTemplateRegex(template: Template) {
     let result = this.regex.exec(template);
     const arr = [];
     let firstPos;
@@ -52,7 +67,7 @@ export class Templater {
     return arr;
   }
 
-  async parseTemplate(template) {
+  async parseTemplate(template: Template): Promise<AST> {
     const arr = [];
     let startPos = 0;
 
@@ -101,10 +116,10 @@ export class Templater {
   //     }
   // }
 
-  async compileToString(template, data) {
+  async compileToString(template: Template, data: Data): Promise<string> {
     const ast = await this.parse(template);
-    const resultArr = [];
-    ast.map((item) => {
+    const resultArr: Array<string | undefined> = [];
+    ast.map((item: string) => {
       if (item.match(this.regex)) {
         const key = item.replace(this.keyRegex, "").trim();
         data[key] = data[key] || "";
@@ -116,7 +131,7 @@ export class Templater {
     return resultArr.join("");
   }
 
-  async compileToStringDSA(template, data) {
+  async compileToStringDSA(template: Template, data: Data): Promise<string> {
     const ast = await this.parse(template);
     const templateKeys = new Set(
       ast
@@ -126,7 +141,7 @@ export class Templater {
     const resultArr = ast.map((item) => {
       if (templateKeys.has(item)) {
         const key = item.replace(this.keyRegex, "").trim();
-        return data.hasOwnProperty(key) ? data.get(key) : "";
+        return data[key] || "";
       }
       return item;
     });
@@ -134,14 +149,15 @@ export class Templater {
     return resultArr.join("");
   }
 
-  async compileFileToString(path, data, staticFile = true) {
-    let template;
-    if (staticFile && this.templateCache.has(path)) {
-      template = this.templateCache.get(path);
-    } else {
-      template = await fs.readFile(path, "utf-8");
-      this.templateCache.set(path, template);
+  async compileFileToString(path: string, data: Data, staticFile = true) {
+    let template = this.templateCache.get(path);
+
+    if (staticFile && template && typeof template === "string") {
+      return await this.compileToString(template, data);
     }
+
+    template = await fs.readFile(path, "utf-8");
+    this.templateCache.set(path, template);
 
     return await this.compileToString(template, data);
   }

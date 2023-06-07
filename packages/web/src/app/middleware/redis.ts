@@ -1,11 +1,8 @@
-import redis from "redis";
+import * as redis from "redis";
 import RedisStore from "connect-redis";
 
 // sessions
-const redisClient = redis.createClient({
-  host: "localhost",
-  port: 6379,
-});
+const redisClient = redis.createClient();
 
 redisClient.connect().catch((err) => {
   console.log("Redis error: ", err);
@@ -13,7 +10,6 @@ redisClient.connect().catch((err) => {
 
 const redisStore = new RedisStore({
   client: redisClient,
-  logErrors: true,
   prefix: "recipe-session",
 });
 

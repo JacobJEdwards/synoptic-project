@@ -1,4 +1,4 @@
-import AbstractPage from "./AbstractPage.js";
+import AbstractPage from "./AbstractPage";
 import { getRecipe } from "../services/recipes.service.js";
 import { createComment } from "../services/comments.service.js";
 import Comment from "../components/StatelessComment.js";

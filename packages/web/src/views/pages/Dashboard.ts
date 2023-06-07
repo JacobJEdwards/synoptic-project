@@ -1,14 +1,13 @@
-import Page from "./AbstractPage.js";
-import fs from 'fs/promises'
+import Page from "./AbstractPage";
 
 export default class Dashboard extends Page {
-    constructor(params, title="Home") {
-        super(params, null, title);
-    }
+  constructor(params: any, title = "Home") {
+    super(params, title);
+  }
 
-    async getHtml() {
-        console.log("USER?:",this.user);
-        let view = `
+  async getHtml() {
+    console.log("USER?:", this.user);
+    let view = `
     <section class="top">
         <article>
             <figure>
@@ -31,6 +30,10 @@ export default class Dashboard extends Page {
     </section>
         `;
 
-        return view;
-    }
+    return view;
+  }
+
+  async clientScript(): Promise<void> {
+    return;
+  }
 }

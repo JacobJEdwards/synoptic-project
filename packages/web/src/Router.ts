@@ -1,16 +1,23 @@
-/**
- * type Match = {
- *      path: string,
- *      result: null | Array<string[]>
- * }
- *
- * result will be null if route doesn't match current path, or an array with the full path and potential parameters
- */
+import { NextFunction, Request, Response } from "express";
+import type { ExpressObject } from "./app.js";
+
+type Match = {
+    path: string;
+    result: null | Array<string[]>;
+    route: Route;
+};
+
+type Route = {
+    path: string;
+    component: () => Promise<any>;
+};
+
+// result will be null if route doesn't match current path, or an array with the full path and potential parameters
 
 /**
  * helper function to allow caching
  */
-function deepEqual(x, y) {
+function deepEqual(x: any, y: any): boolean {
     const tx = typeof x;
     const ty = typeof y;
 
@@ -26,18 +33,18 @@ function deepEqual(x, y) {
  * The path is used to match the url path
  * The component is the view that will be rendered
  */
-export const routes = [
+export const routes: Route[] = [
     {
         path: "/",
-        component: () => import("./views/pages/Dashboard.js"),
+        component: () => import("./views/pages/Dashboard"),
     },
     {
         path: "/about",
-        component: () => import("./views/pages/About.js"),
+        component: () => import("./views/pages/About"),
     },
     {
         path: "/charities",
-        component: () => import("./views/pages/Charities.js"),
+        component: () => import("./views/pages/Charities"),
     },
     {
         path: "/recipes",
@@ -45,7 +52,7 @@ export const routes = [
     },
     {
         path: "/recipes/new",
-        component: () => import("./views/pages/CreateRecipe.js"),
+        component: () => import("./views/pages/CreateRecipe"),
     },
     {
         path: "/recipes/:id",
@@ -53,25 +60,32 @@ export const routes = [
     },
     {
         path: "/login",
-        component: () => import("./views/pages/Login.js"),
+        component: () => import("./views/pages/Login"),
     },
     {
         path: "/register",
-        component: () => import("./views/pages/Register.js"),
+        component: () => import("./views/pages/Register"),
     },
     {
         path: "/logout",
-        component: () => import("./views/pages/Logout.js"),
+        component: () => import("./views/pages/Logout"),
     },
     {
         path: "/404",
-        component: () => import("./views/pages/Error404.js"),
+        component: () => import("./views/pages/Error404"),
     },
 ];
 
 // Improved Router class
 export class Router {
-    constructor(routes) {
+    routes: Set<Route>;
+    matcher: RouterMatcher;
+    match: Match | null | any;
+    view: any;
+    action: any;
+    loader: any;
+
+    constructor(routes: Route[]) {
         this.routes = new Set(routes);
         this.matcher = new RouterMatcher(routes);
         this.match = null;
@@ -80,7 +94,7 @@ export class Router {
         this.loader = null;
     }
 
-    async reloadLoaderData(req, res, next) {
+    async reloadLoaderData(req: Request, res: Response, next: NextFunction) {
         const { loaderData } = await this.loadLoaderData(
             { view: this.view, action: this.action, loader: this.loader },
             req,
@@ -95,7 +109,7 @@ export class Router {
         };
     }
 
-    async loadView(pathname, { req, res, next }) {
+    async loadView(pathname: string, { req, res, next }: ExpressObject) {
         const match = this.matcher.match(pathname);
 
         // if the component is already loaded, return it
@@ -139,7 +153,7 @@ export class Router {
      * @param {object} match
      * @returns {object} the compoenet, action and loader of the route
      */
-    async loadComponent(match) {
+    async loadComponent(match: any) {
         const { default: View, action, loader } = await match.route.component();
 
         const params = this.getParams(match);
@@ -156,7 +170,7 @@ export class Router {
      * @param {object} res
      * @returns {object} the loader data of the route
      */
-    async loadLoaderData({ view, loader, action }, req, res, next) {
+    async loadLoaderData({ view, loader, action }: any, req: Request, res: Response, next: NextFunction) {
         if (loader) {
             const params = view?.params ?? {};
             // load the loader data of the route
@@ -185,7 +199,7 @@ export class Router {
      * Could be used to add routes dynamically
      * @param {object} route
      */
-    addRoute(route) {
+    addRoute(route: Route) {
         this.routes.add(route);
     }
 
@@ -194,7 +208,9 @@ export class Router {
      * @param {object} match
      * @returns {object}
      */
-    getParams(match) {
+    getParams(match: Match) {
+        if (!match.result) return;
+
         const values = match.result.slice(1);
         const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
             (result) => result[1]
@@ -216,6 +232,9 @@ export class Router {
  * @param {object[]} routes
  */
 class RouterMatcher {
+    routes: Route[];
+    regexCache: Map<string, RegExp>;
+
     /**
      * Route object for the 404 page
      * Made it a static member so it can be accessed with ease
@@ -238,15 +257,7 @@ class RouterMatcher {
      * @param {string} path
      * @returns {RegExp}
      */
-    // pathToRegex(path) {
-    //     // return new RegExp(
-    //     //     "^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$"
-    //     // );
-    //     return new RegExp(
-    //         `^${path.replace(/\//g, "\\/").replace(/:\w+/g, "([^\\/]+)")}$`
-    //     );
-    // }
-    pathToRegex(path) {
+    pathToRegex(path: string) {
         const sanitizedPath = path
             .replace(/\//g, "\\/")
             .replace(/:\w+/g, "([^\\/]+)");
@@ -259,7 +270,7 @@ class RouterMatcher {
      * @param {object[]} routes
      * @returns {RouterMatcher}
      */
-    constructor(routes) {
+    constructor(routes: Route[]) {
         this.routes = routes;
         /* Cache the regex for each route */
         this.regexCache = new Map();
@@ -271,7 +282,7 @@ class RouterMatcher {
      * @param {string} pathname
      * @returns {Match}
      */
-    match(pathname) {
+    match(pathname: string) {
         /* Get the current url path */
         const potentialMatches = this.routes.map((route) => {
             let regex = this.regexCache.get(route.path);
@@ -296,7 +307,7 @@ class RouterMatcher {
         /* If there is no match render the 404 page */
         if (!match) {
             match = {
-                route: this.NOT_FOUND_ROUTE,
+                route: RouterMatcher.NOT_FOUND_ROUTE,
                 result: [pathname],
             };
         }

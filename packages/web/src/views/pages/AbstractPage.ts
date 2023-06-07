@@ -1,13 +1,17 @@
 /**
  * Abstract class for all pages
  */
-export default class {
+export default abstract class Page {
+  title: string;
+  params: any;
+  loaderData: any;
+  actionData: any;
+  user: any
   /**
    * Constructor
    * @param {Object} params url parameters
-   * @param {Function} loader data loader function
    */
-  constructor(params, title = "App") {
+  constructor(params: any, title = "App") {
     this.title = title;
     this.params = params;
     this.loaderData = null;
@@ -15,7 +19,6 @@ export default class {
 
   /**
    * Sets the title of the page
-   * @param {String} title title of the page
    */
   setTitle() {
     document.title = this.title;
@@ -26,23 +29,19 @@ export default class {
    * @abstract
    * @returns {String} html of the page
    */
-  async getHtml() {
-    return "";
-  }
+  abstract getHtml(): Promise<string>;
 
   /**
    * Run any client side scripts
    * @abstract
    */
-  async clientScript() {
-    return;
-  }
+  abstract clientScript(): Promise<void>;
 
   /**
    * Renders the page
    * @returns {String} html of the page
    */
-  async serverRender() {
+  async serverRender(): Promise<string> {
     let view = await this.getHtml();
     return view;
   }
@@ -52,6 +51,5 @@ export default class {
    */
   async clientRender() {
     await this.clientScript();
-    return;
   }
 }
