@@ -1,7 +1,10 @@
-import { Templater } from "./Templater";
+import { Templater, type Data } from "./Templater";
 import { Router, routes } from "./Router";
 import path from "path";
 import { ExpressObject } from "./app";
+import Page from "./views/pages/AbstractPage";
+import type { LoaderFunction } from "./types/Loader";
+import type { ActionFunction } from "./types/Action";
 
 export class Renderer {
     router: Router;
@@ -9,9 +12,9 @@ export class Renderer {
     filePath: string;
 
     pathname: string | null;
-    view: any | null;
-    action: any | null;
-    loader: any | null;
+    view: Page | null;
+    action: LoaderFunction | null;
+    loader: ActionFunction | null;
 
     constructor() {
         this.router = new Router(routes);
@@ -24,7 +27,10 @@ export class Renderer {
         this.loader = null;
     }
 
-    async render(pathname: string, { req, res, next }: ExpressObject) {
+    async render(
+        pathname: string,
+        { req, res, next }: ExpressObject
+    ): Promise<string | null> {
         const { view, action, loader } = await this.router.loadView(pathname, {
             req,
             res,
@@ -36,7 +42,7 @@ export class Renderer {
         this.action = action;
         this.loader = loader;
 
-        if (view) {
+        if (this.view) {
             return await this.generateHtml(this.view);
         }
 
@@ -64,8 +70,8 @@ export class Renderer {
     }
 
     /* T extends AbstractPage */
-    async generateHtml(view: any) {
-        const data: any = {};
+    async generateHtml(view: Page): Promise<string> {
+        const data: Data = {};
         data.content = await view.serverRender();
         data.title = view.title ?? "Recipe App";
 

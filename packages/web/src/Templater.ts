@@ -2,7 +2,7 @@ import fs from "fs/promises";
 
 type TemplateCache = Map<string, string[] | string>;
 type AST = string[];
-type Data = Record<string, string>;
+export type Data = Record<string, any>;
 type Template = string;
 
 /**

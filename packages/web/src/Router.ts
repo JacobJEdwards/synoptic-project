@@ -1,13 +1,15 @@
 import { NextFunction, Request, Response } from "express";
+import Page from "./views/pages/AbstractPage"
 import type { ExpressObject } from "./app.js";
+import { ActionFunction } from "./types/Action.js";
+import { LoaderFunction } from "./types/Loader.js";
 
 type Match = {
-    path: string;
-    result: null | Array<string[]>;
+    result: RegExpMatchArray | null;
     route: Route;
 };
 
-type Route = {
+export type Route = {
     path: string;
     component: () => Promise<any>;
 };
@@ -76,14 +78,15 @@ export const routes: Route[] = [
     },
 ];
 
+
 // Improved Router class
 export class Router {
     routes: Set<Route>;
     matcher: RouterMatcher;
-    match: Match | null | any;
-    view: any;
-    action: any;
-    loader: any;
+    match: Match | null;
+    view: Page | null;
+    action: ActionFunction | null;
+    loader: LoaderFunction | null;
 
     constructor(routes: Route[]) {
         this.routes = new Set(routes);
@@ -123,8 +126,8 @@ export class Router {
         const { view, action, loader, params } = await this.loadComponent(match);
 
         // if the user is logged in, pass the user to the view
-        if (req?.session?.user) {
-            view ? (view.user = req.session.user) : null;
+        if (req?.session?.user && view) {
+            view.user = req.session.user;
         }
 
         // load the loader data of the route defined in the component
@@ -153,7 +156,7 @@ export class Router {
      * @param {object} match
      * @returns {object} the compoenet, action and loader of the route
      */
-    async loadComponent(match: any) {
+    async loadComponent(match: Match) {
         const { default: View, action, loader } = await match.route.component();
 
         const params = this.getParams(match);
@@ -170,7 +173,7 @@ export class Router {
      * @param {object} res
      * @returns {object} the loader data of the route
      */
-    async loadLoaderData({ view, loader, action }: any, req: Request, res: Response, next: NextFunction) {
+    async loadLoaderData({ view, loader, action }: any, req: Request, res: Response, next: NextFunction): Promise<any> {
         if (loader) {
             const params = view?.params ?? {};
             // load the loader data of the route
@@ -245,7 +248,7 @@ class RouterMatcher {
      */
     static NOT_FOUND_ROUTE = {
         path: "/404",
-        component: () => import("./views/pages/Error404.js"),
+        component: () => import("./views/pages/Error404"),
     };
 
     /**
@@ -257,7 +260,7 @@ class RouterMatcher {
      * @param {string} path
      * @returns {RegExp}
      */
-    pathToRegex(path: string) {
+    pathToRegex(path: string): RegExp {
         const sanitizedPath = path
             .replace(/\//g, "\\/")
             .replace(/:\w+/g, "([^\\/]+)");
@@ -282,7 +285,7 @@ class RouterMatcher {
      * @param {string} pathname
      * @returns {Match}
      */
-    match(pathname: string) {
+    match(pathname: string): Match {
         /* Get the current url path */
         const potentialMatches = this.routes.map((route) => {
             let regex = this.regexCache.get(route.path);
