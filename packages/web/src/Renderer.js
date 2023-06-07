@@ -27,16 +27,19 @@ export class Renderer {
     this.action = action;
     this.loader = loader;
 
-    return await this.generateHtml(this.view);
+    if (view) {
+      return await this.generateHtml(this.view);
+    }
+
+    return null;
   }
 
   async getComponent(pathname, { req, res, next }) {
-
     if (this.pathname === pathname) {
       return { view: this.view, action: this.action, loader: this.loader };
     }
 
-      this.pathname = pathname;
+    this.pathname = pathname;
 
     const { view, action, loader } = await this.router.loadView(this.pathname, {
       req,
@@ -56,6 +59,10 @@ export class Renderer {
     const data = {};
     data.content = await view.serverRender();
     data.title = view.title ?? "Recipe App";
+
+    data.login = view.user
+      ? `<a href="/logout">Logout</a>`
+      : `<a href="/login">Login</a>`;
 
     const html = await this.templater.compileFileToString(this.filePath, data);
 

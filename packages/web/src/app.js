@@ -41,22 +41,13 @@ const handleGet = async (pathname, { req, res, next }) => {
 
   // if the headers have already been sent (i.e. from the loader function), return
 
-  // dont really like where this is located, might be best to generate all this elsewhere. in router or separate? Renderer class?
-
-  // if (!req.session?.user) {
-  //     const { default: Link } = await import(
-  //         path.resolve(__dirname, "src", "views", "components", "Link.js")
-  //     );
-  //     data.login = new Link({
-  //         href: "/login",
-  //         text: "Login",
-  //     }).render();
-  // }
-
-  if (res.headersSent) return;
 
   // otherwise, read the index.html file and replace the main element with the rendered HTML
   const html = await Renderer.render(pathname, { req, res, next });
+
+  if (res.headersSent) return;
+
+  const response = html ? html : "Not Found";
 
   // send the final HTML to the client
   res.status(200).set({ "Content-Type": "text/html" }).end(html);
