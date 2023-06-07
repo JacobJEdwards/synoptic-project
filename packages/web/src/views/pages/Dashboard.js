@@ -1,4 +1,5 @@
 import Page from "./AbstractPage.js";
+import fs from 'fs/promises'
 
 export default class Dashboard extends Page {
     constructor(params, title="Home") {
