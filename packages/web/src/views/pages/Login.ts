@@ -46,6 +46,9 @@ export default class Login extends Page {
                         <button type="submit">Login</button>
                     </div>
                 </form>
+                <div>
+                    <a href="/register">Register</a>
+                </div>
             </section>
         `;
     }
