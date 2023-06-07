@@ -50,7 +50,7 @@ const handleGet = async (pathname, { req, res, next }) => {
   const response = html ? html : "Not Found";
 
   // send the final HTML to the client
-  res.status(200).set({ "Content-Type": "text/html" }).end(html);
+  res.status(200).set({ "Content-Type": "text/html" }).end(response);
 };
 
 /**
