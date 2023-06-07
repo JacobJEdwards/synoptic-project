@@ -12,7 +12,11 @@ export const loader = async ({ params }) => {
 export const action = async ({ req, res }) => {
   const { body } = req;
   const { comment, recipeId } = body;
-  const response = await createComment(comment, recipeId);
+
+  const userId = req?.session?.user?.id;
+
+  const response = await createComment(comment, recipeId, userId);
+
   res.redirect(`/recipe/${recipeId}`);
   return response;
 };

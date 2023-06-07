@@ -62,9 +62,9 @@ export class RecipesController {
   @Post(":id/comments")
   addComment(
     @Param("id", ParseIntPipe) id: number,
-    @Body() comment: { comment: string }
+    @Body() comment: { message: string, userId?: number }
   ) {
     Logger.log(`Adding comment ${comment} to recipe ${id}`);
-    return this.recipesService.addComment(id, comment.comment);
+    return this.recipesService.addComment(id, comment);
   }
 }

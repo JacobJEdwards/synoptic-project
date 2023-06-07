@@ -26,16 +26,17 @@ export const action = async ({ req, res }) => {
 
     const body = req.body;
 
-    const title = body.title;
-    const description = body.description;
+    const { title, description, origin, steps } = body;
+
     const ingredients = body.ingredients.split("\n");
-    const origin = body.origin;
-    const steps = body.steps;
     const vegan = body.vegan === "on";
     const vegetarian = body.vegetarian === "on";
     const halal = body.halal === "on";
     const kosher = body.kosher === "on";
     const tags = body.tags.split("\n");
+
+    const userId = req?.session?.user?.id;
+
     const recipe = {
         title,
         description,
@@ -47,7 +48,9 @@ export const action = async ({ req, res }) => {
         halal,
         kosher,
         tags,
+        userId,
     };
+
     const newRecipe = await createRecipe(recipe);
 
     if (!newRecipe) {

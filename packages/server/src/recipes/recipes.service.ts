@@ -61,15 +61,15 @@ export class RecipesService {
         });
     }
 
-    async addComment(id: number, comment: string): Promise<Recipe> {
+    async addComment(recipeId: number, comment: { message: string, userId?: number}): Promise<Recipe> {
         const response = await this.prisma.recipe.update({
             where: {
-                id,
+                id: recipeId,
             },
             data: {
                 comments: {
                     create: {
-                        message: comment,
+                        ...comment,
                     },
                 },
             },
