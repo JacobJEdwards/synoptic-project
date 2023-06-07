@@ -25,13 +25,15 @@ export async function getRecipes() {
 export async function getRecipe(id) {
   try {
     const recipe = await fetch(`http://localhost:3000/recipes/${id}`);
+
     if (!recipe.ok) {
-      return {};
+      return null;
     }
+
     return await recipe.json();
   } catch (error) {
     console.log(error);
-    return {};
+    return null;
   }
 }
 
@@ -44,9 +46,14 @@ export async function createRecipe(recipe) {
         "Content-Type": "application/json",
       },
     });
+
+    if (!response.ok) {
+        return null;
+    }
+
     return await response.json();
   } catch (error) {
     console.log(error);
-    return {};
+    return null;
   }
 }
