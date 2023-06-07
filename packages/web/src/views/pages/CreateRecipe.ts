@@ -153,4 +153,3 @@ export default class CreateRecipe extends AbstractPage {
         return
     };
 }
-}
