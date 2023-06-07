@@ -107,3 +107,80 @@ footer {
   padding: 16px;
   margin-top: 32px;
 }
+
+fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto 2% auto 2%;
+  width: 100%;
+  border: 10px solid black;
+  border-radius: 5px;
+}
+
+legend {
+  padding: 5px;
+  font-size: medium;
+  word-spacing: 4px;
+  text-align: center;
+}
+
+#create-recipe-form {
+  display: flex;
+}
+
+.form {
+  padding-top: 25px;
+  padding-left: 250px;
+  font-size: small;
+}
+
+input, textarea {
+  display: block;
+  width: 95%;
+  padding: 10px;
+  margin: 0 5px 0 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: white;
+}
+
+input:hover {
+  background-color: #eff4f7;
+}
+
+textarea:hover {
+  background-color: #eff4f7;
+}
+
+.form-control {
+  display: block;
+}
+
+.label {
+  padding-left: 10px;
+  padding-top: 20px;
+  padding-bottom: 5px;
+}
+
+#create-button {
+  margin: 2% 35% 2% 35%;
+  min-width: 150px;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: #b8195a;
+  color: white
+}
+
+#create-button:hover {
+  background-color: pink;
+}
+
+.checkbox {
+  padding-left: 25px;
+  padding-top: 20px;
+}
+
+#create-button {
+  margin-top: 30px;
+}
