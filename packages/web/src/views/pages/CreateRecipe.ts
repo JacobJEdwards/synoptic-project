@@ -71,48 +71,49 @@ export default class CreateRecipe extends AbstractPage {
         return `
         <section class="prose">
             <h1>Create Recipe</h1>
+            <p class="form">required information is marked with an asterisk (*)</p>
             <form id="create-recipe-form" method="POST">
-                <div class="form-control">
-                    <label for="title">Title</label>
+                <fieldset>
+                    <legend>Create Recipe</legend>
+
+                    <label class="label" for="title">Title*</label>
                     <input type="text" id="title" name="title" placeholder="Enter title" />
-                </div>
-                <div class="form-control">
-                    <label for="description">Description</label>
+
+                    <label class="label" for="description">Description*</label>
                     <textarea id="description" name="description" placeholder="Enter description"></textarea>
-                </div>
-                <div class="form-control">
-                    <label for="ingredients">Ingredients</label>
+
+                    <label class="label" for="ingredients">Ingredients*</label>
                     <textarea id="ingredients" name="ingredients" placeholder="Enter ingredients"></textarea>
-                </div>
-                <div class="form-control">
-                    <label for="origin">Origin</label>
+
+                    <label class="label" for="origin">Origin*</label>
                     <input type="text" id="origin" name="origin" placeholder="Enter origin" />
-                </div>
-                <div class="form-control">
-                    <label for="steps">Steps</label>
+
+                    <label class="label" for="steps">Steps*</label>
                     <textarea id="steps" name="steps" placeholder="Enter steps"></textarea>
-                </div>
-                <div class="form-control">
-                    <label for="vegan">Vegan</label>
-                    <input type="checkbox" id="vegan" name="vegan" />
-                </div>
-                <div class="form-control">
-                    <label for="vegetarian">Vegetarian</label>
-                    <input type="checkbox" id="vegetarian" name="vegetarian" />
-                </div>
-                <div class="form-control">
-                    <label for="halal">Halal</label>
-                    <input type="checkbox" id="halal" name="halal" />
-                </div>
-                <div class="form-control">
-                    <label for="kosher">Kosher</label>
-                    <input type="checkbox" id="kosher" name="kosher" />
-                </div>
-                <div class="form-control">
-                    <label for="tags">Tags</label>
+
+                    <label class="label" for="tags">Tags</label>
                     <textarea id="tags" name="tags" placeholder="Enter tags"></textarea>
-                </div>
-                <button type="submit">Create</button>
+
+                    <label class="label">Meal Tags:</label>
+                    <div class="checkbox">
+                        <label for="vegan">Vegan</label>
+                        <input type="checkbox" name="vegan" id="vegan">
+                    </div>
+                    <div class="checkbox"
+                        <label for="vegetarian">Vegetarian</label>
+                        <input type="checkbox" name="vegetarian" id="vegetarian">
+                    </div>
+                    <div class="checkbox">
+                        <label for="Halal">Halal</label>
+                        <input type="checkbox" name="Halal" id="Halal">
+                    </div>
+                    <div class="checkbox">
+                        <label for="Kosher">Kosher</label>
+                        <input type="checkbox" name="Kosher" id="Kosher">
+                    </div>
+
+                    <button id="create-button" type="submit">Create</button>
+                </fieldset>
             </form>
         </section>
         `;
