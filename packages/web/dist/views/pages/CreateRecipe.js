@@ -1,43 +1,33 @@
-/*
-model Recipe {
-    id          Int      @id @default(autoincrement())
-    title       String
-    description String?
-    ingredients String[]
-    origin      String   @default("Unknown")
-    steps       String
-    vegan       Boolean  @default(false)
-    vegetarian  Boolean  @default(false)
-    halal       Boolean  @default(false)
-    kosher      Boolean  @default(false)
-    tags        String[]
-    user        User?    @relation(fields: [userId], references: [id])
-    userId      Int?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-}
-*/
-
-import AbstractPage from "./AbstractPage";
-import { createRecipe } from "../services/recipes.service.js";
-import type { ActionArgs, ActionFunction } from "../../types/Action";
-
-export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
-    if (!req.body) return res.redirect("/recipes/create");
-
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.action = void 0;
+const AbstractPage_1 = __importDefault(require("./AbstractPage"));
+const recipes_service_js_1 = require("../services/recipes.service.js");
+const action = ({ req, res }) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    if (!req.body)
+        return res.redirect("/recipes/create");
     const body = req.body;
-
     const { title, description, origin, steps } = body;
-
     const ingredients = body.ingredients.split("\n");
     const vegan = body.vegan === "on";
     const vegetarian = body.vegetarian === "on";
     const halal = body.halal === "on";
     const kosher = body.kosher === "on";
     const tags = body.tags.split("\n");
-
-    const userId = req?.session?.user?.id;
-
+    const userId = (_b = (_a = req === null || req === void 0 ? void 0 : req.session) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.id;
     const recipe = {
         title,
         description,
@@ -51,23 +41,20 @@ export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
         tags,
         userId,
     };
-
-    const newRecipe = await createRecipe(recipe);
-
+    const newRecipe = yield (0, recipes_service_js_1.createRecipe)(recipe);
     if (!newRecipe) {
         return;
     }
-
     res.redirect(`/recipes/${newRecipe.id}`);
-};
-
-export default class CreateRecipe extends AbstractPage {
-    constructor(params: any, title = "Create Recipe") {
+});
+exports.action = action;
+class CreateRecipe extends AbstractPage_1.default {
+    constructor(params, title = "Create Recipe") {
         super(params, title);
     }
-
-    async getHtml() {
-        return `
+    getHtml() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return `
         <section class="prose">
             <h1>Create Recipe</h1>
             <form id="create-recipe-form" method="POST">
@@ -115,39 +102,13 @@ export default class CreateRecipe extends AbstractPage {
             </form>
         </section>
         `;
+        });
     }
-
-    async clientScript() {
-        // const form = document.getElementById("create-recipe-form");
-        // form.addEventListener("submit", async (e) => {
-        //   e.preventDefault();
-        //   const formData = new FormData(form);
-        //   const title = formData.get("title");
-        //   const description = formData.get("description");
-        //   const ingredients = formData.get("ingredients").split("\n");
-        //   const origin = formData.get("origin");
-        //   const steps = formData.get("steps");
-        //   const vegan = formData.get("vegan") === "on";
-        //   const vegetarian = formData.get("vegetarian") === "on";
-        //   const halal = formData.get("halal") === "on";
-        //   const kosher = formData.get("kosher") === "on";
-        //   const tags = formData.get("tags").split("\n");
-        //   const recipe = {
-        //     title,
-        //     description,
-        //     ingredients,
-        //     origin,
-        //     steps,
-        //     vegan,
-        //     vegetarian,
-        //     halal,
-        //     kosher,
-        //     tags,
-        //   };
-        //   const newRecipe = await createRecipe(recipe);
-        // const { navigateTo } = await import("../../root.js");
-        // await navigateTo(`/recipes/${newRecipe.id}`);
-        // window.location.reload();
-        return
-    };
+    clientScript() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return;
+        });
+    }
+    ;
 }
+exports.default = CreateRecipe;

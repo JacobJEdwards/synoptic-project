@@ -1,0 +1,1 @@
+{"version":3,"file":"Charities.d.ts","sourceRoot":"","sources":["../../../src/views/pages/Charities.ts"],"names":[],"mappings":"AAAA,OAAO,IAAI,MAAM,gBAAgB,CAAC;AAGlC,OAAO,KAAK,EAAE,cAAc,EAAc,MAAM,oBAAoB,CAAC;AAErE,eAAO,MAAM,MAAM,EAAE,cAGpB,CAAC;AAEF,MAAM,CAAC,OAAO,OAAO,SAAU,SAAQ,IAAI;gBAC3B,MAAM,EAAE,GAAG,EAAE,KAAK,SAAc;IAItC,OAAO;IA0DP,YAAY;CAGrB"}

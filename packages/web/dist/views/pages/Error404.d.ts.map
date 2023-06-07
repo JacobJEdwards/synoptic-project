@@ -1,0 +1,1 @@
+{"version":3,"file":"Error404.d.ts","sourceRoot":"","sources":["../../../src/views/pages/Error404.ts"],"names":[],"mappings":"AAAA,OAAO,IAAI,MAAM,gBAAgB,CAAC;AAElC,MAAM,CAAC,OAAO,OAAO,QAAS,SAAQ,IAAI;gBAC1B,MAAM,EAAE,GAAG,EAAE,KAAK,SAAuB;IAI/C,OAAO;IASP,YAAY,IAAI,OAAO,CAAC,IAAI,CAAC;CAGtC"}

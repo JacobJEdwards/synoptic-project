@@ -4,8 +4,11 @@ import type { ExpressObject } from "./app.js";
 import { ActionFunction } from "./types/Action.js";
 import { LoaderFunction } from "./types/Loader.js";
 
+import jsonRoutes from "./routes.json" //assert { type: "json" };
+
 type Match = {
     result: RegExpMatchArray | null;
+    // result will be null if route doesn't match current path, or an array with the full path and potential parameters
     route: Route;
 };
 
@@ -14,7 +17,6 @@ export type Route = {
     component: () => Promise<any>;
 };
 
-// result will be null if route doesn't match current path, or an array with the full path and potential parameters
 
 /**
  * helper function to allow caching
@@ -29,54 +31,61 @@ function deepEqual(x: any, y: any): boolean {
         : x === y;
 }
 
+export const routes: Route[] = jsonRoutes.map((route) => {
+    return {
+        path: route.urlPath,
+        component: () => import(route.filePath)
+    }
+})
+
 /**
  * Routes of the app
  * Each route has a path and a component
  * The path is used to match the url path
  * The component is the view that will be rendered
  */
-export const routes: Route[] = [
-    {
-        path: "/",
-        component: () => import("./views/pages/Dashboard"),
-    },
-    {
-        path: "/about",
-        component: () => import("./views/pages/About"),
-    },
-    {
-        path: "/charities",
-        component: () => import("./views/pages/Charities"),
-    },
-    {
-        path: "/recipes",
-        component: () => import("./views/pages/Recipes"),
-    },
-    {
-        path: "/recipes/new",
-        component: () => import("./views/pages/CreateRecipe"),
-    },
-    {
-        path: "/recipes/:id",
-        component: () => import("./views/pages/Recipe"),
-    },
-    {
-        path: "/login",
-        component: () => import("./views/pages/Login"),
-    },
-    {
-        path: "/register",
-        component: () => import("./views/pages/Register"),
-    },
-    {
-        path: "/logout",
-        component: () => import("./views/pages/Logout"),
-    },
-    {
-        path: "/404",
-        component: () => import("./views/pages/Error404"),
-    },
-];
+// export const routes: Route[] = [
+//     {
+//         path: "/",
+//         component: () => import("./views/pages/Dashboard"),
+//     },
+//     {
+//         path: "/about",
+//         component: () => import("./views/pages/About"),
+//     },
+//     {
+//         path: "/charities",
+//         component: () => import("./views/pages/Charities"),
+//     },
+//     {
+//         path: "/recipes",
+//         component: () => import("./views/pages/Recipes"),
+//     },
+//     {
+//         path: "/recipes/new",
+//         component: () => import("./views/pages/CreateRecipe"),
+//     },
+//     {
+//         path: "/recipes/:id",
+//         component: () => import("./views/pages/Recipe"),
+//     },
+//     {
+//         path: "/login",
+//         component: () => import("./views/pages/Login"),
+//     },
+//     {
+//         path: "/register",
+//         component: () => import("./views/pages/Register"),
+//     },
+//     {
+//         path: "/logout",
+//         component: () => import("./views/pages/Logout"),
+//     },
+//     {
+//         path: "/404",
+//         component: () => import("./views/pages/Error404"),
+//     },
+// ];
 
 
 // Improved Router class
