@@ -29,7 +29,7 @@ const app = new Application(AppOptions);
 
 // const __dirname = process.cwd();
 
-app.use("/views", express.static(path.resolve("src", "views")));
+app.use("/views", express.static(path.resolve(__dirname, "views")));
 
 /* SSR */
 

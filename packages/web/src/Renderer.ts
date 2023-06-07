@@ -19,7 +19,7 @@ export class Renderer {
     constructor() {
         this.router = new Router(routes);
         this.templater = new Templater();
-        this.filePath = path.resolve("src/views/index.html");
+        this.filePath = path.resolve(__dirname, "views", "index.html");
 
         this.pathname = null;
         this.view = null;
