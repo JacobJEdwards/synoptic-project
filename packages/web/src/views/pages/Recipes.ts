@@ -2,14 +2,15 @@ import Page from "./AbstractPage";
 import { getRecipes } from "../services/recipes.service.js";
 import RecipeCard from "../components/StatelessRecipeCard.js";
 import Link from "../components/Link.js";
+import type { LoaderFunction, LoaderArgs } from "../../types/Loader";
 
-export const loader = async () => {
+export const loader: LoaderFunction = async () => {
     const recipes = await getRecipes();
     return recipes;
 };
 
 export default class Recipes extends Page {
-    constructor(params, title = "Recipes") {
+    constructor(params: any, title = "Recipes") {
         super(params, title);
     }
 
@@ -19,7 +20,7 @@ export default class Recipes extends Page {
 
         if (recipes) {
             recipesHtml = recipes
-                .map((recipe) => {
+                .map((recipe: any) => {
                     return new RecipeCard(recipe).render();
                 })
                 .join("");
@@ -79,19 +80,6 @@ export default class Recipes extends Page {
     }
 
     async clientScript() {
-        // const recipes = this.loaderData;
-        // if (!recipes) return;
-        //
-        // const recipeContainer = document.querySelector(".recipe-container");
-        //
-        // recipes.forEach((recipe) => {
-        //   const recipeElement = document.createElement("article");
-        //   recipeElement.classList.add("service");
-        //
-        //   const recipeComponent = new RecipeCard(recipeElement, recipe);
-        //   recipeComponent.init();
-        //
-        //   recipeContainer.appendChild(recipeElement);
-        // });
+        return
     }
 }

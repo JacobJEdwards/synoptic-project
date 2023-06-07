@@ -1,8 +1,9 @@
 import Page from "./AbstractPage";
 import { getCharities } from "../services/charity.service.js";
 import CharityCard from "../components/StatelessCharityCard.js";
+import type { LoaderFunction, LoaderArgs } from "../../types/Loader";
 
-export const loader = async () => {
+export const loader: LoaderFunction = async () => {
     const charities = await getCharities();
     return charities;
 };

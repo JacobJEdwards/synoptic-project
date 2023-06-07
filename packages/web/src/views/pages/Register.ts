@@ -1,12 +1,14 @@
 import Page from "./AbstractPage";
 import { register } from "../services/auth.service.js";
-import type { Request, Response } from "express";
+import type { LoaderFunction, LoaderArgs } from '../../types/Loader'
+import type { ActionFunction, ActionArgs } from '../../types/Action'
 
-export const loader = async ({ req, res }: {req: Request, res: Response}) => {
+
+export const loader: LoaderFunction = async ({ req, res }: LoaderArgs) => {
   if (req.session.user) return res.redirect("/");
 };
 
-export const action = async ({ req, res }: {req: Request, res: Response}) => {
+export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
   // edge cases
   if (!req.body) return res.redirect("/register");
 

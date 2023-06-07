@@ -21,8 +21,9 @@ model Recipe {
 import type { Request, Response } from "express";
 import AbstractPage from "./AbstractPage";
 import { createRecipe } from "../services/recipes.service.js";
+import type { ActionArgs, ActionFunction } from "../../types/Action";
 
-export const action = async ({ req, res }: { req: Request, res: Response }) => {
+export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
     if (!req.body) return res.redirect("/recipes/create");
 
     const body = req.body;

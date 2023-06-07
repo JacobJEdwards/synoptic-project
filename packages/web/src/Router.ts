@@ -48,7 +48,7 @@ export const routes: Route[] = [
     },
     {
         path: "/recipes",
-        component: () => import("./views/pages/Recipes.js"),
+        component: () => import("./views/pages/Recipes"),
     },
     {
         path: "/recipes/new",
@@ -56,7 +56,7 @@ export const routes: Route[] = [
     },
     {
         path: "/recipes/:id",
-        component: () => import("./views/pages/Recipe.js"),
+        component: () => import("./views/pages/Recipe"),
     },
     {
         path: "/login",

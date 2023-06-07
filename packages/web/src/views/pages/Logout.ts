@@ -1,7 +1,7 @@
 import Page from "./AbstractPage";
-import type { ExpressObject } from "../../app";
+import type { LoaderFunction, LoaderArgs } from "../../types/Loader"
 
-export const loader = async ({ req, res, next }: ExpressObject) => {
+export const loader: LoaderFunction = async ({ req, res, next }: LoaderArgs) => {
     if (req.session) {
         req.session.destroy((err) => {
             if (err) {
@@ -13,17 +13,3 @@ export const loader = async ({ req, res, next }: ExpressObject) => {
 
     res.redirect("/");
 };
-
-// export default class Logout extends Page {
-//     constructor(params, title = "Logout") {
-//         super(params, title);
-//     }
-//
-//     async getHtml() {
-//         return `
-//             <div class="container">
-//                 <h1>Logging out...</h1>
-//             </div>
-//         `;
-//     }
-// }

@@ -2,14 +2,17 @@ import AbstractPage from "./AbstractPage";
 import { getRecipe } from "../services/recipes.service.js";
 import { createComment } from "../services/comments.service.js";
 import Comment from "../components/StatelessComment.js";
+import type { LoaderArgs, LoaderFunction } from "../../types/Loader";
+import type { ActionArgs, ActionFunction } from "../../types/Action";
 
-export const loader = async ({ params }) => {
+
+export const loader: LoaderFunction = async ({ params }: LoaderArgs) => {
   const { id } = params;
   const recipe = await getRecipe(id);
   return recipe;
 };
 
-export const action = async ({ req, res }) => {
+export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
   const { body } = req;
   const { comment, recipeId } = body;
 
@@ -22,7 +25,7 @@ export const action = async ({ req, res }) => {
 };
 
 export default class Recipe extends AbstractPage {
-  constructor(params, title = "Recipe") {
+  constructor(params: any, title = "Recipe") {
     super(params, title);
   }
 
@@ -35,7 +38,7 @@ export default class Recipe extends AbstractPage {
     }
 
     const commentsHtml = recipe?.comments
-      .map((comment) => {
+      .map((comment: any) => {
         return new Comment(comment).render();
       })
       .join("");
@@ -62,14 +65,6 @@ export default class Recipe extends AbstractPage {
   }
 
   async clientScript() {
-    const form = document.querySelector(".comment-form");
-    form.addEventListener("submit", async (e) => {
-      // e.preventDefault();
-      // const formData = new FormData(form);
-      // const comment = formData.get("comment");
-      // const recipeId = this.params.id;
-      // const response = await createComment(comment, recipeId);
-      window.location.reload();
-    });
+      return
   }
 }
