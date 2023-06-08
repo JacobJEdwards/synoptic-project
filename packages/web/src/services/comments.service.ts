@@ -1,27 +1,39 @@
 import type { Comment, User } from "@lib/types";
 
-export async function createComment(comment: Comment, recipeId: number, user?: User): Promise<Comment | null> {
-    try {
-        const request = {
-            message: comment,
-            userId: user?.id,
-            username: user?.username,
-        };
+export async function createComment(
+  message: string,
+  recipeId: number,
+  user?: User
+): Promise<Comment | null> {
+  try {
+    const userId = user?.id;
+    const username = user?.username;
 
-        const data = await fetch(
-            `http://localhost:3000/recipes/${recipeId}/comments`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(request),
-            }
-        );
-        return await data.json();
+    const request = {
+      message: message,
+      userId: userId,
+      username: username,
+    };
 
-    } catch (err) {
-        console.log(err);
-        return null;
+
+    const response = await fetch(
+      `http://localhost:3000/recipes/${recipeId}/comments`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+      }
+    );
+
+    if (!response.ok) {
+      return null;
     }
+
+    return await response.json();
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
 }

@@ -1,10 +1,16 @@
-import { AbstractPage as Page } from "@lib/components"
-import type { Params, ActionArgs, ActionFunction, LoaderArgs, LoaderFunction, User } from "@lib/types";
+import { AbstractPage as Page } from "@lib/components";
+import type {
+  Params,
+  ActionArgs,
+  ActionFunction,
+  LoaderArgs,
+  LoaderFunction,
+  User,
+} from "@lib/types";
 import Comment from "@components/StatelessComment";
 
 import { getRecipe } from "@services/recipes.service";
 import { createComment } from "@services/comments.service";
-
 
 export const loader: LoaderFunction = async ({ params }: LoaderArgs) => {
   const { id } = params;
@@ -14,11 +20,11 @@ export const loader: LoaderFunction = async ({ params }: LoaderArgs) => {
 
 export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
   const { body } = req;
-  const { comment, recipeId } = body;
+  const { message, recipeId } = body;
 
-  const user = req.session.user ? req.session.user as User : undefined;
+  const user = req.session.user ? (req.session.user as User) : undefined;
 
-  const response = await createComment(comment, recipeId, user);
+  const response = await createComment(message, recipeId, user);
 
   res.redirect(`/recipes/${recipeId}`);
   return response;
@@ -55,16 +61,20 @@ export default class Recipe extends Page {
             <div class="comments">
                 ${commentsHtml}
             </div>
-            <form class="comment-form" method="POST">
-                <input type="text" name="comment" placeholder="Your comment" />
+            <h2>Add comment</h2>
+            <form action="/recipes/${recipe.id}" method="POST">
                 <input type="hidden" name="recipeId" value="${recipe.id}" />
-                <button type="submit">Add comment</button>
+                <div class="form-control">
+                    <label class="label" for="message">Message</label>
+                    <textarea class="textarea" name="message" id="message" cols="30" rows="10"></textarea>
+                </div>
+                <button class="btn" type="submit">Add comment</button>
             </form>
             </article>
         `;
   }
 
   async clientScript() {
-      return
+    return;
   }
 }

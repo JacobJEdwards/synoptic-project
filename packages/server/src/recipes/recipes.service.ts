@@ -70,7 +70,7 @@ export class RecipesService {
 
   async addComment(
     recipeId: number,
-    comment: { message: string; userId: number; username: string }
+    comment: { message: string; userId?: number; username?: string }
   ): Promise<Recipe> {
     const response = await this.prisma.recipe.update({
       where: {

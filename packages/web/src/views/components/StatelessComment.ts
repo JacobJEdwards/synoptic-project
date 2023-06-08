@@ -7,7 +7,7 @@ export default class StatelessComment extends Component {
     }
 
     render() {
-        const comment = this.props;
+        const comment: Comment = this.props;
 
         if (!comment) {
             return `
@@ -17,10 +17,9 @@ export default class StatelessComment extends Component {
             `;
         }
 
-        const userName = comment.user ? comment.user.name : "Anonymous";
         return `
             <div class="comment">
-                <h4>${userName}</h4>
+                <h4>${comment.username}</h4>
                 <p>${comment.message}</p>
             </div>
         `;
