@@ -69,10 +69,12 @@ export default class Recipes extends Page {
       <section class="recipe-container">
         ${recipesHtml}
       </section>
-      ${new Link({
-            href: "/recipes/new",
-            text: "Add a Recipe",
-        }).render()}
+      <p id="add-recipe">Do you have a recipe that you can't find here, please
+        ${new Link({
+              href: "/recipes/new",
+              text: "add a recipe here!",
+          }).render()}
+      </p>
     </section>
         `;
 

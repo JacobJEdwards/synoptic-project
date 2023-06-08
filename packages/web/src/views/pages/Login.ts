@@ -31,24 +31,23 @@ export default class Login extends Page {
 
     async getHtml() {
         return `
-            <h1>Login</h1>
             <section>
-                <form class="login-form" action="/login" method="POST">
-                    <div class="form-control">
-                        <label for="email">Email</label>
+                <h1>Login</h1>
+                <p class="form">Required information is marked with an asterisk (*)</p>
+                <form id="login-form" action="/login" method="POST">
+                    <fieldset>
+                        <legend>Login</legend>
+                        <label class="label" for="email">Email*</label>
                         <input type="email" id="email" name="email" placeholder="Email" required />
-                    </div>
-                    <div class="form-control">
-                        <label for="password">Password</label>
+
+                        <label class="label" for="password">Password*</label>
                         <input type="password" id="password" name="password" placeholder="Password" required />
-                    </div>
-                    <div class="form-control">
-                        <button type="submit">Login</button>
-                    </div>
+
+                        <button id="login-button" type="submit">Login</button>
+
+                        <p id="p-reg">Don't have an account? <a href="/register">Register here.</a></p>
+                    </fieldset>
                 </form>
-                <div>
-                    <a href="/register">Register</a>
-                </div>
             </section>
         `;
     }

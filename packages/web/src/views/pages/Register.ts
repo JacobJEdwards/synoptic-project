@@ -33,31 +33,28 @@ export default class Register extends Page {
   async getHtml() {
     return `
         <section class="register">
-            <h1>Register</h1>
-            <form class="register-form" action="/register" method="POST">
-                <div class="form-control">
-                    <label for="username">Username</label>
+          <h1>Register</h1>
+          <p class="form">Required information is marked with an asterisk (*)</p>
+            <form id="register-form" action="/register" method="POST">
+              <fieldset>
+                  <legend>Register</legend>
+                    <label class="label" for="username">Username*</label>
                     <input type="text" name="username" id="username" placeholder="Username" required />
-                </div>
-                <div class="form-control">
-                    <label for="email">Email</label>
+
+                    <label class="label" for="email">Email*</label>
                     <input type="email" name="email" id="email" placeholder="Email" required />
-                </div>
-                <div class="form-control">
-                    <label for="name">Name</label>
+
+                    <label class="label" for="name">Name*</label>
                     <input type="text" name="name" id="name" placeholder="Name" required />
-                </div>
-                <div class="form-control">
-                    <label for="password">Password</label>
+
+                    <label class="label" for="password">Password*</label>
                     <input type="password" name="password" id="password" placeholder="Password" required />
-                </div>
-                <div class="form-control">
-                    <button type="submit">Register</button>
-                </div>
+
+                    <button id="register-button" type="submit">Register</button>
+
+                    <p>Already have an account? <a href="/login">Login</a></p>
+              </fieldset>
             </form>
-            <div>
-                <p>Already have an account? <a href="/login">Login</a></p>
-            </div>
         </section>
         `;
   }
