@@ -10,7 +10,7 @@ export type ActionReturn<T> = {
   success: boolean;
   data?: T;
   error?: string;
-} | void;
+} | void | T;
 
 export type ActionFunction<T = any> = (
   args: ActionArgs

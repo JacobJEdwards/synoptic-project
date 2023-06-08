@@ -13,7 +13,7 @@ export type LoaderReturn<T> = {
     success: boolean;
     data?: T;
     error?: string;
-} | void;
+} | void | T;
 
 export type LoaderFunction<T = any> = (
     args: LoaderArgs
