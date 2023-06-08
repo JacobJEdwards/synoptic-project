@@ -1,7 +1,9 @@
-import Page from "./AbstractPage";
-import { getCharities } from "../services/charity.service.js";
-import CharityCard from "../components/StatelessCharityCard.js";
-import type { LoaderFunction, LoaderArgs } from "../../types/Loader";
+import { AbstractPage as Page } from "@lib/components"
+import type { Params } from "@lib/types"
+
+import { getCharities } from "@services/charity.service";
+import CharityCard from "@components/StatelessCharityCard";
+import type { LoaderFunction, LoaderArgs } from "@lib/types";
 
 export const loader: LoaderFunction = async () => {
     const charities = await getCharities();

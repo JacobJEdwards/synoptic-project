@@ -1,42 +1,42 @@
 [
   {
     "urlPath": "/",
-    "filePath": "./views/pages/Dashboard"
+    "filePath": "src/views/pages/Dashboard"
   },
   {
     "urlPath": "/about",
-    "filePath": "./views/pages/About"
+    "filePath": "src/views/pages/About"
   },
   {
     "urlPath": "/charities",
-    "filePath": "./views/pages/Charities"
+    "filePath": "src/views/pages/Charities"
   },
   {
     "urlPath": "/recipes",
-    "filePath": "./views/pages/Recipes"
+    "filePath": "src/views/pages/Recipes"
   },
   {
     "urlPath": "/recipes/new",
-    "filePath": "./views/pages/CreateRecipe"
+    "filePath": "src/views/pages/CreateRecipe"
   },
   {
     "urlPath": "/recipes/:id",
-    "filePath": "./views/pages/Recipe"
+    "filePath": "src/views/pages/Recipe"
   },
   {
     "urlPath": "/login",
-    "filePath": "./views/pages/Login"
+    "filePath": "src/views/pages/Login"
   },
   {
     "urlPath": "/register",
-    "filePath": "./views/pages/Register"
+    "filePath": "src/views/pages/Register"
   },
   {
     "urlPath": "/logout",
-    "filePath": "./views/pages/Logout"
+    "filePath": "src/views/pages/Logout"
   },
   {
     "urlPath": "/404",
-    "filePath": "./views/pages/Error404"
+    "filePath": "src/views/pages/Error404"
   }
 ]

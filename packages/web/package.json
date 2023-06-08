@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev:css": "postcss src/styles/styles.css -o src/views/css/index.css",
-    "dev": "nodemon --watch src --exec \"npm run dev:css && ts-node src/app.ts\"",
+    "dev": "nodemon --watch src --exec \"npm run dev:css && ts-node -r tsconfig-paths/register src/app.ts\"",
     "build:css": "postcss src/styles/styles.css -o src/views/css/index.css",
     "compile": "npm run build:css && tsc",
     "postcompile": "cp src/views/index.html dist/views/index.html; mkdir -p dist/views/css/; cp src/views/css/index.css dist/views/css/index.css",
@@ -19,7 +19,8 @@
     "express-session": "^1.17.3",
     "helmet": "^7.0.0",
     "morgan": "^1.10.0",
-    "redis": "^4.6.7"
+    "redis": "^4.6.7",
+    "tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.1",

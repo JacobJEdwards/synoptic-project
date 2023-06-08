@@ -1,7 +1,8 @@
-import Page from "./AbstractPage";
+import { AbstractPage as Page } from "@lib/components"
+import type { Params } from "@lib/types"
 
 export default class Dashboard extends Page {
-  constructor(params: any, title = "Home") {
+  constructor(params: Params, title = "Home") {
     super(params, title);
   }
 

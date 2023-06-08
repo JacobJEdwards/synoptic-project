@@ -1,5 +1,4 @@
-import Page from "./AbstractPage";
-import type { LoaderFunction, LoaderArgs } from "../../types/Loader"
+import type { LoaderFunction, LoaderArgs } from "@lib/types"
 
 export const loader: LoaderFunction = async ({ req, res, next }: LoaderArgs) => {
     if (req.session) {

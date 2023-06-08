@@ -1,8 +1,9 @@
-import Page from "./AbstractPage";
-import { getRecipes } from "../services/recipes.service.js";
-import RecipeCard from "../components/StatelessRecipeCard.js";
-import Link from "../components/Link.js";
-import type { LoaderFunction, LoaderArgs } from "../../types/Loader";
+import { AbstractPage as Page } from "@/lib/components";
+import type { Params, LoaderFunction, LoaderArgs } from "@lib/types";
+
+import { getRecipes } from "@services/recipes.service";
+import RecipeCard from "@components/StatelessRecipeCard";
+import Link from "@components/Link";
 
 export const loader: LoaderFunction = async () => {
     const recipes = await getRecipes();
@@ -10,7 +11,7 @@ export const loader: LoaderFunction = async () => {
 };
 
 export default class Recipes extends Page {
-    constructor(params: any, title = "Recipes") {
+    constructor(params: Params, title = "Recipes") {
         super(params, title);
     }
 

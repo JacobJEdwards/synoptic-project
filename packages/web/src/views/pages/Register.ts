@@ -1,37 +1,42 @@
-import Page from "./AbstractPage";
-import { register } from "../services/auth.service.js";
-import type { LoaderFunction, LoaderArgs } from '../../types/Loader'
-import type { ActionFunction, ActionArgs } from '../../types/Action'
+import { AbstractPage as Page } from "@lib/components"
+import type { Params, LoaderArgs, LoaderFunction, ActionArgs, ActionFunction } from "@lib/types";
 
+import { register } from "@services/auth.service";
 
-export const loader: LoaderFunction = async ({ req, res }: LoaderArgs) => {
-  if (req.session.user) return res.redirect("/");
+export const loader: LoaderFunction<void> = async ({ req, res }: LoaderArgs) => {
+    if (req?.session?.user) {
+        console.log("User is already logged in", req.session.user);
+        res.redirect("/");
+        return;
+    }
+
+    return;
 };
 
 export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
-  // edge cases
-  if (!req.body) return res.redirect("/register");
+    // edge cases
+    if (!req.body) return res.redirect("/register");
 
-  const { username, email, name, password } = req.body;
+    const { username, email, name, password } = req.body;
 
-  const data = await register(username, email, password, name);
+    const data = await register(username, email, password, name);
 
-  if (data?.user && data?.jwt) {
-    req.session.user = data.user;
-    req.session.jwt = data.jwt;
-    res.redirect("/");
-  }
+    if (data?.user && data?.jwt) {
+        req.session.user = data.user;
+        req.session.jwt = data.jwt;
+        res.redirect("/");
+    }
 
-  res.redirect("/register");
+    res.redirect("/register");
 };
 
 export default class Register extends Page {
-  constructor(params: any, title = "Register") {
-    super(params, title);
-  }
+    constructor(params: Params, title = "Register") {
+        super(params, title);
+    }
 
-  async getHtml() {
-    return `
+    async getHtml() {
+        return `
         <section class="register">
           <h1>Register</h1>
           <p class="form">Required information is marked with an asterisk (*)</p>
@@ -57,9 +62,9 @@ export default class Register extends Page {
             </form>
         </section>
         `;
-  }
+    }
 
-  async clientScript(): Promise<void> {
-    return;
-  }
+    async clientScript(): Promise<void> {
+        return;
+    }
 }

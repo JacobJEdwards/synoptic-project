@@ -30,6 +30,7 @@ model Comment {
     id        Int      @id @default(autoincrement())
     user      User?     @relation(fields: [userId], references: [id])
     userId    Int?
+    username  String   @default("Anonymous")
     recipes   Recipe   @relation(fields: [recipeId], references: [id])
     recipeId  Int
     message   String

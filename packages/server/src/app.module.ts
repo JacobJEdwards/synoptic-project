@@ -5,6 +5,7 @@ import { AuthModule } from "./auth/auth.module";
 import { UsersModule } from "./users/users.module";
 import { ConfigModule } from "@nestjs/config";
 import { CharitiesModule } from './charities/charities.module';
+import { CommentsModule } from './comments/comments.module';
 import config from "./config/configuration";
 
 /**
@@ -24,6 +25,7 @@ import config from "./config/configuration";
     RecipesModule,
     UsersModule,
     CharitiesModule,
+    CommentsModule,
   ],
 })
 export class AppModule {}

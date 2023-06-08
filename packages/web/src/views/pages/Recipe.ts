@@ -1,9 +1,9 @@
-import AbstractPage from "./AbstractPage";
-import { getRecipe } from "../services/recipes.service.js";
-import { createComment } from "../services/comments.service.js";
-import Comment from "../components/StatelessComment.js";
-import type { LoaderArgs, LoaderFunction } from "../../types/Loader";
-import type { ActionArgs, ActionFunction } from "../../types/Action";
+import { AbstractPage as Page } from "@lib/components"
+import type { Params, ActionArgs, ActionFunction, LoaderArgs, LoaderFunction, User } from "@lib/types";
+import Comment from "@components/StatelessComment";
+
+import { getRecipe } from "@services/recipes.service";
+import { createComment } from "@services/comments.service";
 
 
 export const loader: LoaderFunction = async ({ params }: LoaderArgs) => {
@@ -16,16 +16,16 @@ export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
   const { body } = req;
   const { comment, recipeId } = body;
 
-  const userId = req?.session?.user?.id;
+  const user = req.session.user ? req.session.user as User : undefined;
 
-  const response = await createComment(comment, recipeId, userId);
+  const response = await createComment(comment, recipeId, user);
 
-  res.redirect(`/recipe/${recipeId}`);
+  res.redirect(`/recipes/${recipeId}`);
   return response;
 };
 
-export default class Recipe extends AbstractPage {
-  constructor(params: any, title = "Recipe") {
+export default class Recipe extends Page {
+  constructor(params: Params, title = "Recipe") {
     super(params, title);
   }
 

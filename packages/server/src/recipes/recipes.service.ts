@@ -1,79 +1,89 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Logger } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { CreateRecipeResponseDto, UpdateRecipeResponseDto, RecipeDto, UpdateRecipeDto } from "./dto/recipes.dto";
+import {
+  CreateRecipeResponseDto,
+  UpdateRecipeResponseDto,
+  RecipeDto,
+  UpdateRecipeDto,
+} from "./dto/recipes.dto";
 import type { Comment, Recipe } from "@prisma/client";
 
 @Injectable()
 export class RecipesService {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-    async create(createRecipeDto: any) {
-        const recipe = await this.prisma.recipe.create({
-            data: {
-                ...createRecipeDto,
-            },
-        });
+  async create(createRecipeDto: any) {
+    const recipe = await this.prisma.recipe.create({
+      data: {
+        ...createRecipeDto,
+      },
+    });
 
-        return recipe;
+    return recipe;
+  }
+
+  async findAll() {
+    const recipes = await this.prisma.recipe.findMany({
+      include: {
+        comments: true,
+        user: true,
+      },
+    });
+
+    if (!recipes || recipes.length === 0) {
+      throw new NotFoundException({ status: 404, error: "No recipes found" });
     }
 
-    async findAll() {
-        const recipes = await this.prisma.recipe.findMany({
-            include: {
-                comments: true,
-            },
-        });
+    return recipes;
+  }
 
-        if (!recipes || recipes.length === 0) {
-            throw new NotFoundException({ status: 404, error: "No recipes found" });
-        }
+  async findOne(id: number) {
+    const recipe = await this.prisma.recipe.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        comments: true,
+        user: true,
+      },
+    });
 
-        return recipes;
+    if (!recipe) {
+      throw new NotFoundException({ status: 404, error: "Recipe not found" });
     }
 
-    async findOne(id: number) {
-        const recipe = await this.prisma.recipe.findUnique({
-            where: {
-                id,
-            },
-            include: {
-                comments: true,
-            },
-        });
+    return recipe;
+  }
 
-        if (!recipe) {
-            throw new NotFoundException({ status: 404, error: "Recipe not found" });
-        }
+  async update(id: number, updateRecipeDto: UpdateRecipeDto) {
+    return `This action updates a #${id} recipe`;
+  }
 
-        return recipe;
-    }
+  async remove(id: number) {
+    return await this.prisma.recipe.delete({
+      where: {
+        id,
+      },
+    });
+  }
 
-    async update(id: number, updateRecipeDto: UpdateRecipeDto) {
-        return `This action updates a #${id} recipe`;
-    }
-
-    async remove(id: number) {
-        return await this.prisma.recipe.delete({
-            where: {
-                id,
-            },
-        });
-    }
-
-    async addComment(recipeId: number, comment: { message: string, userId?: number}): Promise<Recipe> {
-        const response = await this.prisma.recipe.update({
-            where: {
-                id: recipeId,
-            },
-            data: {
-                comments: {
-                    create: {
-                        ...comment,
-                    },
-                },
-            },
-        });
-        return response;
-    }
+  async addComment(
+    recipeId: number,
+    comment: { message: string; userId: number; username: string }
+  ): Promise<Recipe> {
+    const response = await this.prisma.recipe.update({
+      where: {
+        id: recipeId,
+      },
+      data: {
+        comments: {
+          create: {
+            ...comment,
+          },
+        },
+      },
+    });
+    return response;
+  }
 }

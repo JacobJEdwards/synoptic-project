@@ -1,8 +1,13 @@
-import Page from "./AbstractPage";
-import { login } from "../services/auth.service.js";
-import type { Request, Response } from "express";
-import type { LoaderFunction, LoaderArgs } from "../../types/Loader"
-import type { ActionFunction, ActionArgs } from "../../types/Action"
+import { AbstractPage as Page } from "@lib/components";
+import type {
+    Params,
+    LoaderFunction,
+    LoaderArgs,
+    ActionArgs,
+    ActionFunction,
+} from "@lib/types";
+
+import { login } from "@services/auth.service";
 
 export const loader: LoaderFunction = async ({ req, res }: LoaderArgs) => {
     if (req.session?.user) return res.redirect("/");
@@ -15,6 +20,8 @@ export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
 
     const data = await login(email, password);
 
+    console.log(data);
+
     if (data?.user && data?.jwt) {
         req.session.user = data.user;
         req.session.jwt = data.jwt;
@@ -25,7 +32,7 @@ export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
 };
 
 export default class Login extends Page {
-    constructor(params: any, title = "Login") {
+    constructor(params: Params, title = "Login") {
         super(params, title);
     }
 

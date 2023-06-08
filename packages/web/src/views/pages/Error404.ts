@@ -1,7 +1,8 @@
-import Page from "./AbstractPage";
+import { AbstractPage as Page } from "@lib/components"
+import type { Params } from "@lib/types"
 
 export default class Error404 extends Page {
-    constructor(params: any, title="404 - Page Not Found") {
+    constructor(params: Params, title="404 - Page Not Found") {
         super(params, title);
     }
 

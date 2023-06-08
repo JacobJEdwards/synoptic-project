@@ -1,26 +1,6 @@
-/*
-model Recipe {
-    id          Int      @id @default(autoincrement())
-    title       String
-    description String?
-    ingredients String[]
-    origin      String   @default("Unknown")
-    steps       String
-    vegan       Boolean  @default(false)
-    vegetarian  Boolean  @default(false)
-    halal       Boolean  @default(false)
-    kosher      Boolean  @default(false)
-    tags        String[]
-    user        User?    @relation(fields: [userId], references: [id])
-    userId      Int?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-}
-*/
-
-import AbstractPage from "./AbstractPage";
-import { createRecipe } from "../services/recipes.service.js";
-import type { ActionArgs, ActionFunction } from "../../types/Action";
+import { AbstractPage as Page } from "@lib/components"
+import type { Params, ActionArgs, ActionFunction } from "@lib/types"
+import { createRecipe } from "@services/recipes.service";
 
 export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
     if (!req.body) return res.redirect("/recipes/create");
@@ -61,8 +41,8 @@ export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
     res.redirect(`/recipes/${newRecipe.id}`);
 };
 
-export default class CreateRecipe extends AbstractPage {
-    constructor(params: any, title = "Create Recipe") {
+export default class CreateRecipe extends Page {
+    constructor(params: Params, title = "Create Recipe") {
         super(params, title);
     }
 
