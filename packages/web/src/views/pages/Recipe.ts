@@ -71,11 +71,13 @@ export default class Recipe extends Page {
             return `<h1>Recipe not found</h1>`;
         }
 
-        const commentsHtml = recipe.comments ? recipe.comments
-            .map((comment: Comment) => {
-                return new CommentComponent(comment).render();
-            })
-            .join("") : "";
+        const commentsHtml = recipe.comments
+            ? recipe.comments
+                .map((comment: Comment) => {
+                    return new CommentComponent(comment).render();
+                })
+                .join("")
+            : "";
 
         this.title = recipe.title;
 
@@ -104,5 +106,5 @@ export default class Recipe extends Page {
 
     async clientScript() {
         return;
-    
+    }
 }

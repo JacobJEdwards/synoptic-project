@@ -1,88 +1,90 @@
 import { Router, routes, Templater } from "@lib/app";
-import type {
-    Data,
-    ExpressObject,
-    LoaderFunction,
-    ActionFunction,
-} from "@lib/types";
+import type { ExpressObject, LoaderFunction, ActionFunction } from "@lib/types";
 import path from "path";
 import { AbstractPage as Page } from "@lib/components";
 
+type replacements = "title" | "content" | "login";
+type Data = Record<replacements, string>;
+
 export default class Renderer {
-    router: Router;
-    templater: Templater;
-    filePath: string;
+  router: Router;
+  templater: Templater;
+  filePath: string;
 
-    pathname: string | null;
-    view: Page | null;
-    action: LoaderFunction | null;
-    loader: ActionFunction | null;
+  pathname: string | null;
+  view: Page | null;
+  action: LoaderFunction | null;
+  loader: ActionFunction | null;
 
-    constructor() {
-        this.router = new Router(routes);
-        this.templater = new Templater();
-        this.filePath = path.resolve("src", "views", "index.html");
+  constructor() {
+    this.router = new Router(routes);
+    this.templater = new Templater<Data>();
+    this.filePath = path.resolve("src", "views", "index.html");
 
-        this.pathname = null;
-        this.view = null;
-        this.action = null;
-        this.loader = null;
+    this.pathname = null;
+    this.view = null;
+    this.action = null;
+    this.loader = null;
+  }
+
+  async render(
+    pathname: string,
+    { req, res, next }: ExpressObject
+  ): Promise<string | null> {
+    const { view, action, loader } = await this.router.loadView(pathname, {
+      req,
+      res,
+      next,
+    });
+
+    this.pathname = pathname;
+    this.view = view;
+    this.action = action;
+    this.loader = loader;
+
+    if (this.view) {
+      return await this.generateHtml(this.view);
     }
 
-    async render(
-        pathname: string,
-        { req, res, next }: ExpressObject
-    ): Promise<string | null> {
-        const { view, action, loader } = await this.router.loadView(pathname, {
-            req,
-            res,
-            next,
-        });
+    return null;
+  }
 
-        this.pathname = pathname;
-        this.view = view;
-        this.action = action;
-        this.loader = loader;
-
-        if (this.view) {
-            return await this.generateHtml(this.view);
-        }
-
-        return null;
+  async getComponent(pathname: string, { req, res, next }: ExpressObject) {
+    if (this.pathname === pathname) {
+      return { view: this.view, action: this.action, loader: this.loader };
     }
 
-    async getComponent(pathname: string, { req, res, next }: ExpressObject) {
-        if (this.pathname === pathname) {
-            return { view: this.view, action: this.action, loader: this.loader };
-        }
+    this.pathname = pathname;
 
-        this.pathname = pathname;
+    const { view, action, loader } = await this.router.loadView(this.pathname, {
+      req,
+      res,
+      next,
+    });
 
-        const { view, action, loader } = await this.router.loadView(this.pathname, {
-            req,
-            res,
-            next,
-        });
+    this.view = view;
+    this.action = action;
+    this.loader = loader;
 
-        this.view = view;
-        this.action = action;
-        this.loader = loader;
+    return { view, action, loader };
+  }
 
-        return { view, action, loader };
-    }
+  /* T extends AbstractPage */
+  async generateHtml(view: Page): Promise<string> {
+    const data: Data = {
+      title: "",
+      content: "",
+      login: "",
+    };
+    data.content = await view.serverRender();
+    data.title = view.title ?? "Recipe App";
 
-    /* T extends AbstractPage */
-    async generateHtml(view: Page): Promise<string> {
-        const data: Data = {};
-        data.content = await view.serverRender();
-        data.title = view.title ?? "Recipe App";
+    data.login = view.user
+      ? `<a href="/profile">Profile</a>`
+      : `<a href="/login">Login</a>`;
 
-        data.login = view.user
-            ? `<a href="/profile">Profile</a>`
-            : `<a href="/login">Login</a>`;
+    const html = await this.templater.compileFileToString(this.filePath, data);
 
-        const html = await this.templater.compileFileToString(this.filePath, data);
-
-        return html;
-    }
+    return html;
+  }
 }

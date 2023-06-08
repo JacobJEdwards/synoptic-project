@@ -1,4 +1,4 @@
-export type { Data } from "@lib/app/Templater";
+export type { TemplateData } from "@lib/app/Templater";
 
 export type { LoaderArgs, LoaderFunction, LoaderReturn } from "./Loader";
 
