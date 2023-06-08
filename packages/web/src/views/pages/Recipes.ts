@@ -1,13 +1,23 @@
 import { AbstractPage as Page } from "@/lib/components";
-import type { Params, LoaderFunction, LoaderArgs } from "@lib/types";
+import type { Params, LoaderFunction, LoaderArgs, Recipe } from "@lib/types";
 
 import { getRecipes } from "@services/recipes.service";
 import RecipeCard from "@components/StatelessRecipeCard";
 import Link from "@components/Link";
 
-export const loader: LoaderFunction = async () => {
-    const recipes = await getRecipes();
-    return recipes;
+export const loader: LoaderFunction<Recipe[]> = async () => {
+    const response = await getRecipes();
+    if (!response) {
+        return {
+            success: false,
+            error: "No recipes found",
+        };
+    }
+
+    return {
+        success: true,
+        data: response,
+    };
 };
 
 export default class Recipes extends Page {
@@ -16,7 +26,7 @@ export default class Recipes extends Page {
     }
 
     async getHtml() {
-        const recipes = this.loaderData;
+        const recipes = this.loaderData?.data as Recipe[];
         let recipesHtml = "";
 
         if (recipes) {
@@ -72,9 +82,9 @@ export default class Recipes extends Page {
       </section>
       <p id="add-recipe">Do you have a recipe that you can't find here, please
         ${new Link({
-              href: "/recipes/new",
-              text: "add a recipe here!",
-          }).render()}
+            href: "/recipes/new",
+            text: "add a recipe here!",
+        }).render()}
       </p>
     </section>
         `;
@@ -83,6 +93,6 @@ export default class Recipes extends Page {
     }
 
     async clientScript() {
-        return
+        return;
     }
 }

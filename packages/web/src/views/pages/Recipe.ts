@@ -1,63 +1,91 @@
 import { AbstractPage as Page } from "@lib/components";
 import type {
-  Params,
-  ActionArgs,
-  ActionFunction,
-  LoaderArgs,
-  LoaderFunction,
-  User,
+    Params,
+    ActionArgs,
+    ActionFunction,
+    LoaderArgs,
+    LoaderFunction,
+    User,
+    Recipe as RecipeType,
+    Comment,
 } from "@lib/types";
-import Comment from "@components/StatelessComment";
+import CommentComponent from "@components/StatelessComment";
 
 import { getRecipe } from "@services/recipes.service";
 import { createComment } from "@services/comments.service";
 
-export const loader: LoaderFunction = async ({ params }: LoaderArgs) => {
-  const { id } = params;
-  const recipe = await getRecipe(id);
-  return recipe;
+export const loader: LoaderFunction<RecipeType> = async ({
+    params,
+    res,
+}: LoaderArgs) => {
+    const { id } = params;
+    const data = await getRecipe(id);
+    if (!data) {
+        return {
+            success: false,
+            error: "Recipe not found",
+        };
+    }
+    return {
+        data: data,
+        success: true,
+    };
 };
 
-export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
-  const { body } = req;
-  const { message, recipeId } = body;
+export const action: ActionFunction<Comment> = async ({
+    req,
+    res,
+}: ActionArgs) => {
+    const { body } = req;
+    const { message, recipeId } = body;
 
-  const user = req.session.user ? (req.session.user as User) : undefined;
+    const user = req.session.user ? (req.session.user as User) : undefined;
 
-  const response = await createComment(message, recipeId, user);
+    const response = await createComment(message, recipeId, user);
 
-  res.redirect(`/recipes/${recipeId}`);
-  return response;
+    if (!response) {
+        return {
+            success: false,
+            error: "Error creating comment",
+        };
+    }
+
+    res.redirect(`/recipes/${recipeId}`);
+
+    return {
+        success: true,
+        data: response,
+    };
 };
 
 export default class Recipe extends Page {
-  constructor(params: Params, title = "Recipe") {
-    super(params, title);
-  }
-
-  async getHtml() {
-    const recipe = this.loaderData;
-    console.log("ACTION", this.actionData);
-
-    if (!recipe) {
-      return `<h1>Recipe not found</h1>`;
+    constructor(params: Params, title = "Recipe") {
+        super(params, title);
     }
 
-    const commentsHtml = recipe?.comments
-      .map((comment: any) => {
-        return new Comment(comment).render();
-      })
-      .join("");
+    async getHtml() {
+        console.log("ACTION", this.actionData);
+        const recipe = this.loaderData?.data as RecipeType;
 
-    this.title = recipe.title;
+        if (!recipe) {
+            return `<h1>Recipe not found</h1>`;
+        }
 
-    return `
+        const commentsHtml = recipe.comments ? recipe.comments
+            .map((comment: Comment) => {
+                return new CommentComponent(comment).render();
+            })
+            .join("") : "";
+
+        this.title = recipe.title;
+
+        return `
     <article class="prose lg:prose-xl">
             <h1>${recipe.title}</h1>
             <p>${recipe.description}</p>
             <p>${recipe.ingredients}</p>
             <p>${recipe.steps}</p>
-            <p>${recipe.comments.length} comments</p>
+            <p>${recipe?.comments?.length} comments</p>
             <div class="comments">
                 ${commentsHtml}
             </div>
@@ -72,9 +100,9 @@ export default class Recipe extends Page {
             </form>
             </article>
         `;
-  }
+    }
 
-  async clientScript() {
-    return;
-  }
+    async clientScript() {
+        return;
+    
 }

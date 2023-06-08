@@ -1,12 +1,12 @@
-import type { Params, User } from "@lib/types";
+import type { Params, User, ActionReturn, LoaderReturn } from "@lib/types";
 /**
  * Abstract class for all pages
  */
 export default abstract class Page {
   title: string;
   params: Params;
-  loaderData: any;
-  actionData: any;
+  loaderData: LoaderReturn<any> | null;
+  actionData: ActionReturn<any> | null;
   user: User | null;
   /**
    * Constructor

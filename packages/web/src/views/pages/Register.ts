@@ -13,7 +13,7 @@ export const loader: LoaderFunction<void> = async ({ req, res }: LoaderArgs) => 
     return;
 };
 
-export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
+export const action: ActionFunction<void> = async ({ req, res }: ActionArgs) => {
     // edge cases
     if (!req.body) return res.redirect("/register");
 

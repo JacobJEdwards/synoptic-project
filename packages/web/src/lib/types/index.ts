@@ -1,14 +1,8 @@
-export type { Data } from '@lib/app/Templater'
+export type { Data } from "@lib/app/Templater";
 
-export type {
-    LoaderArgs,
-    LoaderFunction
-} from "./Loader"
+export type { LoaderArgs, LoaderFunction, LoaderReturn } from "./Loader";
 
-export type {
-    ActionArgs,
-    ActionFunction
-} from "./Action"
+export type { ActionArgs, ActionFunction, ActionReturn } from "./Action";
 
 export type {
     Params,
@@ -17,24 +11,11 @@ export type {
     Body,
     ExpressObject,
     ExpressCallback,
-    Middleware
-} from "./Requests"
+    Middleware,
+} from "./Requests";
 
-export type {
-    User,
-    Recipe,
-    Charity,
-    Role,
-    Comment
-} from "./Schemas"
+export type { User, Recipe, Charity, Role, Comment } from "./Schemas";
 
-export type {
-    AppOptions
-} from "@lib/app/Application"
+export type { AppOptions } from "@lib/app/Application";
 
-export type {
-    Route,
-    Match,
-    ComponentObject
-} from "@lib/app/Router"
-
+export type { Route, Match, ComponentObject } from "@lib/app/Router";

@@ -9,7 +9,10 @@ import type {
 } from "@lib/types";
 import { getProfile } from "@services/user.service";
 
-export const loader: LoaderFunction = async ({ req, res }: LoaderArgs) => {
+export const loader: LoaderFunction<User> = async ({
+  req,
+  res,
+}: LoaderArgs) => {
   const jwt = req.session.jwt;
   const userId = req.session?.user?.id;
 
@@ -22,10 +25,16 @@ export const loader: LoaderFunction = async ({ req, res }: LoaderArgs) => {
 
   if (!profile) {
     res.redirect("/login");
-    return;
+    return {
+      success: false,
+      error: "User not found",
+    };
   }
 
-  return profile;
+  return {
+    success: true,
+    data: profile,
+  };
 };
 
 export default class Profile extends Page {
@@ -34,9 +43,9 @@ export default class Profile extends Page {
   }
 
   async getHtml(): Promise<string> {
-    const user = this.loaderData as User;
-    const comments = this.loaderData?.comments as Comment[];
-    const recipes = this.loaderData?.recipes as Recipe[];
+    const user = this.loaderData?.data as User;
+    const comments = this.loaderData?.data?.comments as Comment[];
+    const recipes = this.loaderData?.data?.recipes as Recipe[];
 
     return `
             <div class="container">

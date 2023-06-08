@@ -1,6 +1,7 @@
+import { User } from "@/lib/types";
 import { verifyToken } from "./auth.service";
 
-export async function getProfile(jwt: string, userId: number) {
+export async function getProfile(jwt: string, userId: number): Promise<User | null> {
   try {
     const permission = await verifyToken(jwt, userId);
     if (!permission) {

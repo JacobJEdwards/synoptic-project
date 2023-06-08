@@ -9,7 +9,10 @@ import type {
 
 import { login } from "@services/auth.service";
 
-export const loader: LoaderFunction = async ({ req, res }: LoaderArgs) => {
+export const loader: LoaderFunction<void> = async ({
+    req,
+    res,
+}: LoaderArgs) => {
     if (req.session?.user) return res.redirect("/");
 };
 
@@ -26,8 +29,15 @@ export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
         req.session.user = data.user;
         req.session.jwt = data.jwt;
         res.redirect("/profile");
+        return {
+            success: true,
+        };
     } else {
         res.redirect("/login");
+        return {
+            success: false,
+            error: "Invalid credentials",
+        };
     }
 };
 

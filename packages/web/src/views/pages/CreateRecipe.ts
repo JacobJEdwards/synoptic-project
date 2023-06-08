@@ -2,7 +2,7 @@ import { AbstractPage as Page } from "@lib/components"
 import type { Params, ActionArgs, ActionFunction } from "@lib/types"
 import { createRecipe } from "@services/recipes.service";
 
-export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
+export const action: ActionFunction<void> = async ({ req, res }: ActionArgs) => {
     if (!req.body) return res.redirect("/recipes/create");
 
     const body = req.body;
@@ -35,7 +35,10 @@ export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
     const newRecipe = await createRecipe(recipe);
 
     if (!newRecipe) {
-        return;
+        return {
+            success: false,
+            error: "Failed to create recipe",
+        }
     }
 
     res.redirect(`/recipes/${newRecipe.id}`);
