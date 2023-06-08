@@ -1,15 +1,13 @@
 import * as dotenv from "dotenv";
-dotenv.config();
-
 import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import path from "path";
-
 import { Application, Renderer as RendererClass } from "@lib/app";
 import { asyncHandler } from "@lib/utils";
 import type { AppOptions, ExpressObject } from "@lib/types";
 import middleware from "@/middleware/app.middleware";
 
+dotenv.config();
 
 /* Set up */
 const port = process.env.PORT || 3001;

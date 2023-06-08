@@ -1,46 +1,46 @@
 [
   {
     "urlPath": "/",
-    "filePath": "src/views/pages/Dashboard"
+    "fileName": "Dashboard"
   },
   {
     "urlPath": "/about",
-    "filePath": "src/views/pages/About"
+    "fileName": "About"
   },
   {
     "urlPath": "/charities",
-    "filePath": "src/views/pages/Charities"
+    "fileName": "Charities"
   },
   {
     "urlPath": "/recipes",
-    "filePath": "src/views/pages/Recipes"
+    "fileName": "Recipes"
   },
   {
     "urlPath": "/recipes/new",
-    "filePath": "src/views/pages/CreateRecipe"
+    "fileName": "CreateRecipe"
   },
   {
     "urlPath": "/recipes/:id",
-    "filePath": "src/views/pages/Recipe"
+    "fileName": "Recipe"
   },
   {
     "urlPath": "/login",
-    "filePath": "src/views/pages/Login"
+    "fileName": "Login"
   },
   {
     "urlPath": "/register",
-    "filePath": "src/views/pages/Register"
+    "fileName": "Register"
   },
   {
     "urlPath": "/logout",
-    "filePath": "src/views/pages/Logout"
+    "fileName": "Logout"
   },
   {
       "urlPath": "/profile",
-      "filePath": "src/views/pages/Profile"
+      "fileName": "Profile"
   },
   {
     "urlPath": "/404",
-    "filePath": "src/views/pages/Error404"
+    "fileName": "Error404"
   }
 ]

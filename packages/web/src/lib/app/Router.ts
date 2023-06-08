@@ -31,7 +31,7 @@ export type Route = {
 export const routes: Route[] = jsonRoutes.map((route) => {
     return {
         path: route.urlPath,
-        component: () => import(route.filePath)
+        component: () => import(`../../views/pages/${route.fileName}`)
     }
 })
 
