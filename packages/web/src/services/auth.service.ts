@@ -50,3 +50,27 @@ export async function register(
         return null;
     }
 }
+
+export async function verifyToken(jwt: string, userId: number): Promise<boolean> {
+    try {
+        const response = await fetch("http://localhost:3000/auth/profile", {
+            method: "GET",
+            headers: { Authorization: `Bearer ${jwt}` },
+        });
+
+        if (!response.ok) {
+            return false;
+        }
+
+        const { id } = await response.json();
+        if (id !== userId) {
+            return false;
+        }
+
+        return true;
+
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+}

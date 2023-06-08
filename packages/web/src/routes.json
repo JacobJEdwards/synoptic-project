@@ -36,6 +36,10 @@
     "filePath": "src/views/pages/Logout"
   },
   {
+      "urlPath": "/profile",
+      "filePath": "src/views/pages/Profile"
+  },
+  {
     "urlPath": "/404",
     "filePath": "src/views/pages/Error404"
   }

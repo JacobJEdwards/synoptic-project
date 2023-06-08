@@ -25,7 +25,7 @@ export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
     if (data?.user && data?.jwt) {
         req.session.user = data.user;
         req.session.jwt = data.jwt;
-        res.redirect("/");
+        res.redirect("/profile");
     } else {
         res.redirect("/login");
     }

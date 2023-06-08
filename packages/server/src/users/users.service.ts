@@ -6,6 +6,8 @@ import { ZodValidationPipe } from "@anatine/zod-nestjs";
 import * as bcrypt from "bcrypt";
 import { ConfigService } from "@nestjs/config";
 
+type UserWithoutPassword = Omit<User, "password">;
+
 @Injectable()
 export class UsersService {
     constructor(
@@ -46,6 +48,21 @@ export class UsersService {
                 password: hashedPassword,
             },
         });
+
+        return user;
+    }
+
+    async getProfile(id: number): Promise<UserWithoutPassword | null> {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                recipes: true,
+                comments: true,
+            },
+        });
+        console.log(user);
 
         return user;
     }

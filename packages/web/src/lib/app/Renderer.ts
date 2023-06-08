@@ -78,7 +78,7 @@ export default class Renderer {
         data.title = view.title ?? "Recipe App";
 
         data.login = view.user
-            ? `<a href="/logout">Logout</a>`
+            ? `<a href="/profile">Profile</a>`
             : `<a href="/login">Login</a>`;
 
         const html = await this.templater.compileFileToString(this.filePath, data);
