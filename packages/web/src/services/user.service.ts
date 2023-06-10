@@ -1,9 +1,6 @@
 import { User } from "@/lib/types";
 
-export async function getProfile(
-    jwt: string,
-    userId: number
-): Promise<User | null> {
+export async function getProfile(jwt: string): Promise<User | null> {
     try {
         const response = await fetch(`http://localhost:3000/users/profile`, {
             method: "GET",
@@ -13,15 +10,12 @@ export async function getProfile(
             },
         });
 
-        console.log(response);
-
         if (!response.ok) {
             return null;
         }
 
-        const data = await response.json();
-        console.log(data);
-        return data;
+        return await response.json();
+
     } catch (error) {
         return null;
     }

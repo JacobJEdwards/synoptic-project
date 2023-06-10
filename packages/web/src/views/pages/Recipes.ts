@@ -1,9 +1,8 @@
-import {AbstractPage as Page} from "@/lib/components";
-import type {LoaderFunction, Params, Recipe} from "@lib/types";
+import { AbstractPage as Page } from "@/lib/components";
+import type { LoaderFunction, Params, Recipe } from "@lib/types";
 
-import {getRecipes} from "@services/recipes.service";
+import { getRecipes } from "@services/recipes.service";
 import RecipeCard from "@components/StatelessRecipeCard";
-import Link from "@components/Link";
 
 export const loader: LoaderFunction<Recipe[]> = async () => {
     const response = await getRecipes();
@@ -31,7 +30,7 @@ export default class Recipes extends Page {
 
         if (recipes) {
             recipesHtml = recipes
-                .map((recipe: any) => {
+                .map((recipe: Recipe) => {
                     return new RecipeCard(recipe).render();
                 })
                 .join("");
@@ -81,10 +80,7 @@ export default class Recipes extends Page {
         ${recipesHtml}
       </section>
       <p id="add-recipe">Do you have a recipe that you can't find here, please
-        ${new Link({
-            href: "/recipes/new",
-            text: "add a recipe here!",
-        }).render()}
+        <a href="/recipes/new">add it here</a>
       </p>
     </section>
         `;
