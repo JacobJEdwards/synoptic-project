@@ -7,7 +7,7 @@ export default class Error404 extends Page {
     }
 
     async getHtml() {
-        let view = `
+        const view = `
             <h1>404 - Page Not Found</h1>
             <p>Sorry, but the page you were trying to view does not exist.</p>
         `;

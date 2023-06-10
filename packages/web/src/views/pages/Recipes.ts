@@ -35,7 +35,7 @@ export default class Recipes extends Page {
                 })
                 .join("");
         }
-        let view = `
+        const view = `
         <section class="prose">
       <h1>Recipes Page</h1>
 

@@ -27,7 +27,7 @@ export default abstract class Page {
     /**
      * Sets the title of the page
      */
-    setTitle() {
+    protected setTitle() {
         document.title = this.title;
     }
 
@@ -48,15 +48,15 @@ export default abstract class Page {
      * Renders the page
      * @returns {String} html of the page
      */
-    async serverRender(): Promise<string> {
-        let view = await this.getHtml();
+    public async serverRender(): Promise<string> {
+        const view = await this.getHtml();
         return view;
     }
 
     /**
      * What to do after the page is rendered
      */
-    async clientRender() {
+    public async clientRender() {
         await this.clientScript();
     }
 }

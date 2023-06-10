@@ -4,7 +4,7 @@ import session from "express-session";
 import express from "express";
 import redisStore from "./redis";
 
-import type {User} from "@lib/types";
+import type {Middleware, User} from "@lib/types";
 
 declare module "express-session" {
     export interface SessionData {
@@ -13,7 +13,7 @@ declare module "express-session" {
     }
 }
 
-const middleware: Array<any> = [
+const middleware: Array<Middleware |any> = [
     // cors(),
     // helmet(),
     morgran("dev"),

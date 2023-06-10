@@ -133,5 +133,5 @@ export default class CreateRecipe extends Page {
         // await navigateTo(`/recipes/${newRecipe.id}`);
         // window.location.reload();
         return
-    };
+    }
 }

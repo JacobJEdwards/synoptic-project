@@ -8,7 +8,7 @@ export default class Dashboard extends Page {
 
     async getHtml() {
         console.log("USER?:", this.user);
-        let view = `
+        const view = `
     <section class="top">
         <article>
             <figure>
