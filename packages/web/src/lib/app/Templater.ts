@@ -15,18 +15,18 @@ export default class Templater<T extends TemplateData = TemplateData> {
     keyRegex: RegExp;
     templateCache: TemplateCache;
 
-    constructor() {
+    constructor(cache = new Map()) {
         // Regex to match {{ key }} in a string
         this.regex = new RegExp(/{{(.*?)}}/g);
         this.keyRegex = new RegExp(/{{|}}/g);
-        this.templateCache = new Map();
+        this.templateCache = cache || new Map();
     }
 
     /**
      * @method parse
      * @description Parses a template string and returns an array of strings and keys ({{ key }})
-     * @param {string} template - The template string to parse (e.g. "<h1>{{ title }}</h1>")
-     * @returns {Promise<string[]>} - An array of strings and keys (e.g. ["<h1>", "{{ title }}", "</h1>"])
+     * @param {Template} template - The template string to parse (e.g. "<h1>{{ title }}</h1>")
+     * @returns {Promise<AST>} - An array of strings and keys (e.g. ["<h1>", "{{ title }}", "</h1>"])
      */
     async parse(template: Template): Promise<AST> {
         // if (this.templateCache.has(template)) {
@@ -96,25 +96,25 @@ export default class Templater<T extends TemplateData = TemplateData> {
         return arr;
     }
 
-    // async *parseTemplate(template) {
-    //     let result = this.regex.exec(template);
-    //     let lastIndex = 0;
-    //
-    //     while (result) {
-    //         const firstPos = result.index;
-    //         if (firstPos !== lastIndex) {
-    //             yield template.substring(lastIndex, firstPos);
-    //         }
-    //
-    //         yield result[0];
-    //         lastIndex = firstPos + result[0].length;
-    //         result = this.regex.exec(template);
-    //     }
-    //
-    //     if (lastIndex < template.length) {
-    //         yield template.substring(lastIndex);
-    //     }
-    // }
+    async* parseTemplateGenerator(template: Template): AsyncGenerator<string> {
+        let result = this.regex.exec(template);
+        let lastIndex = 0;
+
+        while (result) {
+            const firstPos = result.index;
+            if (firstPos !== lastIndex) {
+                yield template.substring(lastIndex, firstPos);
+            }
+
+            yield result[0];
+            lastIndex = firstPos + result[0].length;
+            result = this.regex.exec(template);
+        }
+
+        if (lastIndex < template.length) {
+            yield template.substring(lastIndex);
+        }
+    }
 
     async compileToString(template: Template, data: T): Promise<string> {
         const ast = await this.parse(template);
@@ -131,21 +131,18 @@ export default class Templater<T extends TemplateData = TemplateData> {
         return resultArr.join("");
     }
 
-    async compileToStringDSA(template: Template, data: T): Promise<string> {
-        const ast = await this.parse(template);
-        const templateKeys = new Set(
-            ast
-                .filter((item) => item.match(this.regex))
-                .map((item) => item.replace(this.keyRegex, "").trim())
-        );
-        const resultArr = ast.map((item) => {
-            if (templateKeys.has(item)) {
-                const key = item.replace(this.keyRegex, "").trim();
-                return data[key] || "";
-            }
-            return item;
-        });
+    async compileToStringGenerator(template: Template, data: T): Promise<string> {
+        const resultArr: Array<string | undefined> = [];
 
+        for await (const item of this.parseTemplateGenerator(template)) {
+            if (item.match(this.regex)) {
+                const key = item.replace(this.keyRegex, "").trim();
+                const replacement = data[key] || "";
+                resultArr.push(replacement);
+            } else {
+                resultArr.push(item);
+            }
+        }
         return resultArr.join("");
     }
 

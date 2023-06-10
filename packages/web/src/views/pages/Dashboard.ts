@@ -1,14 +1,14 @@
-import { AbstractPage as Page } from "@lib/components"
-import type { Params } from "@lib/types"
+import {AbstractPage as Page} from "@lib/components"
+import type {Params} from "@lib/types"
 
 export default class Dashboard extends Page {
-  constructor(params: Params, title = "Home") {
-    super(params, title);
-  }
+    constructor(params: Params, title = "Home") {
+        super(params, title);
+    }
 
-  async getHtml() {
-    console.log("USER?:", this.user);
-    let view = `
+    async getHtml() {
+        console.log("USER?:", this.user);
+        let view = `
     <section class="top">
         <article>
             <figure>
@@ -31,10 +31,10 @@ export default class Dashboard extends Page {
     </section>
         `;
 
-    return view;
-  }
+        return view;
+    }
 
-  async clientScript(): Promise<void> {
-    return;
-  }
+    async clientScript(): Promise<void> {
+        return;
+    }
 }

@@ -5,8 +5,8 @@ import Router from "./Router.js";
  * @param {string} url
  */
 export const navigateTo = async (url) => {
-  history.pushState(null, null, url);
-  await Render();
+    history.pushState(null, null, url);
+    await Render();
 };
 
 /**
@@ -14,22 +14,22 @@ export const navigateTo = async (url) => {
  * Add the css files to the head of the document
  */
 export function init() {
-  const stylesheets = [];
+    const stylesheets = [];
 
-  stylesheets.forEach((stylesheet) => {
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = stylesheet;
-    document.head.appendChild(link);
-  });
+    stylesheets.forEach((stylesheet) => {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = stylesheet;
+        document.head.appendChild(link);
+    });
 }
 
 const Render = async () => {
-  const { view } = await Router.loadView(location.pathname);
+    const {view} = await Router.loadView(location.pathname);
 
-  /* Render the view in the app tags */
-  //document.querySelector("#app").innerHTML = await view.render();
-  await view.clientRender();
+    /* Render the view in the app tags */
+    //document.querySelector("#app").innerHTML = await view.render();
+    await view.clientRender();
 };
 
 /**
@@ -54,12 +54,12 @@ window.addEventListener("popstate", Render);
  * Call the Router function instead of navigating to the href
  */
 document.addEventListener("DOMContentLoaded", () => {
-  // document.body.addEventListener("click", (e) => {
-  //   if (e.target.matches("[data-link]")) {
-  //     e.preventDefault();
-  //     navigateTo(e.target.href);
-  //   }
-  // });
+    // document.body.addEventListener("click", (e) => {
+    //   if (e.target.matches("[data-link]")) {
+    //     e.preventDefault();
+    //     navigateTo(e.target.href);
+    //   }
+    // });
 
-  Render();
+    Render();
 });

@@ -1,21 +1,21 @@
 // Purpose: Service for recipes
-import type { Recipe } from "@lib/types";
+import type {Recipe} from "@lib/types";
 
 /**
  * @description Get all recipes
  * @returns {Array} Array of recipes
  */
 export async function getRecipes(): Promise<Recipe[]> {
-  try {
-    const recipes = await fetch("http://localhost:3000/recipes");
-    if (!recipes.ok) {
-      return [];
+    try {
+        const recipes = await fetch("http://localhost:3000/recipes");
+        if (!recipes.ok) {
+            return [];
+        }
+        return await recipes.json();
+    } catch (error) {
+        console.log(error);
+        return [];
     }
-    return await recipes.json();
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
 }
 
 /**
@@ -24,37 +24,37 @@ export async function getRecipes(): Promise<Recipe[]> {
  * @returns {Object} Recipe object
  */
 export async function getRecipe(id: number): Promise<Recipe | null> {
-  try {
-    const recipe = await fetch(`http://localhost:3000/recipes/${id}`);
+    try {
+        const recipe = await fetch(`http://localhost:3000/recipes/${id}`);
 
-    if (!recipe.ok) {
-      return null;
+        if (!recipe.ok) {
+            return null;
+        }
+
+        return await recipe.json();
+    } catch (error) {
+        console.log(error);
+        return null;
     }
-
-    return await recipe.json();
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
 }
 
 export async function createRecipe(recipe: Recipe): Promise<Recipe | null> {
-  try {
-    const response = await fetch("http://localhost:3000/recipes", {
-      method: "POST",
-      body: JSON.stringify(recipe),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+        const response = await fetch("http://localhost:3000/recipes", {
+            method: "POST",
+            body: JSON.stringify(recipe),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
 
-    if (!response.ok) {
+        if (!response.ok) {
+            return null;
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.log(error);
         return null;
     }
-
-    return await response.json();
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
 }

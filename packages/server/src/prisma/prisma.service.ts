@@ -1,5 +1,5 @@
-import { Injectable, INestApplication } from "@nestjs/common";
-import { PrismaClient } from "@prisma/client";
+import {INestApplication, Injectable} from "@nestjs/common";
+import {PrismaClient} from "@prisma/client";
 
 /**
  * A custom provider to ensure that there is only ever one instance of Prisma

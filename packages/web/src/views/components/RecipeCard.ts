@@ -1,5 +1,5 @@
-import { AbstractComponent as Component } from "@lib/components";
-import type { Recipe } from "@lib/types";
+import {AbstractComponent as Component} from "@lib/components";
+import type {Recipe} from "@lib/types";
 import Link from "./Link";
 
 export default class RecipeCard extends Component {
@@ -18,7 +18,7 @@ export default class RecipeCard extends Component {
         return `
                 <figure>
                     <img src="/views/images/placeholder.jpg" alt="${recipe.name
-            }" />
+        }" />
                     <figcaption>
                         <h2>${recipe.title}</h2>
                         <p>${recipe.description}</p>

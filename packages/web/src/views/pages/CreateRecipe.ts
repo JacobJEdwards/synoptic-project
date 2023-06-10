@@ -1,13 +1,13 @@
-import { AbstractPage as Page } from "@lib/components"
-import type { Params, ActionArgs, ActionFunction } from "@lib/types"
-import { createRecipe } from "@services/recipes.service";
+import {AbstractPage as Page} from "@lib/components"
+import type {ActionArgs, ActionFunction, Params} from "@lib/types"
+import {createRecipe} from "@services/recipes.service";
 
-export const action: ActionFunction<void> = async ({ req, res }: ActionArgs) => {
+export const action: ActionFunction<void> = async ({req, res}: ActionArgs) => {
     if (!req.body) return res.redirect("/recipes/create");
 
     const body = req.body;
 
-    const { title, description, origin, steps } = body;
+    const {title, description, origin, steps} = body;
 
     const ingredients = body.ingredients.split("\n");
     const vegan = body.vegan === "on";

@@ -1,4 +1,4 @@
-import type { User } from "@lib/types";
+import type {User} from "@lib/types";
 
 export type AuthResponse = {
     user: User;
@@ -12,8 +12,8 @@ export async function login(
     try {
         const response = await fetch("http://localhost:3000/auth/login", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({email, password}),
         });
 
         if (!response.ok) {
@@ -36,8 +36,8 @@ export async function register(
     try {
         const response = await fetch("http://localhost:3000/auth/register", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, password, name }),
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({username, email, password, name}),
         });
 
         if (!response.ok) {
@@ -55,19 +55,16 @@ export async function verifyToken(jwt: string, userId: number): Promise<boolean>
     try {
         const response = await fetch("http://localhost:3000/auth/profile", {
             method: "GET",
-            headers: { Authorization: `Bearer ${jwt}` },
+            headers: {Authorization: `Bearer ${jwt}`},
         });
 
         if (!response.ok) {
             return false;
         }
 
-        const { id } = await response.json();
-        if (id !== userId) {
-            return false;
-        }
+        const {id} = await response.json();
+        return id === userId;
 
-        return true;
 
     } catch (err) {
         console.log(err);

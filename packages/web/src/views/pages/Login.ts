@@ -1,25 +1,19 @@
-import { AbstractPage as Page } from "@lib/components";
-import type {
-    Params,
-    LoaderFunction,
-    LoaderArgs,
-    ActionArgs,
-    ActionFunction,
-} from "@lib/types";
+import {AbstractPage as Page} from "@lib/components";
+import type {ActionArgs, ActionFunction, LoaderArgs, LoaderFunction, Params,} from "@lib/types";
 
-import { login } from "@services/auth.service";
+import {login} from "@services/auth.service";
 
 export const loader: LoaderFunction<void> = async ({
-    req,
-    res,
-}: LoaderArgs) => {
+                                                       req,
+                                                       res,
+                                                   }: LoaderArgs) => {
     if (req.session?.user) return res.redirect("/");
 };
 
-export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
+export const action: ActionFunction = async ({req, res}: ActionArgs) => {
     if (!req.body) return res.redirect("/login");
 
-    const { email, password } = req.body;
+    const {email, password} = req.body;
 
     const data = await login(email, password);
 

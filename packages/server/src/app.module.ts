@@ -1,11 +1,11 @@
-import { Module } from "@nestjs/common";
-import { PrismaModule } from "./prisma/prisma.module";
-import { RecipesModule } from "./recipes/recipes.module";
-import { AuthModule } from "./auth/auth.module";
-import { UsersModule } from "./users/users.module";
-import { ConfigModule } from "@nestjs/config";
-import { CharitiesModule } from './charities/charities.module';
-import { CommentsModule } from './comments/comments.module';
+import {Module} from "@nestjs/common";
+import {PrismaModule} from "./prisma/prisma.module";
+import {RecipesModule} from "./recipes/recipes.module";
+import {AuthModule} from "./auth/auth.module";
+import {UsersModule} from "./users/users.module";
+import {ConfigModule} from "@nestjs/config";
+import {CharitiesModule} from './charities/charities.module';
+import {CommentsModule} from './comments/comments.module';
 import config from "./config/configuration";
 
 /**
@@ -13,19 +13,20 @@ import config from "./config/configuration";
  * Main application module that imports all other modules.
  */
 @Module({
-  imports: [
-    // access environment variables
-    ConfigModule.forRoot({ isGlobal: true, load: [config] }),
+    imports: [
+        // access environment variables
+        ConfigModule.forRoot({isGlobal: true, load: [config]}),
 
-    // database module
-    PrismaModule,
+        // database module
+        PrismaModule,
 
-    // feature modules
-    AuthModule,
-    RecipesModule,
-    UsersModule,
-    CharitiesModule,
-    CommentsModule,
-  ],
+        // feature modules
+        AuthModule,
+        RecipesModule,
+        UsersModule,
+        CharitiesModule,
+        CommentsModule,
+    ],
 })
-export class AppModule {}
+export class AppModule {
+}

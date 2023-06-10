@@ -1,5 +1,5 @@
-import { AbstractPage as Page } from "@lib/components"
-import type { Params } from "@lib/types"
+import {AbstractPage as Page} from "@lib/components"
+import type {Params} from "@lib/types"
 
 export default class About extends Page {
     constructor(params: Params, title = "About Us") {

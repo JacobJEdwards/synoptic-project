@@ -1,4 +1,4 @@
-import type { Charity } from "@lib/types";
+import type {Charity} from "@lib/types";
 
 export async function getCharities(): Promise<Charity[]> {
     try {

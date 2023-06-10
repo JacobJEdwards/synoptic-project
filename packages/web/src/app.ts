@@ -1,10 +1,10 @@
 import * as dotenv from "dotenv";
+import type {NextFunction, Request, Response} from "express";
 import express from "express";
-import type { Request, Response, NextFunction } from "express";
 import path from "path";
-import { Application, Renderer as RendererClass } from "@lib/app";
-import { asyncHandler } from "@lib/utils";
-import type { AppOptions, ExpressObject } from "@lib/types";
+import {Application, Renderer as RendererClass} from "@lib/app";
+import {asyncHandler} from "@lib/utils";
+import type {AppOptions, ExpressObject} from "@lib/types";
 import middleware from "@/middleware/app.middleware";
 
 dotenv.config();
@@ -13,8 +13,8 @@ dotenv.config();
 const port = process.env.PORT || 3001;
 
 const AppOptions = {
-  port: port,
-  middleware: middleware,
+    port: port,
+    middleware: middleware,
 } as AppOptions;
 
 /* Express app wrapper instance */
@@ -32,73 +32,73 @@ app.use("/views", express.static(path.resolve(__dirname, "views")));
  * HTML and JavaScript are evaluated on the server
  */
 const handleGet = async (
-  pathname: string,
-  { req, res, next }: ExpressObject
+    pathname: string,
+    {req, res, next}: ExpressObject
 ) => {
-  // returns an instance of the view object corresponding to the URL path
+    // returns an instance of the view object corresponding to the URL path
 
-  // gets the rendered HTML from the view object and passes the user object to the view (may be undefined)
+    // gets the rendered HTML from the view object and passes the user object to the view (may be undefined)
 
-  // if the headers have already been sent (i.e. from the loader function), return
+    // if the headers have already been sent (i.e. from the loader function), return
 
-  // otherwise, read the index.html file and replace the main element with the rendered HTML
-  const html = await Renderer.render(pathname, { req, res, next });
+    // otherwise, read the index.html file and replace the main element with the rendered HTML
+    const html = await Renderer.render(pathname, {req, res, next});
 
-  if (res.headersSent) return;
+    if (res.headersSent) return;
 
-  const response = html ? html : "Not Found";
+    const response = html ? html : "Not Found";
 
-  // send the final HTML to the client
-  res.status(200).set({ "Content-Type": "text/html" }).end(response);
+    // send the final HTML to the client
+    res.status(200).set({"Content-Type": "text/html"}).end(response);
 };
 
 /**
  * Methods used to handle any POST request
  */
 const handlePost = async (
-  pathname: string,
-  { req, res, next }: ExpressObject
+    pathname: string,
+    {req, res, next}: ExpressObject
 ) => {
-  // if an action function has been exported from the view, execute it
-  // the action function allows a component to handle a POST request
-  const { action, view } = await Renderer.getComponent(pathname, {
-    req,
-    res,
-    next,
-  });
+    // if an action function has been exported from the view, execute it
+    // the action function allows a component to handle a POST request
+    const {action, view} = await Renderer.getComponent(pathname, {
+        req,
+        res,
+        next,
+    });
 
-  if (action) {
-    const actionData = await action({ req, res, next });
-    view.actionData = actionData;
-  }
+    if (action) {
+        const actionData = await action({req, res, next});
+        view.actionData = actionData;
+    }
 
-  // if the headers have not been sent in the action function, redirect to the current URL to avoid resending POST requests
-  if (!res.headersSent) {
-    res.redirect(req.url);
-  }
+    // if the headers have not been sent in the action function, redirect to the current URL to avoid resending POST requests
+    if (!res.headersSent) {
+        res.redirect(req.url);
+    }
 };
 
 /* Catch-all route */
 app.all(
-  "*",
-  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const method = req.method;
-    const pathname = req.url;
+    "*",
+    asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const method = req.method;
+        const pathname = req.url;
 
-    // handle GET and POST requests
-    switch (method) {
-      case "GET":
-        await handleGet(pathname, { req, res, next });
-        break;
+        // handle GET and POST requests
+        switch (method) {
+            case "GET":
+                await handleGet(pathname, {req, res, next});
+                break;
 
-      case "POST":
-        await handlePost(pathname, { req, res, next });
-        break;
+            case "POST":
+                await handlePost(pathname, {req, res, next});
+                break;
 
-      default:
-        res.status(404).send("Not Found");
-    }
-  })
+            default:
+                res.status(404).send("Not Found");
+        }
+    })
 );
 
 app.listen();

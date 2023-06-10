@@ -36,8 +36,8 @@
     "fileName": "Logout"
   },
   {
-      "urlPath": "/profile",
-      "fileName": "Profile"
+    "urlPath": "/profile",
+    "fileName": "Profile"
   },
   {
     "urlPath": "/404",

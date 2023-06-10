@@ -1,10 +1,9 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
-import type { User } from "@prisma/client";
-import type { CreateUserDto } from "./dto/create-user.dto";
-import { ZodValidationPipe } from "@anatine/zod-nestjs";
+import {Injectable} from "@nestjs/common";
+import {PrismaService} from "src/prisma/prisma.service";
+import type {User} from "@prisma/client";
+import type {CreateUserDto} from "./dto/create-user.dto";
 import * as bcrypt from "bcrypt";
-import { ConfigService } from "@nestjs/config";
+import {ConfigService} from "@nestjs/config";
 
 type UserWithoutPassword = Omit<User, "password">;
 
@@ -13,7 +12,8 @@ export class UsersService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly configService: ConfigService
-    ) { }
+    ) {
+    }
 
     async findOne(emailOrUsername: string): Promise<User | null> {
         const user = await this.prisma.user.findUnique({
@@ -34,7 +34,7 @@ export class UsersService {
     }
 
     async create(data: CreateUserDto): Promise<User> {
-        const { username, email, name, password } = data;
+        const {username, email, name, password} = data;
 
         const saltRounds = this.configService.get<number>("bcrypt.salt") ?? 10;
 

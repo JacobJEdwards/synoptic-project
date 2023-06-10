@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction, RequestHandler, ErrorRequestHandler } from 'express';
+import type {ErrorRequestHandler, NextFunction, Request, RequestHandler, Response} from 'express';
 
 export type Params = Record<string, string | number | boolean | undefined | null>;
 export type Query = Record<string, string | number | boolean | undefined | null>;
@@ -12,10 +12,10 @@ export type ExpressObject = {
 };
 
 export type ExpressCallback = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-  ...args: any
+    req: Request,
+    res: Response,
+    next: NextFunction,
+    ...args: any
 ) => void;
 
 export type Middleware = RequestHandler | ErrorRequestHandler;

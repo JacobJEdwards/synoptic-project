@@ -1,10 +1,15 @@
 {
-    "restartable": "rs",
-    "ignore": [".git", "node_modules/**/node_modules"],
-    "verbose": true,
-    "env": {
-        "NODE_ENV": "development"
-    },
-    "watch": ["src"],
-    "ext": "ts, js, cjs, mjs, json, css"
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules"
+  ],
+  "verbose": true,
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "watch": [
+    "src"
+  ],
+  "ext": "ts, js, cjs, mjs, json, css"
 }

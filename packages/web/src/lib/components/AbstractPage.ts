@@ -1,58 +1,61 @@
-import type { Params, User, ActionReturn, LoaderReturn } from "@lib/types";
+import type {ActionReturn, LoaderReturn, Params, User} from "@lib/types";
+
 /**
  * Abstract class for all pages
  */
 export default abstract class Page {
-  title: string;
-  params: Params;
-  loaderData: LoaderReturn<any> | null;
-  actionData: ActionReturn<any> | null;
-  user: User | null;
-  /**
-   * Constructor
-   * @param {Object} params url parameters
-   */
-  constructor(params: Params, title = "App") {
-    this.title = title;
-    this.params = params;
-    this.loaderData = null;
-    this.actionData = null;
-    this.user = null;
-  }
+    title: string;
+    params: Params;
+    loaderData: LoaderReturn<any> | null;
+    actionData: ActionReturn<any> | null;
+    user: User | null;
 
-  /**
-   * Sets the title of the page
-   */
-  setTitle() {
-    document.title = this.title;
-  }
+    /**
+     * Constructor
+     * @param {Object} params url parameters
+     * @param title
+     */
+    protected constructor(params: Params, title = "App") {
+        this.title = title;
+        this.params = params;
+        this.loaderData = null;
+        this.actionData = null;
+        this.user = null;
+    }
 
-  /**
-   * Gets the html of the page
-   * @abstract
-   * @returns {String} html of the page
-   */
-  abstract getHtml(): Promise<string>;
+    /**
+     * Sets the title of the page
+     */
+    setTitle() {
+        document.title = this.title;
+    }
 
-  /**
-   * Run any client side scripts
-   * @abstract
-   */
-  abstract clientScript(): Promise<void>;
+    /**
+     * Gets the html of the page
+     * @abstract
+     * @returns {String} html of the page
+     */
+    abstract getHtml(): Promise<string>;
 
-  /**
-   * Renders the page
-   * @returns {String} html of the page
-   */
-  async serverRender(): Promise<string> {
-    let view = await this.getHtml();
-    return view;
-  }
+    /**
+     * Run any client side scripts
+     * @abstract
+     */
+    abstract clientScript(): Promise<void>;
 
-  /**
-   * What to do after the page is rendered
-   */
-  async clientRender() {
-    await this.clientScript();
-  }
+    /**
+     * Renders the page
+     * @returns {String} html of the page
+     */
+    async serverRender(): Promise<string> {
+        let view = await this.getHtml();
+        return view;
+    }
+
+    /**
+     * What to do after the page is rendered
+     */
+    async clientRender() {
+        await this.clientScript();
+    }
 }

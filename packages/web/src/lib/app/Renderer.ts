@@ -1,90 +1,90 @@
-import { Router, routes, Templater } from "@lib/app";
-import type { ExpressObject, LoaderFunction, ActionFunction } from "@lib/types";
+import {Router, routes, Templater} from "@lib/app";
+import type {ActionFunction, ExpressObject, LoaderFunction} from "@lib/types";
 import path from "path";
-import { AbstractPage as Page } from "@lib/components";
+import {AbstractPage as Page} from "@lib/components";
 
 type replacements = "title" | "content" | "login";
 type Data = Record<replacements, string>;
 
 export default class Renderer {
-  router: Router;
-  templater: Templater;
-  filePath: string;
+    router: Router;
+    templater: Templater;
+    filePath: string;
 
-  pathname: string | null;
-  view: Page | null;
-  action: LoaderFunction | null;
-  loader: ActionFunction | null;
+    pathname: string | null;
+    view: Page | null;
+    action: LoaderFunction | null;
+    loader: ActionFunction | null;
 
-  constructor() {
-    this.router = new Router(routes);
-    this.templater = new Templater<Data>();
-    this.filePath = path.resolve("src", "views", "index.html");
+    constructor() {
+        this.router = new Router(routes);
+        this.templater = new Templater<Data>();
+        this.filePath = path.resolve("src", "views", "index.html");
 
-    this.pathname = null;
-    this.view = null;
-    this.action = null;
-    this.loader = null;
-  }
-
-  async render(
-    pathname: string,
-    { req, res, next }: ExpressObject
-  ): Promise<string | null> {
-    const { view, action, loader } = await this.router.loadView(pathname, {
-      req,
-      res,
-      next,
-    });
-
-    this.pathname = pathname;
-    this.view = view;
-    this.action = action;
-    this.loader = loader;
-
-    if (this.view) {
-      return await this.generateHtml(this.view);
+        this.pathname = null;
+        this.view = null;
+        this.action = null;
+        this.loader = null;
     }
 
-    return null;
-  }
+    async render(
+        pathname: string,
+        {req, res, next}: ExpressObject
+    ): Promise<string | null> {
+        const {view, action, loader} = await this.router.loadView(pathname, {
+            req,
+            res,
+            next,
+        });
 
-  async getComponent(pathname: string, { req, res, next }: ExpressObject) {
-    if (this.pathname === pathname) {
-      return { view: this.view, action: this.action, loader: this.loader };
+        this.pathname = pathname;
+        this.view = view;
+        this.action = action;
+        this.loader = loader;
+
+        if (this.view) {
+            return await this.generateHtml(this.view);
+        }
+
+        return null;
     }
 
-    this.pathname = pathname;
+    async getComponent(pathname: string, {req, res, next}: ExpressObject) {
+        if (this.pathname === pathname) {
+            return {view: this.view, action: this.action, loader: this.loader};
+        }
 
-    const { view, action, loader } = await this.router.loadView(this.pathname, {
-      req,
-      res,
-      next,
-    });
+        this.pathname = pathname;
 
-    this.view = view;
-    this.action = action;
-    this.loader = loader;
+        const {view, action, loader} = await this.router.loadView(this.pathname, {
+            req,
+            res,
+            next,
+        });
 
-    return { view, action, loader };
-  }
+        this.view = view;
+        this.action = action;
+        this.loader = loader;
 
-  /* T extends AbstractPage */
-  async generateHtml(view: Page): Promise<string> {
-    const data: Data = {
-      title: "",
-      content: "",
-      login: "",
-    };
-    data.content = await view.serverRender();
-    data.title = view.title ?? "Recipe App";
+        return {view, action, loader};
+    }
 
-    data.login = view.user
-      ? `<a href="/profile">Profile</a>`
-      : `<a href="/login">Login</a>`;
+    /* T extends AbstractPage */
+    async generateHtml(view: Page): Promise<string> {
+        const data: Data = {
+            title: "",
+            content: "",
+            login: "",
+        };
+        data.content = await view.serverRender();
+        data.title = view.title ?? "Recipe App";
 
-    const html = await this.templater.compileFileToString(this.filePath, data);
+        data.login = view.user
+            ? `<a href="/profile">Profile</a>`
+            : `<a href="/login">Login</a>`;
 
-    return html;
-  }
+        const html = await this.templater.compileFileToString(this.filePath, data);
+
+        return html;
+    }
 }

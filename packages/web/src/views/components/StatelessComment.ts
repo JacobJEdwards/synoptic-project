@@ -1,5 +1,5 @@
-import { StatelessComponent as Component } from "@lib/components";
-import type { Comment } from "@lib/types";
+import {StatelessComponent as Component} from "@lib/components";
+import type {Comment} from "@lib/types";
 
 export default class StatelessComment extends Component {
     constructor(props: Comment) {

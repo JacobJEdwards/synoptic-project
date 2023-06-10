@@ -1,9 +1,9 @@
-import { AbstractPage as Page } from "@lib/components"
-import type { Params, LoaderArgs, LoaderFunction, ActionArgs, ActionFunction } from "@lib/types";
+import {AbstractPage as Page} from "@lib/components"
+import type {ActionArgs, ActionFunction, LoaderArgs, LoaderFunction, Params} from "@lib/types";
 
-import { register } from "@services/auth.service";
+import {register} from "@services/auth.service";
 
-export const loader: LoaderFunction<void> = async ({ req, res }: LoaderArgs) => {
+export const loader: LoaderFunction<void> = async ({req, res}: LoaderArgs) => {
     if (req?.session?.user) {
         console.log("User is already logged in", req.session.user);
         res.redirect("/");
@@ -13,11 +13,11 @@ export const loader: LoaderFunction<void> = async ({ req, res }: LoaderArgs) => 
     return;
 };
 
-export const action: ActionFunction<void> = async ({ req, res }: ActionArgs) => {
+export const action: ActionFunction<void> = async ({req, res}: ActionArgs) => {
     // edge cases
     if (!req.body) return res.redirect("/register");
 
-    const { username, email, name, password } = req.body;
+    const {username, email, name, password} = req.body;
 
     const data = await register(username, email, password, name);
 

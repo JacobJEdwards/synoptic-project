@@ -1,15 +1,15 @@
-import { StatelessComponent as Component } from "@lib/components";
-import type { Charity } from "@/lib/types";
+import {StatelessComponent as Component} from "@lib/components";
+import type {Charity} from "@/lib/types";
 
 export default class StatelessCharityCard extends Component {
-  constructor(props: Charity) {
-    super(props);
-  }
+    constructor(props: Charity) {
+        super(props);
+    }
 
-  render() {
-    const charity = this.props as Charity;
+    render() {
+        const charity = this.props as Charity;
 
-    return `
+        return `
             <section class="charity-card">
             <h2>${charity.name}</h2>
             <p>
@@ -17,5 +17,5 @@ export default class StatelessCharityCard extends Component {
             </p>
             </section>
             `;
-  }
+    }
 }

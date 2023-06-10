@@ -1,7 +1,7 @@
-import { AbstractPage as Page } from "@/lib/components";
-import type { Params, LoaderFunction, LoaderArgs, Recipe } from "@lib/types";
+import {AbstractPage as Page} from "@/lib/components";
+import type {LoaderFunction, Params, Recipe} from "@lib/types";
 
-import { getRecipes } from "@services/recipes.service";
+import {getRecipes} from "@services/recipes.service";
 import RecipeCard from "@components/StatelessRecipeCard";
 import Link from "@components/Link";
 

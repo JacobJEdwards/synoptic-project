@@ -1,10 +1,10 @@
-import { NestFactory } from "@nestjs/core";
-import { Logger } from "@nestjs/common";
-import { AppModule } from "./app.module";
-import { middleware } from "./app.middleware";
-import type { NestExpressApplication } from "@nestjs/platform-express";
-import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
-import { patchNestjsSwagger } from "@anatine/zod-nestjs";
+import {NestFactory} from "@nestjs/core";
+import {Logger} from "@nestjs/common";
+import {AppModule} from "./app.module";
+import {middleware} from "./app.middleware";
+import type {NestExpressApplication} from "@nestjs/platform-express";
+import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
+import {patchNestjsSwagger} from "@anatine/zod-nestjs";
 
 /**
  * Bootstrap the application

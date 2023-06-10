@@ -1,6 +1,5 @@
-import type { INestApplication } from "@nestjs/common";
+import type {INestApplication} from "@nestjs/common";
 import * as compression from "compression";
-import helmet from "helmet";
 
 /**
  * Middleware
@@ -9,8 +8,8 @@ import helmet from "helmet";
  * @description Middleware for the application
  */
 export function middleware(app: INestApplication): INestApplication {
-  // app.use(helmet());
-  app.enableCors();
-  app.use(compression());
-  return app;
+    // app.use(helmet());
+    app.enableCors();
+    app.use(compression());
+    return app;
 }

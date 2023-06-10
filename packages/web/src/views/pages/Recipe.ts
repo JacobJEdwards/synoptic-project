@@ -1,24 +1,24 @@
-import { AbstractPage as Page } from "@lib/components";
+import {AbstractPage as Page} from "@lib/components";
 import type {
-    Params,
     ActionArgs,
     ActionFunction,
+    Comment,
     LoaderArgs,
     LoaderFunction,
-    User,
+    Params,
     Recipe as RecipeType,
-    Comment,
+    User,
 } from "@lib/types";
 import CommentComponent from "@components/StatelessComment";
 
-import { getRecipe } from "@services/recipes.service";
-import { createComment } from "@services/comments.service";
+import {getRecipe} from "@services/recipes.service";
+import {createComment} from "@services/comments.service";
 
 export const loader: LoaderFunction<RecipeType> = async ({
-    params,
-    res,
-}: LoaderArgs) => {
-    const { id } = params;
+                                                             params,
+                                                             res,
+                                                         }: LoaderArgs) => {
+    const {id} = params;
     const data = await getRecipe(id);
     if (!data) {
         return {
@@ -33,11 +33,11 @@ export const loader: LoaderFunction<RecipeType> = async ({
 };
 
 export const action: ActionFunction<Comment> = async ({
-    req,
-    res,
-}: ActionArgs) => {
-    const { body } = req;
-    const { message, recipeId } = body;
+                                                          req,
+                                                          res,
+                                                      }: ActionArgs) => {
+    const {body} = req;
+    const {message, recipeId} = body;
 
     const user = req.session.user ? (req.session.user as User) : undefined;
 

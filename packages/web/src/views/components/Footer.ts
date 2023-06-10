@@ -1,4 +1,4 @@
-import { AbstractComponent as Component } from "@lib/components";
+import {AbstractComponent as Component} from "@lib/components";
 
 export default class RecipeCard extends Component {
     constructor(parentElement: HTMLElement) {

@@ -1,15 +1,15 @@
-import { AbstractComponent as Component } from "@lib/components";
-import type { Charity } from "@lib/types";
+import {AbstractComponent as Component} from "@lib/components";
+import type {Charity} from "@lib/types";
 
 export default class RecipeCard extends Component {
-  constructor(parentElement: HTMLElement, charity: Charity) {
-    super(parentElement, charity);
-  }
+    constructor(parentElement: HTMLElement, charity: Charity) {
+        super(parentElement, charity);
+    }
 
-  async getHtml() {
-    const charity = this.props;
+    async getHtml() {
+        const charity = this.props;
 
-    return `
+        return `
         <section class="charity-card">
             <h2>${charity.name}</h2>
             <p>
@@ -17,5 +17,5 @@ export default class RecipeCard extends Component {
             </p>
         </section>
             `;
-  }
+    }
 }
