@@ -5,6 +5,7 @@ import type {
     ActionFunction,
     LoaderFunction,
     ExpressObject,
+    Params,
 } from "@lib/types"
 
 import jsonRoutes from "@/routes.json" //assert { type: "json" };
@@ -19,6 +20,7 @@ export type Match = {
     result: RegExpMatchArray | null;
     // result will be null if route doesn't match current path, or an array with the full path and potential parameters
     route: Route;
+    queryParams: URLSearchParams;
 };
 
 export type Route = {
@@ -132,7 +134,7 @@ export default class Router {
         this.match = match;
 
         // load the components module and create a new instance of the view
-        const { view, action, loader, params } = await this.loadComponent(match);
+        const { view, action, loader, params, queryParams } = await this.loadComponent(match);
 
         // if the user is logged in, pass the user to the view
         if (req?.session?.user && view) {
@@ -164,17 +166,20 @@ export default class Router {
 
     /**
      * Load the component of the route
-     * @param {object} match
-     * @returns {object} the compoenet, action and loader of the route
+     * @param {Match} match
+     * @returns {ComponentObject} the compoenet, action and loader of the route
      */
     async loadComponent(match: Match) {
         const { default: View, action, loader } = await match.route.component();
 
-        const params = this.getParams(match);
+        const params: Params = this.getParams(match);
+        const queryParams = match.queryParams;
 
         const view = View ? new View(params) : null;
 
-        return { view, action, loader, params };
+        view.queryParams = queryParams;
+
+        return { view, action, loader, params, queryParams };
     }
 
     /**
@@ -186,9 +191,11 @@ export default class Router {
     async loadLoaderData({ view, loader, action }: ComponentObject, { req, res, next }: ExpressObject): Promise<any> {
         if (loader) {
             const params = view?.params ?? {};
+            const queryParams = view?.queryParams ?? new URLSearchParams();
             // load the loader data of the route
             const loaderData = await loader({
                 params,
+                queryParams,
                 req,
                 res,
                 next,
@@ -218,11 +225,11 @@ export default class Router {
 
     /**
      * get parameters from the url path
-     * @param {object} match
-     * @returns {object}
+     * @param {Match} match
+     * @returns {Params}
      */
-    getParams(match: Match) {
-        if (!match.result) return;
+    getParams(match: Match): Params {
+        if (!match.result) return {};
 
         const values = match.result.slice(1);
         const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
@@ -254,9 +261,9 @@ export class RouterMatcher {
      * @static
      * @constant
      * @memberof RouterMatcher
-     * @type {object}
+     * @type {Route}
      */
-    static NOT_FOUND_ROUTE = {
+    static NOT_FOUND_ROUTE: Route = {
         path: "/404",
         component: () => import("@/views/pages/Error404"),
     };
@@ -280,8 +287,7 @@ export class RouterMatcher {
     /**
      * @constructor
      * @memberof RouterMatcher
-     * @param {object[]} routes
-     * @returns {RouterMatcher}
+     * @param {Route[]} routes
      */
     constructor(routes: Route[]) {
         this.routes = routes;
@@ -297,6 +303,11 @@ export class RouterMatcher {
      */
     match(pathname: string): Match {
         /* Get the current url path */
+        const url = pathname.split('?')
+
+        const parameters = url[0] ?? pathname
+        const queryParams = new URLSearchParams(url[1])
+
         const potentialMatches = this.routes.map((route) => {
             let regex = this.regexCache.get(route.path);
 
@@ -308,7 +319,8 @@ export class RouterMatcher {
 
             return {
                 route: route,
-                result: pathname.match(regex),
+                result: parameters.match(regex),
+                queryParams
             };
         });
 
@@ -322,6 +334,7 @@ export class RouterMatcher {
             match = {
                 route: RouterMatcher.NOT_FOUND_ROUTE,
                 result: [pathname],
+                queryParams
             };
         }
 

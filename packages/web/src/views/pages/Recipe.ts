@@ -1,4 +1,4 @@
-import {AbstractPage as Page} from "@lib/components";
+import { AbstractPage as Page } from "@lib/components";
 import type {
     ActionArgs,
     ActionFunction,
@@ -11,14 +11,23 @@ import type {
 } from "@lib/types";
 import CommentComponent from "@components/StatelessComment";
 
-import {getRecipe} from "@services/recipes.service";
-import {createComment} from "@services/comments.service";
+import { getRecipe } from "@services/recipes.service";
+import { createComment } from "@services/comments.service";
 
 export const loader: LoaderFunction<RecipeType> = async ({
-                                                             params,
-                                                             res,
-                                                         }: LoaderArgs) => {
-    const {id} = params;
+    params,
+    res,
+}: LoaderArgs) => {
+    const id = parseInt(params.id as string);
+
+    if (!id || typeof id !== "number") {
+        res.redirect("/recipes");
+        return {
+            success: false,
+            error: "Recipe not found",
+        };
+    }
+
     const data = await getRecipe(id);
     if (!data) {
         return {
@@ -33,11 +42,11 @@ export const loader: LoaderFunction<RecipeType> = async ({
 };
 
 export const action: ActionFunction<Comment> = async ({
-                                                          req,
-                                                          res,
-                                                      }: ActionArgs) => {
-    const {body} = req;
-    const {message, recipeId} = body;
+    req,
+    res,
+}: ActionArgs) => {
+    const { body } = req;
+    const { message, recipeId } = body;
 
     const user = req.session.user ? (req.session.user as User) : undefined;
 
@@ -87,7 +96,8 @@ export default class Recipe extends Page {
             <p>${recipe.description}</p>
             <p>${recipe.ingredients}</p>
             <p>${recipe.steps}</p>
-            <p>${recipe?.comments?.length} comments</p>
+            <p>${recipe?.comments?.length} comment${recipe?.comments?.length === 1 ? "" : "s"
+            }</p>
             <div class="comments">
                 ${commentsHtml}
             </div>

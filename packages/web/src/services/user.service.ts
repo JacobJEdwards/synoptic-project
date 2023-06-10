@@ -1,14 +1,11 @@
-import {User} from "@/lib/types";
-import {verifyToken} from "./auth.service";
+import { User } from "@/lib/types";
 
-export async function getProfile(jwt: string, userId: number): Promise<User | null> {
+export async function getProfile(
+    jwt: string,
+    userId: number
+): Promise<User | null> {
     try {
-        const permission = await verifyToken(jwt, userId);
-        if (!permission) {
-            return null;
-        }
-
-        const response = await fetch(`http://localhost:3000/users/${userId}`, {
+        const response = await fetch(`http://localhost:3000/users/profile`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -16,11 +13,14 @@ export async function getProfile(jwt: string, userId: number): Promise<User | nu
             },
         });
 
+        console.log(response);
+
         if (!response.ok) {
             return null;
         }
 
         const data = await response.json();
+        console.log(data);
         return data;
     } catch (error) {
         return null;

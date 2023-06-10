@@ -1,4 +1,5 @@
 import type {NextFunction, Request, Response} from "express";
+import { Params } from "./Requests";
 
 // type params
 
@@ -6,7 +7,8 @@ export type LoaderArgs = {
     req: Request;
     res: Response;
     next: NextFunction;
-    params: any;
+    params: Params;
+    queryParams: URLSearchParams;
 };
 
 export type LoaderReturn<T> = {

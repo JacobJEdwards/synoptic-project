@@ -6,6 +6,7 @@ import type {ActionReturn, LoaderReturn, Params, User} from "@lib/types";
 export default abstract class Page {
     title: string;
     params: Params;
+    queryParams!: URLSearchParams;
     loaderData: LoaderReturn<any> | null;
     actionData: ActionReturn<any> | null;
     user: User | null;

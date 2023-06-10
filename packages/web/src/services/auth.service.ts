@@ -51,23 +51,23 @@ export async function register(
     }
 }
 
-export async function verifyToken(jwt: string, userId: number): Promise<boolean> {
-    try {
-        const response = await fetch("http://localhost:3000/auth/profile", {
-            method: "GET",
-            headers: {Authorization: `Bearer ${jwt}`},
-        });
-
-        if (!response.ok) {
-            return false;
-        }
-
-        const {id} = await response.json();
-        return id === userId;
-
-
-    } catch (err) {
-        console.log(err);
-        return false;
-    }
-}
+// export async function verifyToken(jwt: string, userId: number): Promise<boolean> {
+//     try {
+//         const response = await fetch("http://localhost:3000/auth/profile", {
+//             method: "GET",
+//             headers: {Authorization: `Bearer ${jwt}`},
+//         });
+//
+//         if (!response.ok) {
+//             return false;
+//         }
+//
+//         const {id} = await response.json();
+//         return id === userId;
+//
+//
+//     } catch (err) {
+//         console.log(err);
+//         return false;
+//     }
+// }
