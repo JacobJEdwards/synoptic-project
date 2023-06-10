@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 
-type TemplateCache = Map<string, string[] | string>;
+type TemplateCache = Map<string, string[]>;
+type FileCache = Map<string, string>
 type AST = string[];
 export type TemplateData = Record<string, any>;
 type Template = string;
@@ -14,12 +15,14 @@ export default class Templater<T extends TemplateData = TemplateData> {
     regex: RegExp;
     keyRegex: RegExp;
     templateCache: TemplateCache;
+    fileCache: FileCache;
 
-    constructor(cache = new Map()) {
+    constructor() {
         // Regex to match {{ key }} in a string
         this.regex = new RegExp(/{{(.*?)}}/g);
         this.keyRegex = new RegExp(/{{|}}/g);
-        this.templateCache = cache || new Map();
+        this.templateCache = new Map();
+        this.fileCache = new Map();
     }
 
     /**
@@ -35,7 +38,7 @@ export default class Templater<T extends TemplateData = TemplateData> {
 
         const templateFromCache = this.templateCache.get(template);
 
-        if (templateFromCache && Array.isArray(templateFromCache)) {
+        if (templateFromCache) {
             return templateFromCache;
         }
 
@@ -147,14 +150,14 @@ export default class Templater<T extends TemplateData = TemplateData> {
     }
 
     async compileFileToString(path: string, data: T, staticFile = true) {
-        let template = this.templateCache.get(path);
+        let template = this.fileCache.get(path);
 
         if (staticFile && template && typeof template === "string") {
             return await this.compileToString(template, data);
         }
 
         template = await fs.readFile(path, "utf-8");
-        this.templateCache.set(path, template);
+        this.fileCache.set(path, template);
 
         return await this.compileToString(template, data);
     }
