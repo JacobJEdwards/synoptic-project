@@ -1,50 +1,61 @@
-import {AbstractPage as Page} from "@lib/components";
-import type {ActionArgs, ActionFunction, LoaderArgs, LoaderFunction, Params,} from "@lib/types";
+import { AbstractPage as Page } from "@lib/components";
+import type {
+  ActionArgs,
+  ActionFunction,
+  LoaderArgs,
+  LoaderFunction,
+  Params,
+} from "@lib/types";
 
-import {login} from "@services/auth.service";
+import { login } from "@services/auth.service";
 
 export const loader: LoaderFunction<void> = async ({
-                                                       req,
-                                                       res,
-                                                   }: LoaderArgs) => {
-    if (req.session?.user) return res.redirect("/");
+  req,
+  res,
+}: LoaderArgs) => {
+  if (req.session?.user) return res.redirect("/");
 };
 
-export const action: ActionFunction = async ({req, res}: ActionArgs) => {
-    if (!req.body) return res.redirect("/login");
+export const action: ActionFunction = async ({ req, res }: ActionArgs) => {
+  if (!req.body) return res.redirect("/login");
 
-    const {email, password} = req.body;
+  const { email, password } = req.body;
 
-    const data = await login(email, password);
+  const data = await login(email, password);
 
-    console.log(data);
+  console.log(data);
 
-    if (data?.user && data?.jwt) {
-        req.session.user = data.user;
-        req.session.jwt = data.jwt;
-        res.redirect("/profile");
-        return {
-            success: true,
-        };
-    } else {
-        res.redirect("/login");
-        return {
-            success: false,
-            error: "Invalid credentials",
-        };
-    }
+  if (data?.user && data?.jwt) {
+    req.session.user = data.user;
+    req.session.jwt = data.jwt;
+    res.redirect("/profile");
+    return {
+      success: true,
+    };
+  } else {
+    res.redirect("/login");
+    return {
+      success: false,
+      error: "Invalid credentials",
+    };
+  }
 };
 
 export default class Login extends Page {
-    constructor(params: Params, title = "Login") {
-        super(params, title);
-    }
+  constructor(params: Params, title = "Login") {
+    super(params, title);
+  }
 
-    async getHtml() {
-        return `
+  async getHtml() {
+    return `
             <section>
                 <h1>Login</h1>
                 <p class="form">Required information is marked with an asterisk (*)</p>
+                ${
+                  this.actionData?.success === false
+                    ? `<p class="error">${this.actionData.error}</p>`
+                    : ""
+                }
                 <form id="login-form" action="/login" method="POST">
                     <fieldset>
                         <legend>Login</legend>
@@ -61,9 +72,9 @@ export default class Login extends Page {
                 </form>
             </section>
         `;
-    }
+  }
 
-    async clientScript(): Promise<void> {
-        return;
-    }
+  async clientScript(): Promise<void> {
+    return;
+  }
 }

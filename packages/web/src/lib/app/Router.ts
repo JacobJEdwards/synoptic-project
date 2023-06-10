@@ -177,7 +177,8 @@ export default class Router {
 
         const view = View ? new View(params) : null;
 
-        view.queryParams = queryParams;
+        view ? (view.queryParams = queryParams) : null;
+
 
         return { view, action, loader, params, queryParams };
     }
