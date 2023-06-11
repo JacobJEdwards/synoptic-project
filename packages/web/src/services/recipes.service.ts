@@ -1,7 +1,6 @@
 // Purpose: Service for recipes
 import type { Recipe } from "@lib/types";
-
-export const recipeCache = new Map<number, Recipe>();
+import { RecipeCache } from '@lib/cache'
 
 /**
  * @description Get all recipes
@@ -9,8 +8,10 @@ export const recipeCache = new Map<number, Recipe>();
  */
 export async function getRecipes(): Promise<Recipe[]> {
     try {
-        if (recipeCache.size > 0) {
-            return Array.from(recipeCache.values());
+        const recipesList = await RecipeCache.getAll();
+
+        if (recipesList.length > 0) {
+            return recipesList;
         }
 
         const response = await fetch("http://localhost:3000/recipes");
@@ -19,15 +20,16 @@ export async function getRecipes(): Promise<Recipe[]> {
         }
 
         const recipes = await response.json();
-        recipes.forEach((recipe: Recipe) => {
+        recipes.forEach(async (recipe: Recipe) => {
             if (!recipe.id) {
                 return;
             }
-            if (recipeCache.has(recipe.id)) {
+
+            if (await RecipeCache.hasRecipe(recipe.id)) {
                 return;
             }
 
-            recipeCache.set(recipe.id, recipe);
+            await RecipeCache.setRecipe(recipe.id, recipe);
         });
 
         return recipes;
@@ -44,7 +46,7 @@ export async function getRecipes(): Promise<Recipe[]> {
  */
 export async function getRecipe(id: number): Promise<Recipe | null> {
     try {
-        const recipe = recipeCache.get(id);
+        const recipe = await RecipeCache.getRecipe(id);
 
         if (recipe) {
             return recipe;
@@ -56,7 +58,10 @@ export async function getRecipe(id: number): Promise<Recipe | null> {
             return null;
         }
 
-        return await response.json();
+        const data = await response.json() as Recipe;
+
+        await RecipeCache.setRecipe(id, data);
+        return data;
     } catch (error) {
         console.log(error);
         return null;
@@ -79,7 +84,7 @@ export async function createRecipe(recipe: Recipe): Promise<Recipe | null> {
 
         const data = await response.json();
 
-        recipeCache.set(data.id, data);
+        await RecipeCache.setRecipe(data.id, data);
         return data;
     } catch (error) {
         console.log(error);

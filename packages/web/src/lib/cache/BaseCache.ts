@@ -1,31 +1,43 @@
-export default class BaseCache<T, X> {
-    private cache: Map<T, X>;
+import { redisClient } from "@lib/config";
 
-    constructor() {
-        this.cache = new Map<T, X>();
+export default class BaseCache<T> {
+    private cache: typeof redisClient;
+    private prefix: string;
+
+    constructor(prefix = "") {
+        this.cache = redisClient;
+        this.prefix = prefix;
     }
 
-    get(key: T): X | undefined {
-        return this.cache.get(key);
+    async get(key: string): Promise<T | null> {
+        const data = await this.cache.get(`${this.prefix}${key}`);
+        if (!data) return null;
+        return JSON.parse(data);
     }
 
-    set(key: T, value: X): void {
-        this.cache.set(key, value);
+    async has(key: string): Promise<boolean> {
+        return (await this.get(key)) !== null;
     }
 
-    remove(key: T): void {
-        this.cache.delete(key);
+    async set(key: string, data: T): Promise<void> {
+        await this.cache.set(`${this.prefix}${key}`, JSON.stringify(data));
     }
 
-    clear(): void {
-        this.cache.clear();
+    async delete(key: string): Promise<void> {
+        await this.cache.del(`${this.prefix}${key}`);
     }
 
-    has(key: T): boolean {
-        return this.cache.has(key);
+    async clear(): Promise<void> {
+        await this.cache.flushAll();
     }
 
-    getItems(): IterableIterator<[T, X]> {
-        return this.cache.entries();
+    async getAll(): Promise<T[]> {
+        const keys = await this.cache.keys(`${this.prefix}*`);
+        const data: T[] = [];
+        for (const key of keys) {
+            const value = await this.get(key);
+            if (value) data.push(value);
+        }
+        return data;
     }
 }

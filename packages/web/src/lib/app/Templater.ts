@@ -1,8 +1,7 @@
 import fs from "fs/promises";
 import { HtmlLink, HtmlMeta, HtmlScript } from "../types";
+import { FileCache, TemplateCache } from "@lib/cache"
 
-type TemplateCache = Map<string, string[]>;
-type FileCache = Map<string, string>;
 type AST = string[];
 export type TemplateData = Record<string, any>;
 type Template = string;
@@ -15,15 +14,15 @@ type Template = string;
 export default class Templater<T extends TemplateData = TemplateData> {
   regex: RegExp;
   keyRegex: RegExp;
-  templateCache: TemplateCache;
-  fileCache: FileCache;
+  templateCache: typeof TemplateCache;
+  fileCache: typeof FileCache;
 
   constructor() {
     // Regex to match {{ key }} in a string
     this.regex = new RegExp(/{{(.*?)}}/g);
     this.keyRegex = new RegExp(/{{|}}/g);
-    this.templateCache = new Map();
-    this.fileCache = new Map();
+    this.templateCache = TemplateCache;
+    this.fileCache = FileCache;
   }
 
   /**
@@ -37,11 +36,12 @@ export default class Templater<T extends TemplateData = TemplateData> {
     //   return this.templateCache.get(template);
     // }
 
-    const templateFromCache = this.templateCache.get(template);
+    const templateFromCache = await this.templateCache.get(template);
 
     if (templateFromCache) {
-      return templateFromCache;
+        return templateFromCache;
     }
+
 
     const ast = await this.parseTemplate(template);
     this.templateCache.set(template, ast);
@@ -151,7 +151,7 @@ export default class Templater<T extends TemplateData = TemplateData> {
   }
 
   async compileFileToString(path: string, data: T, staticFile = true) {
-    let template = this.fileCache.get(path);
+    let template = await this.fileCache.get(path);
 
     if (staticFile && template && typeof template === "string") {
       return await this.compileToString(template, data);

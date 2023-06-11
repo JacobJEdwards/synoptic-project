@@ -2,10 +2,11 @@ import morgran from "morgan";
 import compression from "compression";
 import session from "express-session";
 import express from "express";
-import redisStore from "./redis";
+import { redisStore } from "@lib/config";
 
-import type {Middleware, User} from "@lib/types";
+import type { Middleware, User } from "@lib/types";
 
+// extend express session data
 declare module "express-session" {
     export interface SessionData {
         user: User;
@@ -13,13 +14,13 @@ declare module "express-session" {
     }
 }
 
-const middleware: Array<Middleware |any> = [
+const middleware: Array<Middleware | any> = [
     // cors(),
     // helmet(),
     morgran("dev"),
     compression(),
     express.json(),
-    express.urlencoded({extended: true}),
+    express.urlencoded({ extended: true }),
     session({
         store: redisStore,
         secret: "secret",
