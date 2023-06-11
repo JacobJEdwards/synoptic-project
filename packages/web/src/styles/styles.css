@@ -316,3 +316,17 @@ textarea:hover {
 .recipe-card:hover {
   background-color: #eff4f7;
 }
+
+.charity-button {
+  margin: 5% 25% 2% 35%;
+  min-width: 150px;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: #b8195a;
+  color: white;
+}
+
+.charity-button:hover {
+    background-color: pink;
+}

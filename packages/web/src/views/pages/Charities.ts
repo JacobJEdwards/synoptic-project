@@ -40,18 +40,13 @@ export default class Charities extends Page {
         <section class="prose">
         <h1>Charities Page</h1>
         <section class='box'>
-          <br>
           <article class='float-left'>
-            <h1>
-              <a href="https://getintogovan.com/thriving-places-food-for-good-group/"
-                >Get into Govan</a
-              >
-            </h1>
-            <br>
               <p>
-                <span class="charity-info">info about the charity:</span><br><br> This group is made up of many organisations listed below, along with local community members. They are working together as a group to achieve better food outcomes in Govan. 
+                <span class="charity-info">Get Into Govan:</span><br><br> This group is made up of many organisations listed below, along with local community members. They are working together as a group to achieve better food outcomes in Govan. 
                 Aberlour,  Elderpark Housing Association, Gilded Lily, Glasgow City Council Neighbourhoods & Sustainability (Growing Spaces), Glasgow City HSCP (Health Improvement),  Glasgow Community Food Network, Glasgow Housing Association, Glasgow Life, Go Vegan Govan, Govan Boxing Club, Govan Community Project, Govan HELP, Govan Housing Association, Govan Youth Information Point,  Moogety Foods, Preshal Trust, Propagate, The Riverside Hall, and Urban Roots."
               </p>
+              <a href="https://getintogovan.com/thriving-places-food-for-good-group/">
+              <button class="charity-button">Get Into Govan</button></a>
           </article>
           <div class='float-right'>
             <img src='views/images/getintogovan.jpeg'>
@@ -61,16 +56,11 @@ export default class Charities extends Page {
         <section class='box'>
           <br>
           <article class='float-left'>
-            <h1>
-              <a
-                href="https://elderpark.org/your-community/projects/moogety-foods-moogety-food-hub-moogety-garden/"
-                >Moogety Foods</a
-              >
-            </h1>
-            <br>
             <p>
-              <span class="charity-info">info about the charity:</span><br><br> Moogety Foods is a non-profit social enterprise based in Govan, Glasgow, promoting healthy eating, cooking and participation within the community."
+              <span class="charity-info">Moogety Foods:</span><br><br> Moogety Foods is a non-profit social enterprise based in Govan, Glasgow, promoting healthy eating, cooking and participation within the community."
             </p>
+            <a href="https://elderpark.org/your-community/projects/moogety-foods-moogety-food-hub-moogety-garden/">
+            <button class="charity-button">Moogety Foods</button></a>
           </article>
           <div class='float-right'>
             <img src='views/images/moogetyfoods.jpeg'>
@@ -78,17 +68,12 @@ export default class Charities extends Page {
         </section>
   
         <section class='box'>
-          <br>
           <article class='float-left'>
-            <h1>
-              <a href="https://www.govanhelp.org/services/the-govan-pantry"
-                >Govan Pantry</a
-              >
-            </h1>
-            <br>
             <p>
-              <span class="charity-info">info about the charity:</span><br><br> The Govan Pantry is a subsidised community shop that helps families to shop smarter and budget better, providing access to food and other essential items at reduced cost."
+              <span class="charity-info">Govan Pantry:</span><br><br> The Govan Pantry is a subsidised community shop that helps families to shop smarter and budget better, providing access to food and other essential items at reduced cost."
             </p>
+            <a href="https://www.govanhelp.org/services/the-govan-pantry">
+            <button class="charity-button">Govan Pantry</button></a>
           </article>
           <div class='float-right'>
             <img src='views/images/govanpantry.png'>
