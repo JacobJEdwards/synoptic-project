@@ -202,3 +202,5 @@ export default class Templater<T extends TemplateData = TemplateData> {
     return scriptData.join("");
   }
 }
+
+export const TemplaterInstance = new Templater();
