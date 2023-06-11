@@ -1,5 +1,9 @@
-import {AbstractPage as Page} from "@lib/components"
-import type {Params} from "@lib/types"
+import { AbstractPage as Page } from "@lib/components";
+import type { LoaderFunction, Params } from "@lib/types";
+
+export const loader: LoaderFunction = async ({ queryParams }) => {
+    console.log("QUERY PARAMS:", queryParams);
+};
 
 export default class Dashboard extends Page {
     constructor(params: Params, title = "Home") {
