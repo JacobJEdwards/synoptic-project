@@ -225,3 +225,29 @@ textarea:hover {
 #add-recipe {
     text-align: center;
 }
+
+#box {    
+    width: 90%;
+    margin: 5%;
+    overflow: hidden;
+    display: flex;
+    border: #333 solid 10px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    background-color: azure;
+}
+
+#float-left {
+    float: left;
+    width: 60%;
+    padding: 20px;
+}
+
+#float-right {
+    float: right;
+    width: 40%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
