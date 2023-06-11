@@ -1,5 +1,7 @@
 // Purpose: Service for recipes
-import type {Recipe} from "@lib/types";
+import type { Recipe } from "@lib/types";
+
+export const recipeCache = new Map<number, Recipe>();
 
 /**
  * @description Get all recipes
@@ -7,11 +9,28 @@ import type {Recipe} from "@lib/types";
  */
 export async function getRecipes(): Promise<Recipe[]> {
     try {
-        const recipes = await fetch("http://localhost:3000/recipes");
-        if (!recipes.ok) {
+        if (recipeCache.size > 0) {
+            return Array.from(recipeCache.values());
+        }
+
+        const response = await fetch("http://localhost:3000/recipes");
+        if (!response.ok) {
             return [];
         }
-        return await recipes.json();
+
+        const recipes = await response.json();
+        recipes.forEach((recipe: Recipe) => {
+            if (!recipe.id) {
+                return;
+            }
+            if (recipeCache.has(recipe.id)) {
+                return;
+            }
+
+            recipeCache.set(recipe.id, recipe);
+        });
+
+        return recipes;
     } catch (error) {
         console.log(error);
         return [];
@@ -25,13 +44,19 @@ export async function getRecipes(): Promise<Recipe[]> {
  */
 export async function getRecipe(id: number): Promise<Recipe | null> {
     try {
-        const recipe = await fetch(`http://localhost:3000/recipes/${id}`);
+        const recipe = recipeCache.get(id);
 
-        if (!recipe.ok) {
+        if (recipe) {
+            return recipe;
+        }
+
+        const response = await fetch(`http://localhost:3000/recipes/${id}`);
+
+        if (!response.ok) {
             return null;
         }
 
-        return await recipe.json();
+        return await response.json();
     } catch (error) {
         console.log(error);
         return null;
@@ -52,7 +77,10 @@ export async function createRecipe(recipe: Recipe): Promise<Recipe | null> {
             return null;
         }
 
-        return await response.json();
+        const data = await response.json();
+
+        recipeCache.set(data.id, data);
+        return data;
     } catch (error) {
         console.log(error);
         return null;
