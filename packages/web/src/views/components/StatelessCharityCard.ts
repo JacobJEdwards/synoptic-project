@@ -10,9 +10,9 @@ export default class StatelessCharityCard extends Component {
         const charity = this.props as Charity;
 
         return `
-            <section class="charity-card" id="box">
+            <section class="charity-card box">
             <br />
-            <article id="float-left">
+            <article class="float-left">
             <h1>
                 <a href="${charity.website}" target="_blank" rel="noopener noreferrer">
                     ${charity.name}
@@ -20,10 +20,11 @@ export default class StatelessCharityCard extends Component {
             </h1>
             <br />
             <p>
+                <span class="charity-info">info about the charity:</span><br /><br />
                 ${charity.description}
             </p>
             </article>
-            <div id="float-right">
+            <div class="float-right">
                 <img src="views/images/placeholder.jpg" alt="Charity Logo" />
             </div>
             </section>

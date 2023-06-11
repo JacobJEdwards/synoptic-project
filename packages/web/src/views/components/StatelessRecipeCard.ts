@@ -1,6 +1,6 @@
 import Link from "./Link";
-import {StatelessComponent as Component} from "@lib/components";
-import type {Recipe} from "@lib/types";
+import { StatelessComponent as Component } from "@lib/components";
+import type { Recipe } from "@lib/types";
 
 export default class StatelessCharityCard extends Component {
     constructor(props: Recipe) {
@@ -18,11 +18,11 @@ export default class StatelessCharityCard extends Component {
         const userName = recipe.user ? recipe.user.name : "Anonymous";
 
         return `
-            <article class="services">
+            <a class="recipe-card" href="/recipes/${recipe.id}">
+            <article class="service">
                 <figure>
-                    <img src="/views/images/placeholder.jpg" alt="${
-            recipe.name
-        }" />
+                    <img src="/views/images/placeholder.jpg" alt="${recipe.name
+            }" />
                     <figcaption>
                         <h2>${recipe.title}</h2>
                         <p>${recipe.description}</p>
@@ -31,6 +31,7 @@ export default class StatelessCharityCard extends Component {
                     </figcaption>
                 </figure>
                 </article>
+            </a>
             `;
     }
 }
