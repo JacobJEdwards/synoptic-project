@@ -9,25 +9,25 @@ export default class Dashboard extends Page {
     async getHtml() {
         console.log("USER?:", this.user);
         const view = `
-    <section class="top">
-        <article>
-            <figure>
-                <img class="topimg" src="/views/images/placeholder.jpg" alt="placeholder" />
-            </figure>
-        </article>
-    </section>
     <section class="prose">
-        <h1>Index Page</h1>
-        <h2>A world of Recipes</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-            commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-            occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum.
-        </p>
+        <section class="box">
+            <div class="float-right">
+                <img id="index-image" src="/views/images/index-image.jpeg" alt="placeholder" />
+            </div>
+            <article class="float-left">
+            <h2 id="slogan">RECIPES FOR THE WORLD BY THE WORLD</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+            </article>
+        </section>
+        <section class="search-box">
+            <form action="">
+                <input id="search-bar" type="text" placeholder="search the website" name="a">
+                <button id="search-button" type="submit">search</button>
+            </form>
+        </section>
     </section>
         `;
 
