@@ -1,4 +1,5 @@
 import fs from "fs/promises";
+import { HtmlLink, HtmlMeta } from "../types";
 
 type TemplateCache = Map<string, string[]>;
 type FileCache = Map<string, string>
@@ -160,5 +161,29 @@ export default class Templater<T extends TemplateData = TemplateData> {
         this.fileCache.set(path, template);
 
         return await this.compileToString(template, data);
+    }
+
+    generateMeta(metaData: HtmlMeta[]) {
+        const meta = metaData.map((item) => {
+            const { name, content, property } = item;
+            if (name) {
+                return `<meta name="${name}" content="${content}">`;
+            } else if (property) {
+                return `<meta property="${property}" content="${content}">`;
+            } else {
+                return "";
+            }
+        });
+        return meta.join("");
+    }
+
+    generateLinks(links: HtmlLink[]) {
+        const linkData = links.map((item) => {
+            const { rel, href } = item;
+            if (!rel || !href) return "";
+            return `<link rel="${rel}" href="${href}">`;
+        });
+
+        return linkData.join("");
     }
 }

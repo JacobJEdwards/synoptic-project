@@ -4,8 +4,12 @@ import { deepEqual } from "@lib/utils";
 import type {
     ActionFunction,
     LoaderFunction,
+    LinksFunction,
+    MetaFunction,
     ExpressObject,
     Params,
+    HtmlMeta,
+    HtmlLink,
 } from "@lib/types"
 
 import jsonRoutes from "@/routes.json" //assert { type: "json" };
@@ -14,6 +18,8 @@ export type ComponentObject<T = any> = {
     view: Page | null;
     action: ActionFunction<T> | null;
     loader: LoaderFunction<T> | null;
+    meta: MetaFunction | null;
+    links: LinksFunction | null;
 };
 
 export type ComponentImport = {
@@ -101,6 +107,8 @@ export default class Router {
     view: Page | null;
     action: ActionFunction | null;
     loader: LoaderFunction | null;
+    links: LinksFunction | null;
+    meta: MetaFunction | null;
 
     constructor(routes: Route[]) {
         this.routes = new Set(routes);
@@ -109,11 +117,13 @@ export default class Router {
         this.view = null;
         this.action = null;
         this.loader = null;
+        this.links = null;
+        this.meta = null;
     }
 
     async reloadLoaderData({ req, res, next }: ExpressObject) {
         const { loaderData } = await this.loadLoaderData(
-            { view: this.view, action: this.action, loader: this.loader },
+            { view: this.view, action: this.action, loader: this.loader, meta: this.meta, links: this.links },
             {
                 req,
                 res,
@@ -133,14 +143,14 @@ export default class Router {
 
         // if the component is already loaded, return it
         if (deepEqual(match, this.match) || !match?.route) {
-            return await this.loadLoaderData({ view: this.view, loader: this.loader, action: this.action }, { req, res, next });
+            return await this.loadLoaderData({ view: this.view, loader: this.loader, action: this.action, meta: this.meta, links: this.links }, { req, res, next });
         }
 
 
         this.match = match;
 
         // load the components module and create a new instance of the view
-        const { view, action, loader } = await this.loadComponent(match);
+        const { view, action, loader, meta, links } = await this.loadComponent(match);
 
         // if the user is logged in, pass the user to the view
         if (req?.session?.user && view) {
@@ -149,7 +159,7 @@ export default class Router {
 
         // load the loader data of the route defined in the component
         const { loaderData } = await this.loadLoaderData(
-            { view, action, loader },
+            { view, action, loader, meta, links },
             {
                 req,
                 res,
@@ -166,6 +176,8 @@ export default class Router {
             view: this.view,
             action: this.action,
             loader: this.loader,
+            meta: this.meta,
+            links: this.links,
             loaderData,
         };
     }
@@ -176,7 +188,7 @@ export default class Router {
      * @returns {ComponentObject} the compoenet, action and loader of the route
      */
     async loadComponent(match: Match): Promise<ComponentObject> {
-        const { default: View, action, loader } = await match.route.component();
+        const { default: View, action, loader, meta, links } = await match.route.component();
 
         const params: Params = this.getParams(match);
         const queryParams = match.queryParams;
@@ -186,7 +198,7 @@ export default class Router {
         view ? (view.queryParams = queryParams) : null;
 
 
-        return { view, action: action ?? null, loader: loader ?? null };
+        return { view, action: action ?? null, loader: loader ?? null, meta: meta ?? null, links: links ?? null };
     }
 
     /**
@@ -195,7 +207,7 @@ export default class Router {
      * @param {ExpressObject} express
      * @returns {any} the loader data of the route
      */
-    async loadLoaderData({ view, loader, action }: ComponentObject, { req, res, next }: ExpressObject): Promise<any> {
+    async loadLoaderData({ view, loader, action, meta, links }: ComponentObject, { req, res, next }: ExpressObject): Promise<any> {
         if (loader) {
             const params = view?.params ?? {};
             const queryParams = view?.queryParams ?? new URLSearchParams();
@@ -208,9 +220,14 @@ export default class Router {
                 next,
             });
 
+            const metaData: HtmlMeta[] | null = meta ? meta() : null;
+            const linkData: HtmlLink[] | null = links ? links() : null;
+
             // give the view access to the loader data
             if (view) {
                 view.loaderData = loaderData;
+                view.meta = metaData;
+                view.links = linkData;
             }
 
             view ? (view.loaderData = loaderData) : null;
