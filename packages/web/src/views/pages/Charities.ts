@@ -1,5 +1,5 @@
 import {AbstractPage as Page} from "@lib/components"
-import type {Charity, LoaderFunction} from "@lib/types"
+import type {Charity, LoaderFunction, Params} from "@lib/types"
 
 import {getCharities} from "@services/charity.service";
 import CharityCard from "@components/StatelessCharityCard";
@@ -20,7 +20,7 @@ export const loader: LoaderFunction<Charity[] | null> = async () => {
 };
 
 export default class Charities extends Page {
-    constructor(params: any, title = "Charities") {
+    constructor(params: Params, title = "Charities") {
         super(params, title);
     }
 
@@ -30,7 +30,7 @@ export default class Charities extends Page {
 
         if (charities) {
             charitiesHtml = charities
-                .map((charity: any) => {
+                .map((charity: Charity) => {
                     return new CharityCard(charity).render();
                 })
                 .join("");
@@ -94,10 +94,7 @@ export default class Charities extends Page {
             <img src='views/images/placeholder.jpg'>
           </div>
         </section>
-        
-      <section class="charity-container">
         ${charitiesHtml}
-      </section>
       </section>
         `;
 
