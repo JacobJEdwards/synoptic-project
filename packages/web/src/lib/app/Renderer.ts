@@ -5,6 +5,7 @@ import type {
     LoaderFunction,
     MetaFunction,
     LinksFunction,
+    ScriptsFunction,
 } from "@lib/types";
 import path from "path";
 import { AbstractPage as Page } from "@lib/components";
@@ -23,6 +24,7 @@ export default class Renderer {
     loader: ActionFunction | null;
     meta: MetaFunction | null;
     links: LinksFunction | null;
+    scripts: ScriptsFunction | null;
 
     constructor() {
         this.router = new Router(routes);
@@ -35,6 +37,7 @@ export default class Renderer {
         this.loader = null;
         this.meta = null;
         this.links = null;
+        this.scripts = null;
     }
 
     async render(
@@ -94,6 +97,7 @@ export default class Renderer {
         data.title = view.title ?? "Recipe App";
         data.meta = view.meta ? this.templater.generateMeta(view.meta) : "";
         data.links = view.links ? this.templater.generateLinks(view.links) : "";
+        data.scripts = view.scripts ? this.templater.generateScripts(view.scripts) : "";
 
         data.login = view.user
             ? `<a href="/profile">Profile</a>`

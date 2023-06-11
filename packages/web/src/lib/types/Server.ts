@@ -15,3 +15,13 @@ export type HtmlMeta = {
     content: string;
     property?: string;
 };
+
+export type ScriptsReturn = HtmlScript[];
+export type ScriptsFunction = () => ScriptsReturn;
+
+export type HtmlScript = {
+    src: string;
+    type?: string;
+    async?: boolean;
+    defer?: boolean;
+};

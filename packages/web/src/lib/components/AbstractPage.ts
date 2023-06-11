@@ -3,6 +3,7 @@ import type {
   LoaderReturn,
   MetaReturn,
   LinksReturn,
+  ScriptsReturn,
   Params,
   User,
 } from "@lib/types";
@@ -18,6 +19,7 @@ export default abstract class Page {
   actionData: ActionReturn<any> | null;
   meta: MetaReturn | null;
   links: LinksReturn | null;
+  scripts: ScriptsReturn | null;
   user: User | null;
 
   /**
@@ -33,6 +35,7 @@ export default abstract class Page {
     this.user = null;
     this.meta = null;
     this.links = null;
+    this.scripts = null;
   }
 
   /**

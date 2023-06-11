@@ -29,4 +29,7 @@ export type {
   LinksFunction,
   LinksReturn,
   HtmlLink,
+  HtmlScript,
+  ScriptsFunction,
+  ScriptsReturn,
 } from "./Server";
