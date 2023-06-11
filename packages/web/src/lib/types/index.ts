@@ -33,3 +33,7 @@ export type {
   ScriptsFunction,
   ScriptsReturn,
 } from "./Server";
+
+export type {
+    NumericalString,
+} from './Utility'
