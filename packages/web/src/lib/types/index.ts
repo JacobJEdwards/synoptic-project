@@ -14,7 +14,7 @@ export type {
   Middleware,
 } from "./Requests";
 
-export type { User, Recipe, Charity, Role, Comment } from "./Schemas";
+export type { User, Recipe, Charity, Role, Comment, RecipeTags } from "./Schemas";
 
 export type { AppOptions } from "@lib/app/Application";
 

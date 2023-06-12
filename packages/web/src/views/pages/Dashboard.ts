@@ -1,5 +1,11 @@
 import { AbstractPage as Page } from "@lib/components";
-import type { ActionFunction, LoaderFunction, Params, Recipe } from "@lib/types";
+import type {
+  ActionFunction,
+  LoaderFunction,
+  Params,
+  Recipe,
+  RecipeTags,
+} from "@lib/types";
 import { getRecipesByFilter } from "@/services/recipes.service";
 
 export const loader: LoaderFunction = async ({ queryParams }) => {
@@ -9,12 +15,11 @@ export const loader: LoaderFunction = async ({ queryParams }) => {
 };
 
 export const action: ActionFunction = async ({ req }) => {
-    console.log(req.body);
-    const filteredReps = await(getRecipesByFilter(req.body.filter))
-    console.log(filteredReps);
-    return filteredReps;
-}
+  const filter = req.body.filter.toUpperCase() as RecipeTags;
+  const filteredReps = await getRecipesByFilter(filter);
 
+  return filteredReps;
+};
 
 export default class Dashboard extends Page {
   constructor(params: Params, title = "Home") {
@@ -22,14 +27,15 @@ export default class Dashboard extends Page {
   }
 
   override async getHtml() {
-    const filteredReps = this.actionData ?? []
+    const filteredReps = this.actionData ?? [];
 
-    const recipeHtml = filteredReps.map((recipe: Recipe) => {
-        return
-        `
+    const recipeHtml = filteredReps
+      .map((recipe: Recipe) => {
+        return `
         <p>${recipe.title}</p>
-        `
-    }).join("")
+        `;
+      })
+      .join("");
 
     console.log("USER?:", this.user);
     const view = `
@@ -57,8 +63,17 @@ export default class Dashboard extends Page {
                 <input id="search-bar" type="text" placeholder="search the website" name="a">
                 <button id="search-button" type="submit">search</button>
             </form>
-            ${recipeHtml}
         </section>
+        <div>
+            ${
+              this.actionData && this.actionData.length === 0
+                ? "<h2>No Recipes Found</h2>"
+                : this.actionData && this.actionData.length > 0
+                ? "<h2>Recipes Found</h2>"
+                : ""
+            }
+            ${recipeHtml}
+        </div>
     </section>
         `;
 
