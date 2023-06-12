@@ -18,7 +18,7 @@ export const loader: LoaderFunction<RecipeType> = async ({
   params,
   res,
 }: LoaderArgs) => {
-  const id = parseInt(params.id as string);
+  const id = parseInt(params["id"] as string);
 
   if (!id || typeof id !== "number") {
     res.redirect("/recipes");
@@ -72,7 +72,7 @@ export default class Recipe extends Page {
     super(params, title);
   }
 
-  async getHtml() {
+  override async getHtml() {
     console.log("ACTION", this.actionData);
     const recipe = this.loaderData?.data as RecipeType;
 
@@ -123,7 +123,7 @@ export default class Recipe extends Page {
         `;
   }
 
-  async clientScript() {
+  override async clientScript() {
     return;
   }
 }

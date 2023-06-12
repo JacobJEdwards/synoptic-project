@@ -72,7 +72,7 @@ export default class App {
    */
   addErrorRoute(): void {
     this.app.use(
-      (err: any, req: Request, res: Response, next: NextFunction) => {
+      (err: any, _req: Request, res: Response, _next: NextFunction) => {
         if (err instanceof Error) {
           console.error(err.stack);
         }

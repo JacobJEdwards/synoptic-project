@@ -6,7 +6,7 @@ export default class Error404 extends Page {
         super(params, title);
     }
 
-    async getHtml() {
+    override async getHtml() {
         const view = `
             <h1>404 - Page Not Found</h1>
             <p>Sorry, but the page you were trying to view does not exist.</p>
@@ -15,7 +15,7 @@ export default class Error404 extends Page {
         return view;
     }
 
-    async clientScript(): Promise<void> {
+    override async clientScript(): Promise<void> {
         return;
     }
 }

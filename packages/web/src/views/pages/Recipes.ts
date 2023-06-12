@@ -24,7 +24,7 @@ export default class Recipes extends Page {
         super(params, title);
     }
 
-    async getHtml() {
+    override async getHtml() {
         const recipes = this.loaderData?.data as Recipe[];
         let recipesHtml = "";
 
@@ -88,7 +88,7 @@ export default class Recipes extends Page {
         return view;
     }
 
-    async clientScript() {
+    override async clientScript() {
         return;
     }
 }

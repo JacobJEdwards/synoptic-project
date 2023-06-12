@@ -33,7 +33,7 @@ export async function createComment(
 
         const comment = await response.json();
 
-        const recipe = await RecipeCache.addComment(recipeId, comment);
+        await RecipeCache.addComment(recipeId, comment);
         return comment;
     } catch (err) {
         console.log(err);

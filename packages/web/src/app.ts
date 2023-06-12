@@ -1,16 +1,16 @@
 import * as dotenv from "dotenv";
-import type {NextFunction, Request, Response} from "express";
+import type { NextFunction, Request, Response } from "express";
 import express from "express";
 import path from "path";
-import {Application, Renderer as RendererClass} from "@lib/app";
-import {asyncHandler} from "@lib/utils";
-import type {AppOptions, ExpressObject} from "@lib/types";
+import { Application, Renderer as RendererClass } from "@lib/app";
+import { asyncHandler } from "@lib/utils";
+import type { AppOptions, ExpressObject } from "@lib/types";
 import middleware from "@/middleware/app.middleware";
 
 dotenv.config();
 
 /* Set up */
-const port = process.env.PORT || 3001;
+const port = process.env['PORT'] || 3001;
 
 const AppOptions = {
     port: port,
@@ -33,7 +33,7 @@ app.use("/views", express.static(path.resolve(__dirname, "views")));
  */
 const handleGet = async (
     pathname: string,
-    {req, res, next}: ExpressObject
+    { req, res, next }: ExpressObject
 ) => {
     // returns an instance of the view object corresponding to the URL path
 
@@ -42,14 +42,14 @@ const handleGet = async (
     // if the headers have already been sent (i.e. from the loader function), return
 
     // otherwise, read the index.html file and replace the main element with the rendered HTML
-    const html = await Renderer.render(pathname, {req, res, next});
+    const html = await Renderer.render(pathname, { req, res, next });
 
     if (res.headersSent) return;
 
     const response = html ? html : "Not Found";
 
     // send the final HTML to the client
-    res.status(200).set({"Content-Type": "text/html"}).end(response);
+    res.status(200).set({ "Content-Type": "text/html" }).end(response);
 };
 
 /**
@@ -57,18 +57,18 @@ const handleGet = async (
  */
 const handlePost = async (
     pathname: string,
-    {req, res, next}: ExpressObject
+    { req, res, next }: ExpressObject
 ) => {
     // if an action function has been exported from the view, execute it
     // the action function allows a component to handle a POST request
-    const {action, view} = await Renderer.getComponent(pathname, {
+    const { action, view } = await Renderer.getComponent(pathname, {
         req,
         res,
         next,
     });
 
     if (action) {
-        const actionData = await action({req, res, next});
+        const actionData = await action({ req, res, next });
         view.actionData = actionData;
     }
 
@@ -88,11 +88,11 @@ app.all(
         // handle GET and POST requests
         switch (method) {
             case "GET":
-                await handleGet(pathname, {req, res, next});
+                await handleGet(pathname, { req, res, next });
                 break;
 
             case "POST":
-                await handlePost(pathname, {req, res, next});
+                await handlePost(pathname, { req, res, next });
                 break;
 
             default:

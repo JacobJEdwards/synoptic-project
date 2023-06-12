@@ -46,7 +46,7 @@ export default class Login extends Page {
     super(params, title);
   }
 
-  async getHtml() {
+  override async getHtml() {
     return `
             <section>
                 <h1>Login</h1>
@@ -74,7 +74,7 @@ export default class Login extends Page {
         `;
   }
 
-  async clientScript(): Promise<void> {
+  override async clientScript(): Promise<void> {
     return;
   }
 }

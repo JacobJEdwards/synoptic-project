@@ -42,7 +42,7 @@ export default class Profile extends Page {
         super(params, title);
     }
 
-    async getHtml(): Promise<string> {
+    override async getHtml(): Promise<string> {
         const user = this.loaderData?.data as User;
         const comments = this.loaderData?.data?.comments as Comment[];
         const recipes = this.loaderData?.data?.recipes as Recipe[];
@@ -86,7 +86,7 @@ export default class Profile extends Page {
         `;
     }
 
-    async clientScript(): Promise<void> {
+    override async clientScript(): Promise<void> {
         return;
     }
 }

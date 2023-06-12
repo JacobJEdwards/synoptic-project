@@ -10,7 +10,7 @@ export default class Dashboard extends Page {
         super(params, title);
     }
 
-    async getHtml() {
+    override async getHtml() {
         console.log("USER?:", this.user);
         const view = `
     <section class="prose">
@@ -38,7 +38,7 @@ export default class Dashboard extends Page {
         return view;
     }
 
-    async clientScript(): Promise<void> {
+    override async clientScript(): Promise<void> {
         return;
     }
 }

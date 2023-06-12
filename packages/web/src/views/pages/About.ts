@@ -6,7 +6,7 @@ export default class About extends Page {
         super(params, title);
     }
 
-    async getHtml() {
+    override async getHtml() {
         const view = `
         <section class="prose">
       <h1 class="text-2xl">About Us Page</h1>
@@ -16,7 +16,7 @@ export default class About extends Page {
         return view;
     }
 
-    async clientScript(): Promise<void> {
+    override async clientScript(): Promise<void> {
         return;
     }
 }

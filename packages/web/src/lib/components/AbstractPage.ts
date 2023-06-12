@@ -12,7 +12,7 @@ import { TemplaterInstance, type Templater } from "../app";
 /**
  * Abstract class for all pages
  */
-export default abstract class Page {
+export default class Page {
     title: string;
     params: Params;
     queryParams!: URLSearchParams;
@@ -29,7 +29,7 @@ export default abstract class Page {
      * @param {Object} params url parameters
      * @param title
      */
-    protected constructor(
+    constructor(
         params: Params,
         title = "App"
     ) {
@@ -55,13 +55,17 @@ export default abstract class Page {
      * @abstract
      * @returns {String} html of the page
      */
-    abstract getHtml(): Promise<string>;
+     async getHtml(): Promise<string> {
+        return "";
+     }
 
     /**
      * Run any client side scripts
      * @abstract
      */
-    abstract clientScript(): Promise<void>;
+    async clientScript(): Promise<void> {
+        return;
+    }
 
     /**
      * Renders the page

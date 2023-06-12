@@ -25,7 +25,7 @@ export default class Charities extends Page {
     super(params, title);
   }
 
-  async getHtml() {
+  override async getHtml() {
     let charities = this.loaderData?.data as Charity[];
 
     const additonalCharities = [
@@ -98,7 +98,7 @@ export default class Charities extends Page {
   //         charityContainer.appendChild(charityElement);
   //     });
 
-  async clientScript() {
+  override async clientScript() {
     return;
   }
 }

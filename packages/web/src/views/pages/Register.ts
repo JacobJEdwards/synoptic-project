@@ -35,7 +35,7 @@ export default class Register extends Page {
         super(params, title);
     }
 
-    async getHtml() {
+    override async getHtml() {
         return `
         <section class="register">
           <h1>Register</h1>
@@ -64,7 +64,7 @@ export default class Register extends Page {
         `;
     }
 
-    async clientScript(): Promise<void> {
+    override async clientScript(): Promise<void> {
         return;
     }
 }

@@ -49,7 +49,7 @@ export default class CreateRecipe extends Page {
         super(params, title);
     }
 
-    async getHtml() {
+    override async getHtml() {
         return `
         <section class="prose">
             <h1>Create Recipe</h1>
@@ -101,7 +101,7 @@ export default class CreateRecipe extends Page {
         `;
     }
 
-    async clientScript() {
+    override async clientScript() {
         // const form = document.getElementById("create-recipe-form");
         // form.addEventListener("submit", async (e) => {
         //   e.preventDefault();
