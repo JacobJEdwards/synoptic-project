@@ -253,6 +253,35 @@ textarea:hover {
   background-color: azure;
 }
 
+.about_box {    
+  width: 90%;
+  margin: 5%;
+  overflow: hidden;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  background-color: azure;
+  border: #333 solid 10px;
+}
+
+.about_content {
+  padding: 10px;
+  margin: 15px 15px;
+  display: flex;
+  border: #333 solid 2px;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  margin: 10px;
+}
+
 .float-left {
   float: left;
   width: 60%;
