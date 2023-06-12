@@ -3,10 +3,11 @@ import type {
   ActionFunction,
   LoaderFunction,
   Params,
-  Recipe,
+  Recipe as RecipeType,
   RecipeTags,
 } from "@lib/types";
 import { getRecipesByFilter } from "@/services/recipes.service";
+import RecipeCard from "@components/StatelessRecipeCard"
 
 export const loader: LoaderFunction = async ({ queryParams }) => {
   console.log("QUERY PARAMS:", queryParams);
@@ -30,10 +31,8 @@ export default class Dashboard extends Page {
     const filteredReps = this.actionData ?? [];
 
     const recipeHtml = filteredReps
-      .map((recipe: Recipe) => {
-        return `
-        <p>${recipe.title}</p>
-        `;
+      .map((recipe: RecipeType) => {
+        return new RecipeCard(recipe).render();
       })
       .join("");
 
