@@ -1,18 +1,24 @@
 import { AbstractPage as Page } from "@lib/components";
-import type { LoaderFunction, Params } from "@lib/types";
+import type { ActionFunction, LoaderFunction, Params } from "@lib/types";
 
-export const loader: LoaderFunction = async ({ queryParams }) => {
-    console.log("QUERY PARAMS:", queryParams);
+export const loader: LoaderFunction = async ({req, queryParams }) => {
+  console.log("QUERY PARAMS:", queryParams);
+  console.log(queryParams.getAll("a"));
+  console.log("QUERY PARAMS:", queryParams);
 };
 
-export default class Dashboard extends Page {
-    constructor(params: Params, title = "Home") {
-        super(params, title);
-    }
+export const action: ActionFunction = async ({ req, params }) => {
+    console.log(req.body);
+}
 
-    override async getHtml() {
-        console.log("USER?:", this.user);
-        const view = `
+export default class Dashboard extends Page {
+  constructor(params: Params, title = "Home") {
+    super(params, title);
+  }
+
+  override async getHtml() {
+    console.log("USER?:", this.user);
+    const view = `
     <section class="prose">
         <section class="box">
             <div class="float-right">
@@ -35,10 +41,10 @@ export default class Dashboard extends Page {
     </section>
         `;
 
-        return view;
-    }
+    return view;
+  }
 
-    override async clientScript(): Promise<void> {
-        return;
-    }
+  override async clientScript(): Promise<void> {
+    return;
+  }
 }
