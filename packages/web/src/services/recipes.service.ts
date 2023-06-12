@@ -68,6 +68,30 @@ export async function getRecipe(id: number): Promise<Recipe | null> {
     }
 }
 
+export async function getRecipesByFilter(filter: string) {
+    try {
+        const allRecipes = await getRecipes();
+        let filteredReps: Recipe[] = []
+        switch(filter) {
+            case "Vegetarian":
+                filteredReps = allRecipes.filter(recipe => recipe.vegetarian === true);
+            case "Vegan":
+                filteredReps = allRecipes.filter(recipe => recipe.vegan === true);
+            case "Halal":
+                filteredReps = allRecipes.filter(recipe => recipe.halal === true);
+            case "Kosher":
+                filteredReps = allRecipes.filter(recipe => recipe.kosher === true);
+        }
+
+        return filteredReps;
+    }
+    catch (error) {
+        console.log(error);
+        return [];
+    }
+}
+
+
 export async function createRecipe(recipe: Recipe): Promise<Recipe | null> {
     try {
         const response = await fetch("http://localhost:3000/recipes", {
