@@ -34,6 +34,11 @@ export default class Dashboard extends Page {
         </section>
         <section class="search-box">
             <form action="">
+                <select name="filter">
+                    <option value="Vegetarian">Vegetarian</option>
+                    <option value="Vegan">Vegan</option>
+                    <option value="Halal">Halal</option>
+                    <option value="Kosher">Kosher</option>
                 <input id="search-bar" type="text" placeholder="search the website" name="a">
                 <button id="search-button" type="submit">search</button>
             </form>
