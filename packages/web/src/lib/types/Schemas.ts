@@ -56,5 +56,5 @@ export type Charity = {
     website?: string;
 };
 
-export type RecipeTags = "VEGAN" | "VEGETARIAN" | "HALAL" | "KOSHER"
+export type RecipeTags = "VEGAN" | "VEGETARIAN" | "HALAL" | "KOSHER" | "ALL"
 
