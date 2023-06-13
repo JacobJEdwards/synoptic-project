@@ -4,7 +4,7 @@ import type {
   LoaderFunction,
   Params,
   Recipe as RecipeType,
-  RecipeTags,
+  RecipeTags
 } from "@lib/types";
 import { getRecipesByFilter } from "@/services/recipes.service";
 import RecipeCard from "@components/StatelessRecipeCard"
