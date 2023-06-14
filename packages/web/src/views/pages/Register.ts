@@ -15,7 +15,13 @@ export const loader: LoaderFunction<void> = async ({req, res}: LoaderArgs) => {
 
 export const action: ActionFunction<void> = async ({req, res}: ActionArgs) => {
     // edge cases
-    if (!req.body) return res.redirect("/register");
+    if (!req.body) {
+        res.redirect("/register");
+        return {
+            success: false,
+            error: "No data was sent",
+        }
+    }
 
     const {username, email, name, password} = req.body;
 
@@ -25,9 +31,14 @@ export const action: ActionFunction<void> = async ({req, res}: ActionArgs) => {
         req.session.user = data.user;
         req.session.jwt = data.jwt;
         res.redirect("/");
+        return 
     }
 
     res.redirect("/register");
+    return {
+        success: false,
+        error: "Something went wrong",
+    }
 };
 
 export default class Register extends Page {
@@ -40,6 +51,11 @@ export default class Register extends Page {
         <section class="register">
           <h1>Register</h1>
           <p class="form">Required information is marked with an asterisk (*)</p>
+                ${
+                  this.actionData?.success === false
+                    ? `<p class="error">${this.actionData.error}</p>`
+                    : ""
+                }
             <form id="register-form" action="/register" method="POST">
               <fieldset>
                   <legend>Register</legend>

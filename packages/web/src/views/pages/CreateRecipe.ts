@@ -1,80 +1,89 @@
-import {AbstractPage as Page} from "@lib/components"
-import type {ActionArgs, ActionFunction, Params} from "@lib/types"
-import {createRecipe} from "@services/recipes.service";
+import { AbstractPage as Page } from "@lib/components";
+import type { ActionArgs, ActionFunction, Params } from "@lib/types";
+import { createRecipe } from "@services/recipes.service";
 
-export const action: ActionFunction<void> = async ({req, res}: ActionArgs) => {
-    if (!req.body) return res.redirect("/recipes/create");
+export const action: ActionFunction<void> = async ({
+  req,
+  res,
+}: ActionArgs) => {
+  if (!req.body) return res.redirect("/recipes/create");
 
-    const body = req.body;
+  const body = req.body;
 
-    const {title, description, origin, steps} = body;
+  const { title, description, origin, steps } = body;
 
-    const ingredients = body.ingredients.split("\n");
-    const vegan = body.vegan === "on";
-    const vegetarian = body.vegetarian === "on";
-    const halal = body.halal === "on";
-    const kosher = body.kosher === "on";
-    const tags = body.tags.split("\n");
+  const ingredients = body.ingredients.split("\n");
+  const vegan = body.vegan === "on";
+  const vegetarian = body.vegetarian === "on";
+  const halal = body.halal === "on";
+  const kosher = body.kosher === "on";
+  const tags = body.tags.split("\n");
 
-    const userId = req?.session?.user?.id;
+  const userId = req?.session?.user?.id;
 
-    const recipe = {
-        title,
-        description,
-        ingredients,
-        origin,
-        steps,
-        vegan,
-        vegetarian,
-        halal,
-        kosher,
-        tags,
-        userId,
+  const recipe = {
+    title,
+    description,
+    ingredients,
+    origin,
+    steps,
+    vegan,
+    vegetarian,
+    halal,
+    kosher,
+    tags,
+    userId,
+  };
+
+  const newRecipe = await createRecipe(recipe);
+
+  if (!newRecipe) {
+    return {
+      success: false,
+      error: "Failed to create recipe",
     };
+  }
 
-    const newRecipe = await createRecipe(recipe);
-
-    if (!newRecipe) {
-        return {
-            success: false,
-            error: "Failed to create recipe",
-        }
-    }
-
-    res.redirect(`/recipes/${newRecipe.id}`);
+  res.redirect(`/recipes/${newRecipe.id}`);
+  return;
 };
 
 export default class CreateRecipe extends Page {
-    constructor(params: Params, title = "Create Recipe") {
-        super(params, title);
-    }
+  constructor(params: Params, title = "Create Recipe") {
+    super(params, title);
+  }
 
-    override async getHtml() {
-        return `
+  override async getHtml() {
+    return `
         <section class="prose">
             <h1>Create Recipe</h1>
             <p class="form">required information is marked with an asterisk (*)</p>
+            ${
+              this.actionData?.success === false
+                ? `<p class="error">${this.actionData.error}</p>`
+                : ""
+            }
             <form id="create-recipe-form" method="POST">
                 <fieldset>
                     <legend>Create Recipe</legend>
 
                     <label class="label" for="title">Title*</label>
-                    <input type="text" id="title" name="title" placeholder="Enter title" />
+                    <input type="text" id="title" name="title" placeholder="Enter title" required/>
 
                     <label class="label" for="description">Description*</label>
-                    <textarea id="description" name="description" placeholder="Enter description"></textarea>
+                    <textarea id="description" name="description" placeholder="Enter description" required></textarea>
 
                     <label class="label" for="ingredients">Ingredients*</label>
-                    <textarea id="ingredients" name="ingredients" placeholder="Enter ingredients"></textarea>
+                    <textarea id="ingredients" name="ingredients" placeholder="Enter ingredients" required></textarea>
 
                     <label class="label" for="origin">Origin*</label>
-                    <input type="text" id="origin" name="origin" placeholder="Enter origin" />
+                    <input type="text" id="origin" name="origin" placeholder="Enter origin" required/>
 
                     <label class="label" for="steps">Steps*</label>
-                    <textarea id="steps" name="steps" placeholder="Enter steps"></textarea>
+                    <textarea id="steps" name="steps" placeholder="Enter steps" required></textarea>
 
                     <label class="label" for="tags">Tags</label>
-                    <textarea id="tags" name="tags" placeholder="Enter tags"></textarea>
+                    <textarea id="tags" name="tags" placeholder="Enter tags" required></textarea>
 
                     <label class="label">Meal Tags:</label>
                     <div class="checkbox">
@@ -99,39 +108,39 @@ export default class CreateRecipe extends Page {
             </form>
         </section>
         `;
-    }
+  }
 
-    override async clientScript() {
-        // const form = document.getElementById("create-recipe-form");
-        // form.addEventListener("submit", async (e) => {
-        //   e.preventDefault();
-        //   const formData = new FormData(form);
-        //   const title = formData.get("title");
-        //   const description = formData.get("description");
-        //   const ingredients = formData.get("ingredients").split("\n");
-        //   const origin = formData.get("origin");
-        //   const steps = formData.get("steps");
-        //   const vegan = formData.get("vegan") === "on";
-        //   const vegetarian = formData.get("vegetarian") === "on";
-        //   const halal = formData.get("halal") === "on";
-        //   const kosher = formData.get("kosher") === "on";
-        //   const tags = formData.get("tags").split("\n");
-        //   const recipe = {
-        //     title,
-        //     description,
-        //     ingredients,
-        //     origin,
-        //     steps,
-        //     vegan,
-        //     vegetarian,
-        //     halal,
-        //     kosher,
-        //     tags,
-        //   };
-        //   const newRecipe = await createRecipe(recipe);
-        // const { navigateTo } = await import("../../root.js");
-        // await navigateTo(`/recipes/${newRecipe.id}`);
-        // window.location.reload();
-        return
-    }
+  override async clientScript() {
+    // const form = document.getElementById("create-recipe-form");
+    // form.addEventListener("submit", async (e) => {
+    //   e.preventDefault();
+    //   const formData = new FormData(form);
+    //   const title = formData.get("title");
+    //   const description = formData.get("description");
+    //   const ingredients = formData.get("ingredients").split("\n");
+    //   const origin = formData.get("origin");
+    //   const steps = formData.get("steps");
+    //   const vegan = formData.get("vegan") === "on";
+    //   const vegetarian = formData.get("vegetarian") === "on";
+    //   const halal = formData.get("halal") === "on";
+    //   const kosher = formData.get("kosher") === "on";
+    //   const tags = formData.get("tags").split("\n");
+    //   const recipe = {
+    //     title,
+    //     description,
+    //     ingredients,
+    //     origin,
+    //     steps,
+    //     vegan,
+    //     vegetarian,
+    //     halal,
+    //     kosher,
+    //     tags,
+    //   };
+    //   const newRecipe = await createRecipe(recipe);
+    // const { navigateTo } = await import("../../root.js");
+    // await navigateTo(`/recipes/${newRecipe.id}`);
+    // window.location.reload();
+    return;
+  }
 }
