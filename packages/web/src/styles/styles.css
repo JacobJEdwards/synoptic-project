@@ -360,7 +360,7 @@ li {
     background-color: pink;
 }
 
-@media only screen and (max-width: 891px){
+@media only screen and (max-width: 768px){
   .service {
     display: inline-block;
     width: 80%;
@@ -370,6 +370,44 @@ li {
     text-align: center;
     border-radius: 20px;
     box-sizing: border-box;
+  }
+
+  header {
+    display: inline-flex;
+    justify-content: space-between;
+    background-color: yellowgreen;
+    align-items: center;
+  }
+
+  .links {
+    list-style: none;
+  }
+
+  .links li {
+    display: inline-block;
+    padding: 0px 20px;
+  } 
+
+  .links li a:hover {
+    color: red;
+  }
+
+  .nav {
+    display: block;
+    padding: 10px;
+    width: 70%;
+    font-size: small;
+  }
+
+  #wrapper {
+    position: relative;
+  }
+
+  #main-nav {
+    position: absolute;
+    z-index: 1;
+    right: 10px;
+    top: 20px;
   }
 
 } 

@@ -11,28 +11,30 @@
 </head>
 
 <body>
-    <header>
-        <img id="logo" src="/views/images/logo.jpg" alt="">
-        <nav>
-            <ul class="links">
-                <li class="nav"><a data-link href="/">Home</a></li>
-                <li class="nav"><a data-link href="/recipes">Recipes</a></li>
-                <li class="nav"><a data-link href="/charities">Charities</a></li>
-                <li class="nav"><a data-link href="/about">About Us</a></li>
-                <li class="nav">{{ login }}</li>
-            </ul>
-        </nav>
-    </header>
+    <div id="wrapper">
+        <header>
+            <img id="logo" src="/views/images/logo.jpg" alt="">
+            <nav id="main-nav">
+                <ul class="links">
+                    <li class="nav"><a data-link href="/">Home</a></li>
+                    <li class="nav"><a data-link href="/recipes">Recipes</a></li>
+                    <li class="nav"><a data-link href="/charities">Charities</a></li>
+                    <li class="nav"><a data-link href="/about">About Us</a></li>
+                    <li class="nav">{{ login }}</li>
+                </ul>
+            </nav>
+        </header>
 
 
-<main id="app">{{ content }}</main>
+    <main id="app">{{ content }}</main>
 
-<!-- <script type="module" src="/src/root.js"></script> -->
+    <!-- <script type="module" src="/src/root.js"></script> -->
 
-<footer>
-    <p>Copyright ©2023 Worldwide Recipes</p>
-</footer>
-{{ scripts }}
+    <footer>
+        <p>Copyright ©2023 Worldwide Recipes</p>
+    </footer>
+    {{ scripts }}
+    </div>
 </body>
 
 </html>
