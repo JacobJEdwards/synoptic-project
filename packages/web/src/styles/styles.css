@@ -79,7 +79,7 @@ section {
   border-radius: 20px;
 }
 
-#index-image {
+.placeholder-image {
   border: 5px solid black;
 }
 
@@ -144,8 +144,8 @@ legend {
 
 .form {
   padding-top: 25px;
-  padding-left: 400px;
   font-size: small;
+  text-align: center;
 }
 
 input,
@@ -330,6 +330,7 @@ li {
   margin: 5%;
   overflow: hidden;
   display: flex;
+  flex-wrap: wrap;
   border: #333 solid 10px;
   border-radius: 10px;
   align-items: center;
@@ -410,4 +411,60 @@ li {
     top: 20px;
   }
 
-} 
+  .form {
+    padding-top: 25px;
+    font-size: small;
+  }
+
+  .box {
+    flex-wrap: wrap;
+    width: 85%;
+  }
+
+  #index-image {
+    width: 200px;
+    height: 200px;
+  }  
+
+  #search-bar {
+    margin-right: 100px;
+    width: 100%;
+    max-width: 250px;
+    display: flex;
+    border-radius: 60px;
+    padding: 10px 25px 10px 20px;
+  }
+  
+  #search-button {
+    margin: 5% 20% 2% 35%;
+    min-width: 150px;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: #b8195a;
+    color: white;
+  }
+  
+  #search-button:hover {
+    background-color: pink;
+  }
+  
+  .search-box {
+    width: 90%;
+    margin: 5%;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    border: #333 solid 10px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    background-color: azure;
+  }
+
+  #search-title {
+    padding-right: 50px;
+  }
+
+}
+

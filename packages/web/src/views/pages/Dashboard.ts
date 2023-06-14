@@ -47,19 +47,20 @@ export default class Dashboard extends Page {
     <section class="prose">
         <section class="box">
             <div class="float-right">
-                <img id="index-image" src="/views/images/index-image.jpeg" alt="placeholder" />
+                <img class="placeholder-image" id="index-image" src="/views/images/placeholder.jpeg" alt="placeholder" />
             </div>
             <article class="float-left">
-            <h2 id="slogan">RECIPES FOR THE WORLD BY THE WORLD</h2>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua.
-            </p>
+                <h2 id="slogan">RECIPES FOR THE WORLD BY THE WORLD</h2>
+                <p>
+                    From Asia, Europe, Africa, South America, we work hard to provide all sorts of recipes
+                    that will make you feel right at home.
+                </p>
             </article>
         </section>
         <section class="search-box">
+            <h2 id="search-title">Find a Recipe</h2>
             <form action="/" method="POST">
-                <select name="filter">
+                <select id="select" name="filter">
                     <option value="All">All</option>
                     <option value="Vegetarian">Vegetarian</option>
                     <option value="Vegan">Vegan</option>

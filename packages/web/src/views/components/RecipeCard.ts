@@ -17,7 +17,7 @@ export default class RecipeCard extends Component {
 
         return `
                 <figure>
-                    <img src="/views/images/placeholder.jpg" alt="${recipe.name
+                    <img class="placeholder-image" src="/views/images/placeholder.jpeg" alt="${recipe.name
         }" />
                     <figcaption>
                         <h2>${recipe.title}</h2>

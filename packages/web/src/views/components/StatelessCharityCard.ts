@@ -22,7 +22,7 @@ export default class StatelessCharityCard extends Component {
             </a>
             </article>
             <div class="float-right">
-                <img src="views/images/placeholder.jpg" alt="Charity Logo" />
+                <img class="placeholder-image" src="views/images/placeholder.jpeg" alt="Charity Logo" />
             </div>
             </section>
             `;

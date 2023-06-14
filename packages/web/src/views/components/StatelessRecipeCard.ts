@@ -21,7 +21,7 @@ export default class StatelessCharityCard extends Component {
             <a class="recipe-card" href="/recipes/${recipe.id}">
             <article class="service">
                 <figure>
-                    <img src="/views/images/placeholder.jpg" alt="${recipe.name
+                    <img class="placeholder-image" src="/views/images/placeholder.jpeg" alt="${recipe.name
             }" />
                     <figcaption>
                         <h2>${recipe.title}</h2>
